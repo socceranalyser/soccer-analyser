@@ -23,7 +23,9 @@ from .fixtures import (build_schedule, current_cup_matches, fresh_league_results
                        fresh_national_results)
 from .models.dixon_coles import DixonColes
 from .models.elo import Elo
-from .national import NationalElo, fit_national_dc, load_international
+from .calibration import VectorScaling
+from .national import (NationalElo, fit_national_dc, load_international,
+                       national_walk_forward)
 from .pipeline import LIVE_DC, current_season, current_teams
 from .probability import markets, rescale_to_outcomes, score_matrix
 from .tuned import ELO_PARAMS
@@ -68,6 +70,7 @@ class Engine:
         self.schedule = build_schedule(self.base_matches, tmp_elo.ratings.keys(),
                                        set(self.intl_base["home"]) | set(self.intl_base["away"]),
                                        refresh=refresh)
+        self._add_recent_scores(log)
         log("schedule built", len(self.schedule))
 
         fresh = fresh_league_results(self.base_matches, self.schedule)
@@ -94,9 +97,37 @@ class Engine:
 
         self.nat_elo = NationalElo().fit(self.intl)
         self.nat_dc = fit_national_dc(self.intl, n_samples=200)
+        # calibration learnt from the model's own out-of-sample forecasts (2019 -> now);
+        # backtest: Elo test logloss 0.8643 -> 0.8632 (DC blends were rejected)
+        try:
+            oos = national_walk_forward(self.intl, "2019-01-01", "2100-01-01", models=("elo",))
+            y = oos["result"].map({"H": 0, "D": 1, "A": 2}).to_numpy()
+            self.nat_cal = VectorScaling(l2=1.0).fit(oos[["p_home", "p_draw", "p_away"]]
+                                                     .to_numpy(), y)
+        except Exception:
+            self.nat_cal = None
         log("national models fitted")
         self._dc: dict[str, DixonColes] = {}
         self.built_at = pd.Timestamp.now()
+
+    def _add_recent_scores(self, log, days: int = 4):
+        """Fill in scores of the last few days from misli.az (published within minutes),
+        so ratings learn from results before the main sources catch up."""
+        from .misli import attach_results, fetch_results
+        today = pd.Timestamp.now().normalize()
+        recent = self.schedule["date"].between(today - pd.Timedelta(days=days), today) & \
+            ~self.schedule["played"]
+        if not recent.any():
+            return
+        try:
+            res = fetch_results([today - pd.Timedelta(days=d) for d in range(days + 1)])
+        except Exception:
+            return
+        done = res[res["ended"]] if len(res) else res
+        upd = attach_results(self.schedule[recent], done)
+        newly = upd["played"] & ~self.schedule.loc[recent, "played"]
+        self.schedule.loc[upd.index, ["hg", "ag", "played"]] = upd[["hg", "ag", "played"]]
+        log(f"misli scores added: {int(newly.sum())}")
 
     # ------------------------------------------------------------------ models
     def dc(self, league: str) -> DixonColes:
@@ -137,8 +168,9 @@ class Engine:
             known = hk in self.elo.ratings and ak in self.elo.ratings
         else:  # national
             p = self.nat_elo.predict([home], [away], [neutral])
-            head = p["probs"][0]
-            models["Elo"] = head
+            models["Elo"] = p["probs"][0]
+            head = self.nat_cal.transform(p["probs"])[0] if self.nat_cal is not None \
+                else p["probs"][0]
             m_dc = self.nat_dc.score_matrices([home], [away], np.array([neutral]))[0]
             pd_ = markets(m_dc)
             models["Dixon-Coles"] = np.array([pd_["p_home"], pd_["p_draw"], pd_["p_away"]])
@@ -230,6 +262,7 @@ class Engine:
                 row.update(p_home=mk["p_home"], p_draw=mk["p_draw"], p_away=mk["p_away"],
                            xg_home=mk["xg_home"], xg_away=mk["xg_away"],
                            p_over25=mk["totals"][2.5], p_btts=mk["btts"],
-                           top_score=mk["top_scores"][0][0], known=f["known"])
+                           top_score=f"{mk['top_scores'][0][0]} ({mk['top_scores'][0][1]:.0%})",
+                           known=f["known"])
             rows.append(row)
         return pd.DataFrame(rows)

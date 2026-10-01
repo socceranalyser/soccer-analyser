@@ -49,6 +49,60 @@ def get_day(date: pd.Timestamp, built_at: pd.Timestamp, tz: str | None) -> pd.Da
     return get_engine().day(date, tz)
 
 
+@st.cache_data(ttl=120, show_spinner=False)
+def get_scores(date: pd.Timestamp) -> pd.DataFrame:
+    """Finished and live scores from misli.az (refreshed every 2 minutes)."""
+    from soccer.misli import fetch_results
+    try:
+        return fetch_results([date - timedelta(days=1), date, date + timedelta(days=1)])
+    except Exception:
+        return pd.DataFrame()
+
+
+def with_scores(day: pd.DataFrame, date: pd.Timestamp) -> pd.DataFrame:
+    """Overlay fresh scores on a day's fixtures and store finished results."""
+    from soccer.misli import attach_results
+    day = attach_results(day, get_scores(date))
+    # finished/started matches: show the forecast stored BEFORE kick-off (the model has
+    # meanwhile learnt the result, so a fresh forecast would flatter it)
+    try:
+        pre = storage.prematch_forecasts([date - timedelta(days=1), date, date + timedelta(days=1)])
+        if len(pre) and "p_home" in day:
+            pre = pre.drop_duplicates(["league", "home", "away"], keep="last") \
+                .set_index(["league", "home", "away"])
+            now = now_in_tz()
+            for idx, r in day.iterrows():
+                started = r["played"] or (pd.notna(r.get("kickoff")) and r["kickoff"] <= now)
+                key = (r["competition"], r["home"], r["away"])
+                if started and key in pre.index:
+                    day.loc[idx, ["p_home", "p_draw", "p_away"]] = \
+                        pre.loc[key, ["p_home", "p_draw", "p_away"]].to_numpy(float)
+    except Exception:
+        pass
+    fresh = day[day["played"] & day["hg"].notna()]
+    if len(fresh):
+        try:
+            storage.save_results(fresh.assign(
+                league=fresh["competition"], season=fresh["season"].fillna(date.year).astype(int),
+                hg=fresh["hg"].astype(int), ag=fresh["ag"].astype(int),
+                result=np.select([fresh.hg > fresh.ag, fresh.hg == fresh.ag], ["H", "D"], "A")))
+        except Exception:
+            pass
+    return day
+
+
+def status_label(r, now) -> str:
+    if r.get("played"):
+        return "✅ завершён"
+    if r.get("live_status"):
+        minute = f" {int(r['live_minute'])}'" if pd.notna(r.get("live_minute")) else ""
+        return f"🔴 {r['live_status']}{minute}"
+    k = r.get("kickoff")
+    if pd.notna(k) and k <= now:
+        return "⏱ идёт / ждём счёт"
+    return ""
+
+
 TIMEZONES = {"Время компьютера": None, "Баку (UTC+4)": "Asia/Baku",
              "Москва (UTC+3)": "Europe/Moscow", "Стамбул (UTC+3)": "Europe/Istanbul",
              "Киев (UTC+2/+3)": "Europe/Kyiv", "Берлин / Мадрид": "Europe/Berlin",
@@ -229,6 +283,8 @@ def page_today():
         date = today + timedelta(days={"Вчера": -1, "Сегодня": 0, "Завтра": 1}.get(choice, 0))
     query = c[1].text_input("🔎 Поиск команды", placeholder="например: Arsenal, Spain…")
     day = get_day(date, eng.built_at, user_tz())
+    if not day.empty:
+        day = with_scores(day, date)
     if day.empty:
         st.info(f"На {date:%d.%m.%Y} матчей в расписании нет. Попробуйте другой день.")
         _upcoming_hint(eng, date)
@@ -264,6 +320,7 @@ def page_today():
     if view.empty:
         st.warning("Ничего не найдено.")
         return
+    now = now_in_tz()
     table = pd.DataFrame({
         "Время": view["kickoff"].dt.strftime("%H:%M").fillna(""),
         "Турнир": view["comp_name"],
@@ -272,10 +329,15 @@ def page_today():
         "Прогноз": [pick_label(r) if pd.notna(r[0]) else "—"
                     for r in view[["p_home", "p_draw", "p_away"]].to_numpy()]
         if "p_home" in view else "—",
-        "Счёт (прогноз)": view.get("top_score"),
+        "Самый вероятный счёт": view.get("top_score"),
         "ТБ 2.5": view.get("p_over25"),
-        "Итог": [f"{int(h)}:{int(a)}" if pd.notna(h) else "" for h, a in
+        "Статус": [status_label(r, now) for _, r in view.iterrows()],
+        "Счёт": [f"{int(h)}:{int(a)}" if pd.notna(h) else "" for h, a in
                  zip(view["hg"], view["ag"])],
+        "Угадан?": [("✅" if np.argmax([r["p_home"], r["p_draw"], r["p_away"]]) ==
+                     (0 if r["hg"] > r["ag"] else 1 if r["hg"] == r["ag"] else 2) else "❌")
+                    if r["played"] and pd.notna(r.get("p_home")) and pd.notna(r["hg"]) else ""
+                    for _, r in view.iterrows()],
     })
     pct_col = lambda label: st.column_config.ProgressColumn(label, format="percent",
                                                             min_value=0, max_value=1)
@@ -584,6 +646,252 @@ def _accuracy_block(done: pd.DataFrame, run_id: str, key: str):
                            for c in ("П1", "Х", "П2")})
 
 
+# =================================================================== coupon page
+@st.cache_data(ttl=600, show_spinner="Загружаю коэффициенты misli.az…")
+def get_misli(built_at, refresh_token: int) -> pd.DataFrame:
+    """misli.az events linked to our models, with model probabilities per market."""
+    from soccer.misli import fetch_events, link_events, model_probs
+    eng = get_engine()
+    df = link_events(fetch_events(force=refresh_token > 0), eng)
+    probs = []
+    for r in df.itertuples():
+        if r.kind is None or pd.isna(r.kind):
+            probs.append({})
+            continue
+        try:
+            f = eng.forecast(r.kind, r.competition, r.home, r.away, False,
+                             r.home_key, r.away_key)
+            probs.append({f"p_{k}": v for k, v in model_probs(f, r.ou_line).items()}
+                         | {"p_top_score": f["markets"]["top_scores"][0][0]})
+        except Exception:
+            probs.append({})
+    return pd.concat([df, pd.DataFrame(probs)], axis=1)
+
+
+ODDS_COLS = ["o1", "ox", "o2", "o1x", "o12", "ox2", "o_over", "o_under", "o_btts_yes",
+             "o_btts_no"]
+
+
+def _best_value(r) -> tuple[str | None, float]:
+    best, val = None, -1.0
+    for c in ODDS_COLS:
+        o, p = r.get(c), r.get(f"p_{c}")
+        if pd.notna(o) and pd.notna(p) and o > 1:
+            v = p * o - 1
+            if v > val:
+                best, val = c, v
+    return best, val
+
+
+def _market_label(col: str, line) -> str:
+    from soccer.misli import MARKET_LABELS
+    line = 2.5 if line is None or pd.isna(line) else line
+    return MARKET_LABELS[col].format(line=f"{line:g}")
+
+
+def _coupon() -> list[dict]:
+    return st.session_state.setdefault("coupon", [])
+
+
+def _add_pick(r, col: str):
+    picks = [p for p in _coupon() if p["event_id"] != int(r["event_id"])]  # one pick per match
+    picks.append({
+        "event_id": int(r["event_id"]), "kickoff": str(r["kickoff"]),
+        "match": f"{r['home_raw']} — {r['away_raw']}", "comp": r["competition_az"],
+        "market": col, "label": _market_label(col, r.get("ou_line")), "odds": float(r[col]),
+        "p_model": None if pd.isna(r.get(f"p_{col}")) else float(r[f"p_{col}"]),
+        "home": r["home"] if pd.notna(r.get("home")) else None,
+        "away": r["away"] if pd.notna(r.get("away")) else None,
+        "line": None if pd.isna(r.get("ou_line")) else float(r["ou_line"]),
+        "mbs": int(r["mbs"])})
+    st.session_state["coupon"] = picks
+
+
+def render_coupon_sidebar():
+    picks = _coupon()
+    with st.sidebar:
+        st.markdown(f"### 🎟️ Мой купон ({len(picks)})")
+        if not picks:
+            st.caption("Пусто. Выберите матч и нажмите «➕» у нужного исхода.")
+            return
+        for i, p in enumerate(picks):
+            c = st.columns([5, 1])
+            pm = f" · модель {pct(p['p_model'])}" if p["p_model"] is not None else ""
+            c[0].markdown(f"**{p['match']}**  \n{p['label']} @ **{p['odds']:.2f}**{pm}")
+            if c[1].button("✖", key=f"rm_{p['event_id']}", help="убрать"):
+                st.session_state["coupon"] = [q for q in picks if q is not p]
+                st.rerun()
+        total = float(np.prod([p["odds"] for p in picks]))
+        known = all(p["p_model"] is not None for p in picks)
+        prob = float(np.prod([p["p_model"] for p in picks])) if known else None
+        st.metric("Общий коэффициент", f"{total:.2f}")
+        stake = st.number_input("Сумма ставки, ₼", min_value=0.0, value=1.0, step=1.0)
+        st.markdown(f"Возможный выигрыш: **{stake * total:.2f} ₼**")
+        if prob is not None:
+            ev = prob * total - 1
+            st.markdown(f"Шанс, что сыграет весь купон (по модели): **{pct(prob)}**  \n"
+                        f"Ожидание по модели: **{ev:+.0%}** "
+                        + ("🟢" if ev > 0 else "🔴"))
+        else:
+            st.caption("Для части матчей нет прогноза модели — шанс купона не посчитан.")
+        need = max(p["mbs"] for p in picks)
+        if len(picks) < need:
+            st.warning(f"По правилам misli для выбранных матчей нужно минимум {need} события "
+                       f"в купоне (сейчас {len(picks)}).")
+        c = st.columns(2)
+        if c[0].button("💾 Сохранить", width="stretch"):
+            storage.save_coupon(picks, stake, total, prob if prob is not None else float("nan"))
+            st.toast("Купон сохранён — результат появится внизу страницы после матчей.")
+        if c[1].button("🗑️ Очистить", width="stretch"):
+            st.session_state["coupon"] = []
+            st.rerun()
+
+
+def page_coupon():
+    from soccer.misli import outcome_won
+    eng = get_engine()
+    st.title("🎟️ Купон: коэффициенты misli.az и модель")
+    c = st.columns([2, 3, 2, 2])
+    day = c[0].segmented_control("Когда", ["Сегодня", "Завтра", "Все"], default="Все")
+    query = c[1].text_input("🔎 Поиск команды или турнира", key="coupon_q")
+    only_model = c[2].toggle("Только с прогнозом модели", value=True)
+    sort = c[3].selectbox("Сортировка", ["По времени", "По преимуществу модели"])
+    if c[3].button("🔄 Обновить коэффициенты"):
+        st.session_state["misli_token"] = st.session_state.get("misli_token", 0) + 1
+    try:
+        df = get_misli(eng.built_at, st.session_state.get("misli_token", 0))
+    except Exception as exc:
+        st.error(f"Не удалось загрузить misli.az: {exc}")
+        return
+    tz = user_tz() or local_tz()
+    df["kick_local"] = df["kickoff"].dt.tz_convert(tz)
+    today = now_in_tz().tz_localize(None).normalize()
+    dates = df["kick_local"].dt.tz_localize(None).dt.normalize()
+    if day == "Сегодня":
+        df = df[dates == today]
+    elif day == "Завтра":
+        df = df[dates == today + timedelta(days=1)]
+    if only_model:
+        df = df[df["p_o1"].notna()] if "p_o1" in df else df.iloc[:0]
+    if query:
+        q = query.lower()
+        df = df[df["home_raw"].str.lower().str.contains(q, regex=False)
+                | df["away_raw"].str.lower().str.contains(q, regex=False)
+                | df["competition_az"].str.lower().str.contains(q, regex=False)
+                | df["home"].fillna("").str.lower().str.contains(q, regex=False)
+                | df["away"].fillna("").str.lower().str.contains(q, regex=False)]
+    best = df.apply(_best_value, axis=1, result_type="expand") if len(df) else None
+    if best is not None:
+        df = df.assign(best_col=best[0], best_val=best[1])
+        if sort == "По преимуществу модели":
+            df = df.sort_values("best_val", ascending=False)
+        else:
+            df = df.sort_values("kickoff")
+    margin = (1 / df[["o1", "ox", "o2"]]).sum(axis=1) - 1 if len(df) else pd.Series(dtype=float)
+    st.caption(f"Матчей: {len(df)} · средняя маржа букмекера на 1X2: "
+               f"{margin.mean():.1%}" if len(df) else "Матчей не найдено.")
+    with st.expander("ℹ️ Как пользоваться и как понимать «преимущество»", expanded=False):
+        st.markdown(
+            "- Выберите матч в таблице → внизу появятся все исходы с коэффициентами misli и "
+            "вероятностями модели → нажмите **➕**, чтобы добавить в купон (он слева).\n"
+            "- **Справедливый коэффициент** = 1 / вероятность модели. Если коэффициент misli "
+            "выше справедливого, модель считает ставку выгодной (**преимущество > 0**).\n"
+            "- **Важно:** в среднем букмекеры пока точнее нашей модели (см. «Точность»), а маржа "
+            "misli ~6–10% на матч. Поэтому «преимущество» — это место, где модель и букмекер "
+            "расходятся, а не гарантия прибыли. В экспрессе маржа перемножается: чем больше "
+            "событий, тем хуже ожидание.\n"
+            "- **MBS** — минимальное число событий в купоне по правилам misli для этого матча.")
+    if df.empty:
+        render_coupon_sidebar()
+        return
+    view = pd.DataFrame({
+        "Время": df["kick_local"].dt.strftime("%d.%m %H:%M"),
+        "Турнир": df["competition_az"],
+        "Матч": df["home_raw"] + " — " + df["away_raw"],
+        "1": df["o1"], "X": df["ox"], "2": df["o2"],
+        "Модель П1": df.get("p_o1"), "Модель Х": df.get("p_ox"), "Модель П2": df.get("p_o2"),
+        "Лучший вариант по модели": [
+            (f"{_market_label(b, l)} @ {r[b]:.2f} ({v:+.0%})" if isinstance(b, str) else "—")
+            for b, v, l, (_, r) in zip(df["best_col"], df["best_val"], df["ou_line"],
+                                       df.iterrows())],
+        "MBS": df["mbs"],
+    })
+    pc = lambda l: st.column_config.ProgressColumn(l, format="percent", min_value=0, max_value=1)
+    event = st.dataframe(view, hide_index=True, width="stretch", on_select="rerun",
+                         selection_mode="single-row", height=min(38 * (len(view) + 1), 560),
+                         column_config={"Модель П1": pc("Модель П1"), "Модель Х": pc("Модель Х"),
+                                        "Модель П2": pc("Модель П2"),
+                                        "1": st.column_config.NumberColumn(format="%.2f"),
+                                        "X": st.column_config.NumberColumn(format="%.2f"),
+                                        "2": st.column_config.NumberColumn(format="%.2f")})
+    rows = event.selection.rows if event and event.selection else []
+    if rows:
+        r = df.iloc[rows[0]]
+        st.divider()
+        st.markdown(f"### {r['home_raw']} — {r['away_raw']}")
+        st.caption(f"{r['competition_az']} · {r['kick_local']:%d.%m %H:%M} · MBS {r['mbs']}"
+                   + (f" · модель: {r['home']} — {r['away']}" if pd.notna(r.get("home")) else
+                      " · модель этот матч не знает"))
+        head = st.columns([3, 2, 2, 2, 2, 1])
+        for h, t in zip(head, ["Исход", "Коэф. misli", "Модель", "Справедл. коэф.",
+                               "Преимущество", ""]):
+            h.markdown(f"**{t}**")
+        for col in ODDS_COLS:
+            o = r.get(col)
+            if pd.isna(o):
+                continue
+            p = r.get(f"p_{col}")
+            cells = st.columns([3, 2, 2, 2, 2, 1])
+            cells[0].write(_market_label(col, r.get("ou_line")))
+            cells[1].write(f"{o:.2f}")
+            cells[2].write(pct(p) if pd.notna(p) else "—")
+            cells[3].write(f"{1 / p:.2f}" if pd.notna(p) and p > 0 else "—")
+            if pd.notna(p):
+                v = p * o - 1
+                cells[4].write(f"{'🟢' if v > 0 else '🔴'} {v:+.0%}")
+            else:
+                cells[4].write("—")
+            if cells[5].button("➕", key=f"add_{r['event_id']}_{col}", help="в купон"):
+                _add_pick(r, col)
+                st.rerun()
+        if pd.notna(r.get("home")):
+            with st.expander("Подробный разбор матча моделью"):
+                match_card(eng, r["kind"], r["competition"], r["home"], r["away"], False,
+                           r.get("home_key"), r.get("away_key"),
+                           np.array([r["o1"], r["ox"], r["o2"]], float))
+    render_coupon_sidebar()
+
+    saved = storage.load_coupons()
+    if saved:
+        st.divider()
+        st.markdown("### 💾 Сохранённые купоны")
+        for cpn in saved[:20]:
+            status, lines = [], []
+            for p in cpn["picks"]:
+                res = storage.find_result(p["home"], p["away"], p["kickoff"][:10]) \
+                    if p.get("home") else None
+                if res is None:
+                    mark = "⏳"
+                    status.append(None)
+                else:
+                    won = outcome_won(p["market"], res[0], res[1], p.get("line"))
+                    status.append(won)
+                    mark = f"{'✅' if won else '❌'} {res[0]}:{res[1]}"
+                lines.append(f"- {p['match']}: {p['label']} @ {p['odds']:.2f} — {mark}")
+            if any(s is False for s in status):
+                head = "❌ проигран"
+            elif all(s is True for s in status):
+                head = f"✅ выигран: {cpn['stake'] * cpn['total_odds']:.2f} ₼"
+            else:
+                head = "⏳ ждём результатов"
+            with st.expander(f"#{cpn['id']} · {cpn['created_at'][:16].replace('T', ' ')} · "
+                             f"коэф. {cpn['total_odds']:.2f} · ставка {cpn['stake']:.2f} ₼ · {head}"):
+                st.markdown("\n".join(lines))
+                if st.button("Удалить", key=f"del_{cpn['id']}"):
+                    storage.delete_coupon(cpn["id"])
+                    st.rerun()
+
+
 def page_about():
     st.title("ℹ️ Как это работает")
     st.markdown("""
@@ -619,6 +927,7 @@ with st.sidebar:
     st.markdown("## ⚽ Soccer Analyser")
 pages = st.navigation([
     st.Page(page_today, title="Матчи дня", icon="📅", default=True, url_path="today"),
+    st.Page(page_coupon, title="Купон (misli.az)", icon="🎟️", url_path="coupon"),
     st.Page(page_match, title="Прогноз любого матча", icon="🔮", url_path="match"),
     st.Page(page_leagues, title="Лиги и симуляция", icon="🏆", url_path="leagues"),
     st.Page(page_ratings, title="Рейтинги", icon="📊", url_path="ratings"),

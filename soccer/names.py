@@ -20,7 +20,9 @@ CLUB_ALIASES = {
     "Bodø/Glimt": "Bodo/Glimt", "Copenhagen": "FC Copenhagen", "Red Star": "Crvena Zvezda",
     "Union SG": "St. Gilloise", "Union St.-Gilloise": "St. Gilloise",
     "AEK Athens": "AEK", "GNK Dinamo": "Dinamo Zagreb", "Dinamo Zagreb": "Dinamo Zagreb",
-    "RCD Espanyol de Barcelona": "Espanol", "N.E.C.": "Nijmegen", "N.E.C. Nijmegen": "Nijmegen",
+    "RCD Espanyol de Barcelona": "Espanol",
+    "Red Bull New York": "New York Red Bulls", "NY Red Bulls": "New York Red Bulls",
+    "LA Galaxy": "Los Angeles Galaxy", "LAFC": "Los Angeles FC", "N.E.C.": "Nijmegen", "N.E.C. Nijmegen": "Nijmegen",
 }
 NATION_ALIASES = {
     "Türkiye": "Turkey", "Czechia": "Czech Republic", "USA": "United States",

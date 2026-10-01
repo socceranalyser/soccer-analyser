@@ -27,7 +27,7 @@ FEEDS = {
     "UNL": "nations-league", "WC": "fifa-world-cup",
 }
 CUPS = {"UCL": "Лига чемпионов", "UEL": "Лига Европы", "UECL": "Лига конференций"}
-NATIONAL = {"UNL": "Лига наций УЕФА", "WC": "Чемпионат мира"}
+NATIONAL = {"UNL": "Лига наций УЕФА", "WC": "Чемпионат мира", "INT": "Матчи сборных"}
 COMP_ORDER = ["UCL", "UEL", "UECL", "UNL", "WC"]
 
 

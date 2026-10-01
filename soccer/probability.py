@@ -41,6 +41,21 @@ def outcome_probs(m: np.ndarray) -> np.ndarray:
     return np.stack([home, draw, away], axis=-1)
 
 
+def rescale_to_outcomes(m: np.ndarray, target: np.ndarray) -> np.ndarray:
+    """Rescale a score matrix so its [H, D, A] probabilities equal `target`, keeping the
+    relative shape of scores inside each outcome region (lets a better 1X2 model drive
+    the exact-score and totals view)."""
+    n = m.shape[-1]
+    i, j = np.indices((n, n))
+    regions = [i > j, i == j, i < j]
+    cur = outcome_probs(m)
+    out = m.copy()
+    for k, reg in enumerate(regions):
+        f = np.where(cur[..., k] > 0, target[..., k] / np.maximum(cur[..., k], 1e-15), 0.0)
+        out = np.where(reg, out * np.asarray(f)[..., None, None], out)
+    return out / out.sum(axis=(-2, -1), keepdims=True)
+
+
 def total_goals_dist(m: np.ndarray) -> np.ndarray:
     n = m.shape[-1]
     i, j = np.indices((n, n))

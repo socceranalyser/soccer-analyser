@@ -62,8 +62,8 @@ def _dc_league(lm: pd.DataFrame, test_seasons, dc_kwargs: dict, freq: str):
 
 def walk_forward(matches: pd.DataFrame, test_seasons, leagues=None, dc_kwargs=None,
                  elo_kwargs=None, freq: str = "W", models=("dixon_coles", "elo", "market"),
-                 verbose: bool = True, n_jobs: int = max(1, (os.cpu_count() or 2) - 2)
-                 ) -> pd.DataFrame:
+                 verbose: bool = True, n_jobs: int = max(1, (os.cpu_count() or 2) - 2),
+                 cups: pd.DataFrame | None = None) -> pd.DataFrame:
     leagues = leagues or sorted(matches["league"].unique())
     matches = matches[matches["league"].isin(leagues)]
     test_seasons = list(test_seasons)
@@ -74,7 +74,7 @@ def walk_forward(matches: pd.DataFrame, test_seasons, leagues=None, dc_kwargs=No
 
     if "elo" in models:
         elo = Elo(**(elo_kwargs or {}))
-        rated = elo.run(matches)
+        rated = elo.run(matches, cups)
         for (league, season), test in rated[rated["season"].isin(test_seasons)].groupby(
                 ["league", "season"]):
             # outcome model refitted at each league-season start, on earlier data only
@@ -97,6 +97,24 @@ def walk_forward(matches: pd.DataFrame, test_seasons, leagues=None, dc_kwargs=No
 
     preds = pd.concat(out, ignore_index=True)
     return preds.sort_values(["date", "match_id", "model"]).reset_index(drop=True)
+
+
+def euro_walk_forward(matches: pd.DataFrame, euro: pd.DataFrame, test_seasons,
+                      elo_kwargs=None) -> pd.DataFrame:
+    """Elo forecasts for European cup matches (ratings carried over from domestic play)."""
+    elo = Elo(**(elo_kwargs or {}))
+    elo.run(matches, euro)
+    hist = elo.cup_history
+    out = []
+    for season in test_seasons:
+        test = hist[hist["season"] == season]
+        if test.empty:
+            continue
+        elo.fit_outcome_model(hist, as_of=test["date"].min(), leagues=[test["league"].iloc[0]])
+        p = elo.probs_from_diff(elo.diff(test.elo_h, test.elo_a, test.neutral),
+                                test["league"].iloc[0])
+        out.append(_rows(test, "elo", p))
+    return pd.concat(out, ignore_index=True)
 
 
 def common_matches(preds: pd.DataFrame, models) -> pd.DataFrame:

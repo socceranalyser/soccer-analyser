@@ -84,6 +84,11 @@ class DixonColes:
         x = train["hg"].to_numpy(float)
         y = train["ag"].to_numpy(float)
         w = np.exp(-self.xi * (as_of - train["date"]).dt.days.to_numpy(float))
+        if "weight" in train:  # match importance (e.g. friendlies count less)
+            w = w * train["weight"].to_numpy(float)
+        # home factor: 0 at a neutral venue
+        hf = 1.0 - train["neutral"].to_numpy(float) if "neutral" in train else np.ones(len(train))
+        self._hf = hf
 
         theta0 = np.zeros(2 * n + 3)
         theta0[2 * n:] = [0.1, 0.25, -0.05]
@@ -100,7 +105,7 @@ class DixonColes:
         def objective(theta):
             att, dfn = theta[:n], theta[n:2 * n]
             c, home, rho = theta[2 * n:]
-            eta1 = c + home + att[h] - dfn[a]
+            eta1 = c + home * hf + att[h] - dfn[a]
             eta2 = c + att[a] - dfn[h]
             lam, mu = np.exp(eta1), np.exp(eta2)
             tau = np.ones_like(lam)
@@ -124,7 +129,7 @@ class DixonColes:
                     + np.sum(w[m11] * -1 / tau[m11]))
             g_att = np.bincount(h, g1, n) + np.bincount(a, g2, n)
             g_def = -np.bincount(a, g1, n) - np.bincount(h, g2, n)
-            grad = -np.concatenate([g_att, g_def, [g1.sum() + g2.sum(), g1.sum(), grho]])
+            grad = -np.concatenate([g_att, g_def, [g1.sum() + g2.sum(), (g1 * hf).sum(), grho]])
             q_att, q_def = Q @ att, Q @ dfn
             grad[:n] += q_att + lin
             grad[n:2 * n] += q_def + lin
@@ -147,7 +152,8 @@ class DixonColes:
         n = self.n
         att, dfn = self.theta[:n], self.theta[n:2 * n]
         c, home, _ = self.theta[2 * n:]
-        lam = np.exp(c + home + att[h] - dfn[a])
+        hf = self._hf
+        lam = np.exp(c + home * hf + att[h] - dfn[a])
         mu = np.exp(c + att[a] - dfn[h])
         m = len(h)
         p = 2 * n + 2
@@ -156,7 +162,7 @@ class DixonColes:
         x1[rows, h] = 1
         x1[rows, n + a] -= 1
         x1[:, 2 * n] = 1
-        x1[:, 2 * n + 1] = 1
+        x1[:, 2 * n + 1] = hf
         x2 = np.zeros((m, p))
         x2[rows, a] = 1
         x2[rows, n + h] -= 1
@@ -178,12 +184,13 @@ class DixonColes:
     def _index(self, teams) -> np.ndarray:
         return np.array([self._idx.get(t, self.n) for t in teams])
 
-    def rates(self, homes, aways, theta=None):
+    def rates(self, homes, aways, theta=None, neutral=None):
         theta = self.theta if theta is None else theta
         att, dfn, c, home = self._params(theta)
         hi, ai = self._index(homes), self._index(aways)
         c, home = np.asarray(c)[..., None], np.asarray(home)[..., None]
-        lam = np.exp(c + home + att[..., hi] - dfn[..., ai])
+        hf = 1.0 if neutral is None else 1.0 - np.asarray(neutral, float)
+        lam = np.exp(c + home * hf + att[..., hi] - dfn[..., ai])
         mu = np.exp(c + att[..., ai] - dfn[..., hi])
         return lam, mu
 
@@ -205,16 +212,16 @@ class DixonColes:
         except np.linalg.LinAlgError:
             return False
 
-    def score_matrices(self, homes, aways) -> np.ndarray:
+    def score_matrices(self, homes, aways, neutral=None) -> np.ndarray:
         """(n_matches, G, G) score matrices; posterior-predictive if n_samples > 0."""
         if self.n_samples > 0:
-            lam, mu = self.rates(homes, aways, self.sample_theta(self.n_samples))
+            lam, mu = self.rates(homes, aways, self.sample_theta(self.n_samples), neutral)
             return score_matrix(lam, mu, self.rho).mean(axis=0)
-        lam, mu = self.rates(homes, aways)
+        lam, mu = self.rates(homes, aways, neutral=neutral)
         return score_matrix(lam, mu, self.rho)
 
-    def predict(self, homes, aways) -> dict:
-        m = self.score_matrices(list(homes), list(aways))
+    def predict(self, homes, aways, neutral=None) -> dict:
+        m = self.score_matrices(list(homes), list(aways), neutral)
         n = m.shape[-1]
         g = np.arange(n)
         return {

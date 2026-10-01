@@ -1,0 +1,225 @@
+raw,code,country,team,score
+1. FC Heidenheim 1846,GER,Германия,Heidenheim,1.0
+1. FC Köln,GER,Германия,FC Koln,1.0
+1. FC Slovácko,CZE,CZE,1. FC Slovácko,0.0
+1. FC Union Berlin,GER,Германия,Union Berlin,1.0
+1899 Hoffenheim,GER,Германия,Hoffenheim,1.0
+AC Milan,ITA,Италия,Milan,1.0
+AC Sparta Praha,CZE,CZE,AC Sparta Praha,0.0
+ACF Fiorentina,ITA,Италия,Fiorentina,0.983
+AEK Athen,GRE,Греция,AEK,0.95
+AEK Larnaca,CYP,CYP,AEK Larnaca,0.0
+AFC Ajax,NED,Нидерланды,Ajax,1.0
+APOEL Nikosia,CYP,CYP,APOEL Nikosia,0.0
+AS Monaco,FRA,Франция,Monaco,1.0
+AS Monaco FC,MCO,MCO,AS Monaco FC,0.0
+AS Roma,ITA,Италия,Roma,1.0
+AZ Alkmaar,NED,Нидерланды,AZ Alkmaar,1.0
+Aberdeen FC,SCO,Шотландия,Aberdeen,1.0
+Anorthosis Famagusta,CYP,CYP,Anorthosis Famagusta,0.0
+Apollon Limassol,CYP,CYP,Apollon Limassol,0.0
+Aris Limassol,CYP,CYP,Aris Limassol,0.0
+Arsenal FC,ENG,Англия,Arsenal,1.0
+Aston Villa,ENG,Англия,Aston Villa,1.0
+Aston Villa FC,ENG,Англия,Aston Villa,1.0
+Atalanta,ITA,Италия,Atalanta,1.0
+Atalanta BC,ITA,Италия,Atalanta,1.0
+Athletic Club,ESP,Испания,Ath Bilbao,1.0
+Atlético Madrid,ESP,Испания,Ath Madrid,1.0
+Austria Wien,AUT,Австрия,Austria Vienna,0.846
+BATE Borisov,BLR,BLR,BATE Borisov,0.0
+BK Häcken,SWE,Швеция,Hacken,1.0
+BSC Young Boys,SUI,Швейцария,Young Boys,1.0
+Bayer 04 Leverkusen,GER,Германия,Leverkusen,0.977
+Bayer Leverkusen,GER,Германия,Leverkusen,0.977
+Bayern München,GER,Германия,Bayern Munich,1.0
+Beşiktaş,TUR,Турция,Besiktas,1.0
+Bologna FC 1909,ITA,Италия,Bologna,1.0
+Bor. Mönchengladbach,GER,Германия,M'gladbach,0.621
+Borac Banja Luka,BIH,BIH,Borac Banja Luka,0.0
+Borussia Dortmund,GER,Германия,Dortmund,0.964
+Breiðablik,ISL,ISL,Breiðablik,0.0
+Brighton & Hove Albion,ENG,Англия,Brighton,1.0
+Brøndby IF,DEN,Дания,Brondby,1.0
+CFR Cluj,ROU,Румыния,CFR Cluj,1.0
+CS Petrocub,MDA,MDA,CS Petrocub,0.0
+CSKA Moskva,RUS,Россия,CSKA Moscow,1.0
+CSKA Sofia,BUL,BUL,CSKA Sofia,0.0
+Celtic FC,SCO,Шотландия,Celtic,1.0
+Cercle Brugge,BEL,Бельгия,Cercle Brugge,1.0
+Chelsea FC,ENG,Англия,Chelsea,1.0
+Club Atlético de Madrid,ESP,Испания,Ath Madrid,1.0
+Club Brugge KV,BEL,Бельгия,Club Brugge,1.0
+Crvena Zvezda,SRB,SRB,Crvena Zvezda,0.0
+Dinamo Kiev,UKR,UKR,Dinamo Kiev,0.0
+Dinamo Minsk,BLR,BLR,Dinamo Minsk,0.0
+Dinamo Zagreb,CRO,CRO,Dinamo Zagreb,0.0
+Djurgårdens IF,SWE,Швеция,Djurgarden,0.952
+Dundalk FC,IRL,Ирландия,Dundalk,1.0
+Eintracht Frankfurt,GER,Германия,Ein Frankfurt,1.0
+FC Alashkert,ARM,ARM,FC Alashkert,0.0
+FC Barcelona,ESP,Испания,Barcelona,1.0
+FC Basel 1893,SUI,Швейцария,Basel,0.967
+FC Bayern München,GER,Германия,Bayern Munich,1.0
+FC Flora,EST,EST,FC Flora,0.0
+FC Internazionale Milano,ITA,Италия,Inter,1.0
+FC København,DEN,Дания,FC Copenhagen,1.0
+FC Lugano,SUI,Швейцария,Lugano,1.0
+FC Midtjylland,DEN,Дания,Midtjylland,1.0
+FC Nantes,FRA,Франция,Nantes,1.0
+FC Noah,ARM,ARM,FC Noah,0.0
+FC Nordsjælland,DEN,Дания,Nordsjaelland,1.0
+FC Porto,POR,Португалия,Porto,1.0
+FC Red Bull Salzburg,AUT,Австрия,Salzburg,0.964
+FC Schalke 04,GER,Германия,Schalke 04,1.0
+FC Sheriff,MDA,MDA,FC Sheriff,0.0
+FC St. Gallen,SUI,Швейцария,St. Gallen,1.0
+FC Steaua Bucureşti,ROU,Румыния,FCSB,1.0
+FC Twente,NED,Нидерланды,Twente,1.0
+FC Vaduz,LIE,LIE,FC Vaduz,0.0
+FC Zürich,SUI,Швейцария,Zurich,1.0
+FCSB,ROU,Румыния,FCSB,1.0
+FK Astana,KAZ,KAZ,FK Astana,0.0
+FK Bodø/Glimt,NOR,Норвегия,Bodo/Glimt,1.0
+FK Crvena Zvezda,SRB,SRB,Crvena Zvezda,0.0
+FK Jablonec,CZE,CZE,FK Jablonec,0.0
+FK Kairat,KAZ,KAZ,FK Kairat,0.0
+FK Krasnodar,RUS,Россия,Krasnodar,1.0
+FK Mladá Boleslav,CZE,CZE,FK Mladá Boleslav,0.0
+FK RFS,LVA,LVA,FK RFS,0.0
+FK Rostov,RUS,Россия,FK Rostov,1.0
+FK Shakhtar Donetsk,UKR,UKR,Shakhtar Donetsk,0.0
+FK Čukarički,SRB,SRB,FK Čukarički,0.0
+FK Žalgiris,LTU,LTU,FK Žalgiris,0.0
+Fenerbahçe,TUR,Турция,Fenerbahce,1.0
+Ferencvárosi TC,HUN,HUN,Ferencvárosi TC,0.0
+Feyenoord,NED,Нидерланды,Feyenoord,1.0
+Feyenoord Rotterdam,NED,Нидерланды,Feyenoord,0.964
+GNK Dinamo Zagreb,CRO,CRO,Dinamo Zagreb,0.0
+Galatasaray,TUR,Турция,Galatasaray,1.0
+Galatasaray SK,TUR,Турция,Galatasaray,1.0
+Girona FC,ESP,Испания,Girona,1.0
+Granada CF,ESP,Испания,Granada,1.0
+HJK Helsinki,FIN,Финляндия,HJK,0.94
+HNK Rijeka,CRO,CRO,HNK Rijeka,0.0
+Hapoel Be'er Sheva,ISR,ISR,Hapoel Be'er Sheva,0.0
+Heart of Midlothian,SCO,Шотландия,Hearts,1.0
+IF Elfsborg,SWE,Швеция,Elfsborg,1.0
+Inter,ITA,Италия,Inter,1.0
+Jagiellonia Białystok,POL,Польша,Jagiellonia,0.969
+Juventus,ITA,Италия,Juventus,1.0
+Juventus FC,ITA,Италия,Juventus,1.0
+KAA Gent,BEL,Бельгия,Gent,0.967
+KF Ballkani,KOS,KOS,KF Ballkani,0.0
+KRC Genk,BEL,Бельгия,Genk,1.0
+KÍ Klaksvík,FRO,FRO,KÍ Klaksvík,0.0
+LASK,AUT,Австрия,LASK,1.0
+Larne FC,NIR,NIR,Larne FC,0.0
+Lazio Roma,ITA,Италия,Lazio,0.967
+Lech Poznań,POL,Польша,Lech Poznan,1.0
+Legia Warszawa,POL,Польша,Legia,0.953
+Leicester City,ENG,Англия,Leicester,0.978
+Lille OSC,FRA,Франция,Lille,1.0
+Lincoln Red Imps,GIB,GIB,Lincoln Red Imps,0.0
+Liverpool FC,ENG,Англия,Liverpool,1.0
+Lokomotiv Moskva,RUS,Россия,Lokomotiv Moscow,1.0
+Maccabi Haifa,ISR,ISR,Maccabi Haifa,0.0
+Maccabi Tel Aviv,ISR,ISR,Maccabi Tel Aviv,0.0
+Malmö FF,SWE,Швеция,Malmo FF,1.0
+Manchester City,ENG,Англия,Man City,1.0
+Manchester City FC,ENG,Англия,Man City,1.0
+Manchester United,ENG,Англия,Man United,1.0
+Manchester United FC,ENG,Англия,Man United,1.0
+Molde FK,NOR,Норвегия,Molde,1.0
+Montpellier HSC,FRA,Франция,Montpellier,1.0
+Málaga CF,ESP,Испания,Malaga,1.0
+NK Celje,SVN,SVN,NK Celje,0.0
+NK Maribor,SVN,SVN,NK Maribor,0.0
+Newcastle United FC,ENG,Англия,Newcastle,0.972
+NŠ Mura,SVN,SVN,NŠ Mura,0.0
+OGC Nice,FRA,Франция,Nice,1.0
+Olimpija Ljubljana,SVN,SVN,Olimpija Ljubljana,0.0
+Olympiakos Piraeus,GRE,Греция,Olympiakos,0.971
+Olympique Lyonnais,FRA,Франция,Lyon,1.0
+Olympique Marseille,FRA,Франция,Marseille,0.964
+Olympique de Marseille,FRA,Франция,Marseille,1.0
+Omonia Nikosia,CYP,CYP,Omonia Nikosia,0.0
+Oţelul Galaţi,ROU,Румыния,Otelul,0.963
+PAE Olympiakos SFP,GRE,Греция,Olympiakos,0.971
+PAOK Saloniki,GRE,Греция,PAOK,0.947
+PFC Ludogorets Razgrad,BUL,BUL,PFC Ludogorets Razgrad,0.0
+PSV,NED,Нидерланды,PSV Eindhoven,0.972
+PSV Eindhoven,NED,Нидерланды,PSV Eindhoven,1.0
+Panathinaikos,GRE,Греция,Panathinaikos,1.0
+Paphos FC,CYP,CYP,Paphos FC,0.0
+Paris Saint-Germain,FRA,Франция,Paris SG,1.0
+Paris Saint-Germain FC,FRA,Франция,Paris SG,1.0
+Partizan,SRB,SRB,Partizan,0.0
+Pyunik FC,ARM,ARM,Pyunik FC,0.0
+Qarabağ Ağdam FK,AZE,AZE,Qarabağ Ağdam FK,0.0
+Qarabağ FK,AZE,AZE,Qarabağ FK,0.0
+RB Leipzig,GER,Германия,RB Leipzig,1.0
+RB Salzburg,AUT,Австрия,Salzburg,0.984
+RC Lens,FRA,Франция,Lens,1.0
+RSC Anderlecht,BEL,Бельгия,Anderlecht,1.0
+Racing Club de Lens,FRA,Франция,Lens,1.0
+Raków Częstochowa,POL,Польша,Rakow,0.945
+Randers FC,DEN,Дания,Randers FC,1.0
+Rangers FC,SCO,Шотландия,Rangers,1.0
+Rapid Wien,AUT,Австрия,SK Rapid,0.967
+Real Betis,ESP,Испания,Betis,1.0
+Real Madrid,ESP,Испания,Real Madrid,1.0
+Real Madrid CF,ESP,Испания,Real Madrid,1.0
+Real Sociedad,ESP,Испания,Sociedad,1.0
+Real Sociedad de Fútbol,ESP,Испания,Sociedad,1.0
+Royal Antwerp FC,BEL,Бельгия,Antwerp,1.0
+Royale Union Saint-Gilloise,BEL,Бельгия,St. Gilloise,0.979
+SC Freiburg,GER,Германия,Freiburg,1.0
+SK Dnipro-1,UKR,UKR,SK Dnipro-1,0.0
+SK Slavia Praha,CZE,CZE,Slavia Praha,0.0
+SK Sturm Graz,AUT,Австрия,Sturm Graz,1.0
+SL Benfica,POR,Португалия,Benfica,1.0
+SS Lazio,ITA,Италия,Lazio,1.0
+SSC Napoli,ITA,Италия,Napoli,1.0
+Servette FC,SUI,Швейцария,Servette,1.0
+Sevilla FC,ESP,Испания,Sevilla,1.0
+Shakhtar Donetsk,UKR,UKR,Shakhtar Donetsk,0.0
+Shamrock Rovers,IRL,Ирландия,Shamrock Rovers,1.0
+Silkeborg IF,DEN,Дания,Silkeborg,1.0
+Sivasspor,TUR,Турция,Sivasspor,1.0
+Slavia Praha,CZE,CZE,Slavia Praha,0.0
+Slovan Bratislava,SVK,SVK,Slovan Bratislava,0.0
+Slovan Liberec,CZE,CZE,Slovan Liberec,0.0
+Spartak Moskva,RUS,Россия,Spartak Moscow,1.0
+Spartak Trnava,SVK,SVK,Spartak Trnava,0.0
+Sport Lisboa e Benfica,POR,Португалия,Benfica,1.0
+Sporting Braga,POR,Португалия,Sp Braga,0.979
+Sporting CP,POR,Португалия,Sp Lisbon,1.0
+Sporting Clube de Braga,POR,Португалия,Sp Braga,1.0
+Sporting Clube de Portugal,POR,Португалия,Sp Lisbon,1.0
+Stade Brestois 29,FRA,Франция,Brest,0.977
+Stade Rennais,FRA,Франция,Rennes,1.0
+Standard Liège,BEL,Бельгия,Standard,0.973
+Sturm Graz,AUT,Австрия,Sturm Graz,1.0
+TSC Bačka Topola,SRB,SRB,TSC Bačka Topola,0.0
+The New Saints,WAL,WAL,The New Saints,0.0
+Tottenham Hotspur,ENG,Англия,Tottenham,1.0
+Tottenham Hotspur FC,ENG,Англия,Tottenham,1.0
+Toulouse FC,FRA,Франция,Toulouse,1.0
+Trabzonspor,TUR,Турция,Trabzonspor,1.0
+Union Saint-Gilloise,BEL,Бельгия,St. Gilloise,0.979
+Valencia CF,ESP,Испания,Valencia,1.0
+VfB Stuttgart,GER,Германия,Stuttgart,1.0
+VfL Wolfsburg,GER,Германия,Wolfsburg,1.0
+Viktoria Plzeň,CZE,CZE,Viktoria Plzeň,0.0
+Villarreal CF,ESP,Испания,Villarreal,1.0
+Vitesse,NED,Нидерланды,Vitesse,1.0
+Vitória Guimarães,POR,Португалия,Guimaraes,0.969
+Víkingur Reykjavík,ISL,ISL,Víkingur Reykjavík,0.0
+West Ham United,ENG,Англия,West Ham,1.0
+Wolfsberger AC,AUT,Австрия,Wolfsberger AC,1.0
+Zenit St. Petersburg,RUS,Россия,Zenit,1.0
+Zorya Lugansk,UKR,UKR,Zorya Lugansk,0.0
+Zrinjski Mostar,BIH,BIH,Zrinjski Mostar,0.0
+İstanbul Başakşehir,TUR,Турция,Buyuksehyr,0.6
+ŠK Slovan Bratislava,SVK,SVK,Slovan Bratislava,0.0

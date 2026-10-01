@@ -45,7 +45,7 @@ def _engine(refresh_token: int) -> Engine:
 
 
 @st.cache_data(ttl=3 * 3600, show_spinner="Считаю прогнозы на день…")
-def get_day(date: pd.Timestamp, built_at: pd.Timestamp, tz: str) -> pd.DataFrame:
+def get_day(date: pd.Timestamp, built_at: pd.Timestamp, tz: str | None) -> pd.DataFrame:
     return get_engine().day(date, tz)
 
 
@@ -55,9 +55,9 @@ TIMEZONES = {"Время компьютера": None, "Баку (UTC+4)": "Asia/
              "Лондон": "Europe/London", "UTC": "UTC", "Нью-Йорк": "America/New_York"}
 
 
-def user_tz() -> str:
-    label = st.session_state.get("tz_label", "Время компьютера")
-    return TIMEZONES.get(label) or str(local_tz())
+def user_tz() -> str | None:
+    """IANA zone chosen in the sidebar; None = this computer's zone (schedule default)."""
+    return TIMEZONES.get(st.session_state.get("tz_label", "Время компьютера"))
 
 
 def now_in_tz() -> pd.Timestamp:
@@ -82,9 +82,10 @@ def pct(x) -> str:
 
 
 def pick_label(p) -> str:
-    """Most likely outcome in plain words."""
+    """Most likely outcome, flagged when no outcome is clearly ahead."""
     k = int(np.argmax(p))
-    return ["П1", "Х", "П2"][k]
+    label = f"{['П1', 'Х', 'П2'][k]} · {pct(p[k])}"
+    return f"≈ равные шансы ({label})" if p[k] < 0.40 else label
 
 
 # ===================================================================== match card

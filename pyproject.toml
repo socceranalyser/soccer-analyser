@@ -8,6 +8,7 @@ version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
     "numpy", "pandas", "scipy", "requests", "streamlit", "plotly",
+    "tzdata",  # IANA time zones on Windows (Asia/Baku etc.)
 ]
 
 [project.optional-dependencies]

@@ -1,0 +1,7 @@
+[server]
+# headless = no first-run e-mail prompt; start_dashboard.bat opens the browser itself
+headless = true
+port = 8501
+
+[browser]
+gatherUsageStats = false

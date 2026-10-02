@@ -94,11 +94,18 @@ def build(cands: pd.DataFrame, style: str, exclude=frozenset()) -> dict | None:
             "total_odds": total, "prob": prob, "ev": prob * total - 1}
 
 
-def suggest(events: pd.DataFrame) -> list[dict]:
-    """Safe, balanced and bold coupons, using different matches where possible."""
+def suggest(events: pd.DataFrame, source: str = "model") -> list[dict]:
+    """Safe, balanced and bold coupons, using different matches where possible.
+
+    source="model": chances are our model's own analysis (bookmaker odds only set the price);
+    source="market": chances from the bookmaker's margin-free odds.
+    """
     cands = candidates(events)
     if cands.empty:
         return []
+    cands = cands.assign(p_market=cands["p"])
+    if source == "model":
+        cands = cands[cands["p_model"].notna()].assign(p=lambda d: d["p_model"].astype(float))
     out, used = [], set()
     for style in ("safe", "balanced", "bold"):
         cp = build(cands, style, frozenset(used)) or build(cands, style)

@@ -83,6 +83,23 @@ tests/           test_core.py (в т.ч. проверка отсутствия �
   пишутся при открытии дашборда и `scripts/update.py` на сегодня + 3 дня.
 - Run `bt_all` — полный бэктест; `test_2023_2025`, `nat_test_2023_2026` — частные бэктесты.
 
+## Развёртывание (с 2026-10-02)
+
+- **GitHub:** https://github.com/socceranalyser/soccer-analyser (публичный; email в истории
+  заменён на noreply; `gh` CLI залогинен как socceranalyser). Ветка `main`.
+- **Ежедневная задача в облаке:** `.github/workflows/daily.yml` — 06:00 UTC (10:00 Баку) и кнопка
+  «Run workflow»: `scripts/cloud_job.py` (import_state → Engine → results → forecasts → Telegram →
+  export_state) и коммит `data/state/*` обратно в репозиторий. Секреты Actions:
+  TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID (вводит пользователь).
+- **Дашборд в облаке:** https://soccer-analyser.streamlit.app (Streamlit Community Cloud, деплой
+  из main при каждом push). Secrets: `TZ = "Asia/Baku"`, `APP_PASSWORD` (вход по паролю; без него
+  — открыт). Диск временный → прогнозы восстанавливаются из `data/state/` (storage.import_state).
+- **Локально:** ярлык «Soccer Analyser» (start_dashboard.bat) + задача Планировщика
+  «Soccer Analyser - daily update» (pythonw scripts/update.py --log data/update.log --notify,
+  при входе +3 мин и в 10:00, StartWhenAvailable).
+- Правило: пароли/токены пользователя Claude не вводит и не использует — их вписывает пользователь.
+- Изменения кода: правка локально → тесты → commit → `git pull --rebase` (бот коммитит state) → push.
+
 ## Методология
 - **Walk-forward**: клубы — переобучение еженедельно на данных строго до понедельника;
   сборные — ежемесячно; Elo — пакетами по датам. Логит-модели Elo → 1X2 переобучаются на старте

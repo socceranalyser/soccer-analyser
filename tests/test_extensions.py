@@ -84,3 +84,28 @@ def test_plain_language_calls():
     assert total_call(0.62)[:2] == ("Больше 2.5", True) and btts_call(0.4)[:2] == ("Нет", False)
     sc = score_calls([0.25, 0.29, 0.46], 0.6, 0.55, 2, 2)  # Greece 2:2 Netherlands
     assert sc == {"outcome": True, "total": True, "btts": True}
+
+
+def test_coupon_suggestions():
+    from soccer.coupons import market_probs, suggest
+    rows = []
+    for i in range(8):
+        f = 1 + i * 0.15  # increasingly even matches
+        rows.append({"event_id": i, "kickoff": pd.Timestamp("2030-01-01", tz="UTC"),
+                     "home_raw": f"H{i}", "away_raw": f"A{i}", "competition_az": "X",
+                     "mbs": 1 if i != 0 else 5, "o1": 1.25 * f, "ox": 5.0, "o2": 9.0 / f,
+                     "o1x": 1.05, "o12": 1.15, "ox2": 3.2, "ou_line": 2.5, "o_over": 1.9,
+                     "o_under": 1.9, "o_btts_yes": 1.8, "o_btts_no": 2.0,
+                     **{f"p_{c}": 0.5 for c in ("o1", "ox", "o2", "o1x", "o12", "ox2", "o_over",
+                                                "o_under", "o_btts_yes", "o_btts_no")}})
+    df = pd.DataFrame(rows)
+    mp = market_probs(df.iloc[1])
+    assert mp["o1"] + mp["ox"] + mp["o2"] == pytest.approx(1.0)
+    assert mp["o_over"] + mp["o_under"] == pytest.approx(1.0)
+    coupons = suggest(df)
+    assert coupons and coupons[0]["style"] == "safe"
+    for cp in coupons:
+        ids = list(cp["picks"]["event_id"])
+        assert len(ids) == len(set(ids))            # one pick per match
+        assert 0 not in ids                          # MBS 5 never fits a 3-4 match coupon
+        assert cp["prob"] == pytest.approx(np.prod(cp["picks"]["p"]))

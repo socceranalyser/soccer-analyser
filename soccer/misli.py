@@ -326,3 +326,52 @@ def outcome_won(market: str, hg: int, ag: int, line: float | None) -> bool:
     return {"o1": hg > ag, "ox": hg == ag, "o2": hg < ag, "o1x": hg >= ag, "o12": hg != ag,
             "ox2": hg <= ag, "o_over": hg + ag > line, "o_under": hg + ag < line,
             "o_btts_yes": hg > 0 and ag > 0, "o_btts_no": hg == 0 or ag == 0}[market]
+
+
+# ------------------------------------------------------------------- live now
+def fetch_live() -> pd.DataFrame:
+    """Matches being played right now (minute, score, competition) from misli.az."""
+    data = _get("https://apivx.misli.az/api/web/v1/statistics/sport/SOCCER/matches/live")
+    rows = []
+    for m in (data or {}).get("data", []):
+        status = m.get("status") or ""
+        if status not in LIVE_STATUS:
+            continue
+        h, a = m.get("homeTeam") or {}, m.get("awayTeam") or {}
+        hs, as_ = h.get("scores") or {}, a.get("scores") or {}
+        t, c = m.get("tournament") or {}, m.get("country") or {}
+        rows.append({
+            "id": m.get("id"), "home_raw": (h.get("teamName") or "").strip(),
+            "away_raw": (a.get("teamName") or "").strip(),
+            "hg": hs.get("CURRENT", 0) or 0, "ag": as_.get("CURRENT", 0) or 0,
+            "minute": m.get("minute"), "status": LIVE_STATUS[status],
+            "competition": f"{c.get('misliName') or c.get('name') or ''} · "
+                           f"{t.get('misliName') or t.get('name') or ''}".strip(" ·"),
+            "top": bool(t.get("isTopCompetition")),
+            "kickoff": pd.Timestamp(m["date"], unit="ms", tz="UTC") if m.get("date") else pd.NaT,
+            "red_h": h.get("redCards") or 0, "red_a": a.get("redCards") or 0,
+        })
+    return pd.DataFrame(rows)
+
+
+def link_live(live: pd.DataFrame, day: pd.DataFrame) -> pd.DataFrame:
+    """Attach our fixture (names + pre-match call) to live matches when they are ours."""
+    from .euro import _norm
+    from .names import similarity
+    live = live.copy()
+    live["our_idx"] = None
+    if live.empty or day is None or day.empty:
+        return live
+    for i, r in live.iterrows():
+        h = _norm(NATIONS_AZ.get(r["home_raw"], r["home_raw"]))
+        a = _norm(NATIONS_AZ.get(r["away_raw"], r["away_raw"]))
+        best, score = None, 0.0
+        for j, d in day.iterrows():
+            nh = {_norm(str(x)) for x in (d.get("home"), d.get("home_src")) if pd.notna(x)}
+            na = {_norm(str(x)) for x in (d.get("away"), d.get("away_src")) if pd.notna(x)}
+            s = min(max(similarity(n, h) for n in nh), max(similarity(n, a) for n in na))
+            if s > score:
+                best, score = j, s
+        if score >= 0.75:
+            live.at[i, "our_idx"] = best
+    return live

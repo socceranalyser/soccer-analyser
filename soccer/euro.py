@@ -8,6 +8,7 @@ countries — this is what makes a cross-league strength scale possible.
 from __future__ import annotations
 
 import difflib
+import functools
 import re
 import unicodedata
 
@@ -62,6 +63,7 @@ SPECIAL_LETTERS = str.maketrans({"ø": "o", "Ø": "O", "æ": "ae", "Æ": "AE", "
                                  "þ": "th", "ð": "d"})
 
 
+@functools.lru_cache(maxsize=None)
 def _norm(name: str) -> str:
     s = unicodedata.normalize("NFKD", name.translate(SPECIAL_LETTERS))
     s = s.encode("ascii", "ignore").decode().lower()
@@ -190,12 +192,25 @@ def build_name_map(raw: pd.DataFrame, domestic: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def _cached_name_map(raw: pd.DataFrame, domestic: pd.DataFrame) -> pd.DataFrame:
+    """Reuse data/euro_name_map.csv when it already covers every (club, country) pair."""
+    path = DATA_DIR / "euro_name_map.csv"
+    need = set(zip(raw["home_raw"], raw["hc"])) | set(zip(raw["away_raw"], raw["ac"]))
+    try:
+        cached = pd.read_csv(path, encoding="utf-8")
+        if need <= set(zip(cached["raw"], cached["code"])):
+            return cached
+    except (OSError, ValueError, KeyError):
+        pass
+    return build_name_map(raw, domestic)
+
+
 def load_euro(domestic: pd.DataFrame, refresh: bool = False) -> pd.DataFrame:
     """European matches with keys compatible with the domestic Elo ('country|team')."""
     raw = load_raw_euro(refresh=refresh)
     if raw.empty:
         return raw
-    nm = build_name_map(raw, domestic).set_index(["raw", "code"])
+    nm = _cached_name_map(raw, domestic).set_index(["raw", "code"])
 
     def key(name, code):
         r = nm.loc[(name, code)]

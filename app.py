@@ -32,15 +32,20 @@ def get_engine() -> Engine:
     return _engine(st.session_state.get("refresh_token", 0))
 
 
-@st.cache_resource(ttl=3 * 3600, show_spinner="Загружаю данные и обучаю модели (≈30 с)…")
+@st.cache_resource(ttl=3 * 3600, show_spinner="Загружаю данные и обучаю модели (≈1 мин)…")
 def _engine(refresh_token: int) -> Engine:
+    import threading
     eng = Engine(refresh=refresh_token > 0)
-    try:
-        eng.save_results()
-        today = pd.Timestamp.now().normalize()
-        eng.record_days([today + timedelta(days=i) for i in range(4)])
-    except Exception as exc:  # storage problems must never break the dashboard
-        st.toast(f"Не удалось сохранить прогнозы: {exc}")
+
+    def store():  # results + forecasts for the next days, without blocking the page
+        try:
+            eng.save_results()
+            today = pd.Timestamp.now().normalize()
+            eng.record_days([today + timedelta(days=i) for i in range(4)])
+        except Exception:
+            pass  # storage problems must never break the dashboard
+
+    threading.Thread(target=store, daemon=True).start()
     return eng
 
 
@@ -308,6 +313,12 @@ def page_today():
     eng = get_engine()
     st.title("📅 Матчи дня и прогнозы")
     today = now_in_tz().tz_localize(None).normalize()
+    today_day = get_day(today, eng.built_at, user_tz())
+    if not today_day.empty and "p_home" in today_day:
+        today_day = today_day.assign(**_calls_columns(today_day.assign(
+            played=False, hg=np.nan, ag=np.nan)))
+    with st.container(border=True):
+        live_panel(today_day)
     c = st.columns([2, 3, 3])
     choice = c[0].segmented_control("День", ["Вчера", "Сегодня", "Завтра", "Дата…"],
                                     default="Сегодня")
@@ -388,6 +399,67 @@ def page_today():
         match_card(eng, r["kind"], r["competition"], r["home"], r["away"],
                    bool(r.get("neutral", False)), r.get("home_key"), r.get("away_key"),
                    odds, res)
+
+
+# ====================================================================== live now
+@st.cache_data(ttl=25, show_spinner=False)
+def get_live() -> pd.DataFrame:
+    from soccer.misli import fetch_live
+    try:
+        return fetch_live()
+    except Exception:
+        return pd.DataFrame()
+
+
+@st.fragment(run_every=30)
+def live_panel(day: pd.DataFrame):
+    """Matches in play right now; refreshes itself every 30 s, flags new goals."""
+    import time as _time
+    from soccer.misli import link_live
+    live = get_live()
+    if live.empty:
+        st.caption("🔴 Сейчас live-матчей нет (обновляется каждые 30 с).")
+        return
+    live = link_live(live, day)
+    ours = live[live["our_idx"].notna()]
+    # goal detection against the previous refresh
+    prev = st.session_state.setdefault("live_scores", {})
+    flash = st.session_state.setdefault("live_flash", {})
+    now = _time.time()
+    for _, r in live.iterrows():
+        key, score = r["id"], (int(r["hg"]), int(r["ag"]))
+        if key in prev and prev[key] != score:
+            flash[key] = now
+            scorer = r["home_raw"] if score[0] > prev[key][0] else r["away_raw"]
+            st.toast(f"⚽ ГОЛ! {scorer} — {r['home_raw']} {score[0]}:{score[1]} {r['away_raw']}",
+                     icon="⚽")
+        prev[key] = score
+    head = st.columns([3, 2])
+    head[0].markdown(f"#### 🔴 Сейчас идут: {len(live)} матч(ей)"
+                     + (f" · из них наших с прогнозом: {len(ours)}" if len(ours) else ""))
+    show_all = head[1].toggle("Показать все live-матчи", value=len(ours) == 0, key="live_all")
+    show = live if show_all else ours
+    show = show.sort_values(["top", "minute"], ascending=[False, False])
+    if show.empty:
+        st.caption("Матчей из вашего расписания сейчас нет — включите «Показать все».")
+        return
+    for start in range(0, len(show), 4):
+        cols = st.columns(4)
+        for col, (_, r) in zip(cols, show.iloc[start:start + 4].iterrows()):
+            with col.container(border=True):
+                d = day.loc[r["our_idx"]] if pd.notna(r["our_idx"]) else None
+                home = d["home"] if d is not None else r["home_raw"]
+                away = d["away"] if d is not None else r["away_raw"]
+                goal = now - flash.get(r["id"], 0) < 120
+                st.caption(r["competition"])
+                st.markdown(f"{'⚽ **ГОЛ!** ' if goal else ''}**{home}**  "
+                            f"`{int(r['hg'])} : {int(r['ag'])}`  **{away}**")
+                minute = f"{int(r['minute'])}'" if pd.notna(r["minute"]) else ""
+                reds = " " + "🟥" * int(r["red_h"]) + "|" + "🟥" * int(r["red_a"])                     if (r["red_h"] or r["red_a"]) else ""
+                st.caption(f"🔴 {minute} · {r['status']}{reds}")
+                if d is not None and isinstance(d.get("call_outcome"), str):
+                    st.caption(f"Прогноз до матча: {d['call_outcome']} · тотал "
+                               f"{d['call_total']} · обе: {d['call_btts']}")
 
 
 def _calls_columns(view: pd.DataFrame) -> dict:
@@ -825,6 +897,51 @@ def render_coupon_sidebar():
             st.rerun()
 
 
+def render_suggestions(df: pd.DataFrame):
+    """Three ready-made coupons (safe / balanced / bold) from upcoming matches."""
+    from soccer.coupons import suggest
+    upcoming = df[df["kickoff"] > pd.Timestamp.now(tz="UTC")]
+    st.markdown("### 🎯 Готовые купоны")
+    coupons = suggest(upcoming)
+    if not coupons:
+        st.info("Для выбранного периода не хватает матчей с прогнозом модели, чтобы собрать "
+                "купоны. Попробуйте «Все» вместо «Сегодня».")
+        return
+    stake = st.number_input("Пример ставки для расчёта, ₼", min_value=1.0, value=10.0,
+                            step=1.0, key="sugg_stake")
+    cols = st.columns(len(coupons))
+    for col, cp in zip(cols, coupons):
+        with col.container(border=True):
+            st.markdown(f"**{cp['title']}**")
+            for _, pk in cp["picks"].iterrows():
+                t = pd.Timestamp(pk["kickoff"]).tz_convert(user_tz() or local_tz())
+                st.markdown(f"{t:%d.%m %H:%M} · {pk['match']}  \n"
+                            f"**{pk['label']}** @ **{pk['odds']:.2f}** · шанс {pct(pk['p'])}"
+                            + (f" · модель {pct(pk['p_model'])}" if pd.notna(pk.get("p_model"))
+                               else ""))
+            st.divider()
+            c = st.columns(2)
+            c[0].metric("Общий коэф.", f"{cp['total_odds']:.2f}")
+            c[1].metric("Шанс купона", pct(cp["prob"]))
+            st.caption(f"Ставка {stake:.0f} ₼ → выплата {stake * cp['total_odds']:.2f} ₼ · "
+                       f"ожидание {cp['ev']:+.0%} (маржа букмекера)")
+            if st.button("➕ Загрузить в мой купон", key=f"load_{cp['style']}",
+                         width="stretch"):
+                st.session_state["coupon"] = [
+                    {"event_id": int(pk["event_id"]), "kickoff": str(pk["kickoff"]),
+                     "match": pk["match"], "comp": pk["comp"], "market": pk["market"],
+                     "label": pk["label"], "odds": float(pk["odds"]),
+                     "p_model": float(pk["p_model"]) if pd.notna(pk.get("p_model")) else None,
+                     "home": pk["home"], "away": pk["away"], "line": pk["line"],
+                     "mbs": int(pk["mbs"])} for _, pk in cp["picks"].iterrows()]
+                st.rerun()
+    st.caption("Шанс каждого исхода — по коэффициентам misli.az без маржи (на истории это "
+               "точнее нашей модели; модель показана как второе мнение). Шанс купона — "
+               "произведение шансов. Ожидание почти всегда отрицательное: маржа букмекера в "
+               "экспрессе перемножается. Это не гарантия выигрыша — ставьте только то, что "
+               "готовы потерять.")
+
+
 def page_coupon():
     from soccer.misli import outcome_won
     eng = get_engine()
@@ -874,14 +991,15 @@ def page_coupon():
             "вероятностями модели → нажмите **➕**, чтобы добавить в купон (он слева).\n"
             "- **Справедливый коэффициент** = 1 / вероятность модели. Если коэффициент misli "
             "выше справедливого, модель считает ставку выгодной (**преимущество > 0**).\n"
-            "- **Важно:** в среднем букмекеры пока точнее нашей модели (см. «Точность»), а маржа "
-            "misli ~6–10% на матч. Поэтому «преимущество» — это место, где модель и букмекер "
-            "расходятся, а не гарантия прибыли. В экспрессе маржа перемножается: чем больше "
-            "событий, тем хуже ожидание.\n"
+            "- **Важно:** проверка на 47 тыс. матчей показала, что закрывающие коэффициенты "
+            "букмекеров точнее нашей модели, и добавлять к ним модель почти бесполезно. Поэтому "
+            "«преимущество» модели — это место, где модель и букмекер расходятся, а не "
+            "гарантированная выгода. Маржа misli ~6–10% на матч, в экспрессе она перемножается.\n"
             "- **MBS** — минимальное число событий в купоне по правилам misli для этого матча.")
     if df.empty:
         render_coupon_sidebar()
         return
+    render_suggestions(df)
     view = pd.DataFrame({
         "Время": df["kick_local"].dt.strftime("%d.%m %H:%M"),
         "Турнир": df["competition_az"],

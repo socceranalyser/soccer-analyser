@@ -65,9 +65,9 @@ class Engine:
         log("data loaded")
 
         # first pass: ratings to map schedule names, then the schedule itself
-        tmp_elo = Elo(**ELO_PARAMS)
-        tmp_elo.run(self.base_matches, euro_hist)
-        self.schedule = build_schedule(self.base_matches, tmp_elo.ratings.keys(),
+        from .models.elo import team_keys
+        club_keys = set(team_keys(self.base_matches["league"], self.base_matches["home"])) |             set(euro_hist["home_key"]) | set(euro_hist["away_key"])
+        self.schedule = build_schedule(self.base_matches, club_keys,
                                        set(self.intl_base["home"]) | set(self.intl_base["away"]),
                                        refresh=refresh)
         self._add_recent_scores(log)
@@ -99,16 +99,34 @@ class Engine:
         self.nat_dc = fit_national_dc(self.intl, n_samples=200)
         # calibration learnt from the model's own out-of-sample forecasts (2015 -> now);
         # backtest: Elo test logloss 0.8643 -> 0.8630 (DC blends were rejected)
-        try:
-            oos = national_walk_forward(self.intl, "2015-01-01", "2100-01-01", models=("elo",))
-            y = oos["result"].map({"H": 0, "D": 1, "A": 2}).to_numpy()
-            self.nat_cal = VectorScaling(l2=1.0).fit(oos[["p_home", "p_draw", "p_away"]]
-                                                     .to_numpy(), y)
-        except Exception:
-            self.nat_cal = None
+        self.nat_cal = self._national_calibration()
         log("national models fitted")
         self._dc: dict[str, DixonColes] = {}
         self.built_at = pd.Timestamp.now()
+
+    def _national_calibration(self, max_age_days: int = 7):
+        """VectorScaling fitted on out-of-sample national forecasts; cached for a week
+        (the walk-forward behind it takes ~20 s and changes little day to day)."""
+        import json
+        from .config import DATA_DIR
+        path = DATA_DIR / "nat_calibration.json"
+        try:
+            cached = json.loads(path.read_text())
+            if pd.Timestamp.now() - pd.Timestamp(cached["fitted"]) < pd.Timedelta(days=max_age_days):
+                cal = VectorScaling(l2=1.0)
+                cal.params = np.array(cached["params"])
+                return cal
+        except (OSError, ValueError, KeyError):
+            pass
+        try:
+            oos = national_walk_forward(self.intl, "2015-01-01", "2100-01-01", models=("elo",))
+            y = oos["result"].map({"H": 0, "D": 1, "A": 2}).to_numpy()
+            cal = VectorScaling(l2=1.0).fit(oos[["p_home", "p_draw", "p_away"]].to_numpy(), y)
+            path.write_text(json.dumps({"fitted": str(pd.Timestamp.now()),
+                                        "params": cal.params.tolist(), "n": int(len(y))}))
+            return cal
+        except Exception:
+            return None
 
     def _add_recent_scores(self, log, days: int = 4):
         """Fill in scores of the last few days from misli.az (published within minutes),

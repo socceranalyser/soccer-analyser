@@ -40,6 +40,9 @@ OU_PRIORITY = [
     ("PC>2.5", "PC<2.5"), ("AvgC>2.5", "AvgC<2.5"), ("P>2.5", "P<2.5"),
     ("Avg>2.5", "Avg<2.5"), ("BbAv>2.5", "BbAv<2.5"), ("B365>2.5", "B365<2.5"),
 ]
+OPEN_PRIORITY = [("B365", "B365H", "B365D", "B365A"), ("BW", "BWH", "BWD", "BWA"),
+                 ("Avg", "AvgH", "AvgD", "AvgA"), ("BbAv", "BbAvH", "BbAvD", "BbAvA")]
+OPEN_OU_PRIORITY = [("B365>2.5", "B365<2.5"), ("Avg>2.5", "Avg<2.5"), ("BbAv>2.5", "BbAv<2.5")]
 STAT_COLS = {
     "HxG": "hxg", "AxG": "axg", "HS": "hs", "AS": "as_", "HST": "hst", "AST": "ast",
     "HC": "hc", "AC": "ac", "HF": "hf", "AF": "af", "HY": "hy", "AY": "ay",
@@ -150,6 +153,19 @@ def normalise(df: pd.DataFrame, code: str, season: int | None) -> pd.DataFrame:
             ok = out["odds_o25"].isna() & co.notna() & cu.notna()
             out.loc[ok, "odds_o25"] = co[ok]
             out.loc[ok, "odds_u25"] = cu[ok]
+    # early (opening) odds of a mass-market bookmaker — closest to what a bettor sees on a
+    # site like misli.az hours/days before kick-off (closing odds above are sharper)
+    op, _ = _pick_triplet(df, OPEN_PRIORITY)
+    out["open_h"], out["open_d"], out["open_a"] = op["h"], op["d"], op["a"]
+    out["open_o25"] = np.nan
+    out["open_u25"] = np.nan
+    for o, u in OPEN_OU_PRIORITY:
+        if {o, u} <= set(df.columns):
+            co = pd.to_numeric(df[o], errors="coerce")
+            cu = pd.to_numeric(df[u], errors="coerce")
+            ok = out["open_o25"].isna() & co.notna() & cu.notna() & (co > 1) & (cu > 1)
+            out.loc[ok, "open_o25"] = co[ok]
+            out.loc[ok, "open_u25"] = cu[ok]
     for raw_col, col in STAT_COLS.items():
         if raw_col in df.columns:
             out[col] = df[raw_col] if col in ("referee", "time") else pd.to_numeric(

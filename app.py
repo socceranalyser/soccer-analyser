@@ -889,7 +889,7 @@ def render_coupon_sidebar():
         for p in picks:
             c = st.columns([5, 1])
             pm, pk = p.get("p_model"), p.get("p_market")
-            use_model = st.session_state.get("chance_source", "Модель") == "Модель"
+            use_model = st.session_state.get("chance_source", "Итог (рекомендую)") == "Только модель"
             main = (pm if pm is not None else pk) if use_model else (pk if pk is not None else pm)
             parts = []
             if pm is not None:
@@ -910,7 +910,7 @@ def render_coupon_sidebar():
         pm_all = [p.get("p_model") for p in picks]
         prob_k = float(np.prod(pk_all)) if all(v is not None for v in pk_all) else None
         prob_m = float(np.prod(pm_all)) if all(v is not None for v in pm_all) else None
-        use_model = st.session_state.get("chance_source", "Модель") == "Модель"
+        use_model = st.session_state.get("chance_source", "Итог (рекомендую)") == "Только модель"
         prob = (prob_m if prob_m is not None else prob_k) if use_model else             (prob_k if prob_k is not None else prob_m)
         if prob is not None:
             src = " · ".join(x for x in (
@@ -922,8 +922,9 @@ def render_coupon_sidebar():
                        "🔴 на дистанции в минусе (маржа букмекера)")
             st.markdown(f"Если ставить такой купон 100 раз по 1 ₼: потратите 100 ₼, "
                         f"вернётся ≈ **{back:.0f} ₼** — {verdict}")
-            st.caption("Главный шанс — " + ("наша модель" if use_model else "букмекер без маржи")
-                       + " (переключается на странице «Купон»).")
+            st.caption("Главный шанс — " + ("наша модель" if use_model else
+                                             "итоговая оценка (по истории ≈ букмекер без маржи)")
+                       + "; переключается на странице «Купон».")
         else:
             st.caption("Для части матчей нет оценки шанса — шанс купона не посчитан.")
         need = max(p["mbs"] for p in picks)
@@ -945,11 +946,15 @@ def render_suggestions(df: pd.DataFrame):
     upcoming = df[df["kickoff"] > pd.Timestamp.now(tz="UTC")]
     st.markdown("### 🎯 Готовые купоны")
     c0 = st.columns([3, 2])
-    c0[0].radio("Чьи шансы использовать", ["Модель", "Букмекер"], horizontal=True,
-                key="chance_source", help="Модель — наш собственный анализ. Букмекер — "
-                "вероятности из коэффициентов misli.az без маржи.")
+    c0[0].radio("Чьи шансы использовать", ["Итог (рекомендую)", "Только модель", "Только букмекер"],
+                horizontal=True, key="chance_source",
+                help="Итог — модель и букмекер вместе в пропорции, подобранной на истории "
+                     "(23 тыс. матчей). Сейчас история даёт модели почти нулевой вес: когда они "
+                     "спорят, прав почти всегда букмекер. Вес модели вырастет, когда она "
+                     "получит новые данные (составы, травмы, xG).")
     c0[1].toggle("Показывать мнение букмекера для сравнения", value=True, key="show_book")
-    source = "model" if st.session_state.get("chance_source", "Модель") == "Модель" else "market"
+    source = {"Итог (рекомендую)": "combined", "Только модель": "model",
+              "Только букмекер": "market"}[st.session_state.get("chance_source", "Итог (рекомендую)")]
     coupons = suggest(upcoming, source)
     if not coupons:
         st.info("Для выбранного периода не хватает матчей с прогнозом модели, чтобы собрать "

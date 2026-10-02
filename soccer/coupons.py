@@ -94,11 +94,39 @@ def build(cands: pd.DataFrame, style: str, exclude=frozenset()) -> dict | None:
             "total_odds": total, "prob": prob, "ev": prob * total - 1}
 
 
-def suggest(events: pd.DataFrame, source: str = "model") -> list[dict]:
+def blend_weights() -> dict:
+    """Model/bookmaker pooling weights fitted by scripts/tune_open_blend.py (model weight is
+    clipped at 0: a negative weight would mean 'bet against our own model')."""
+    import json
+    from .config import DATA_DIR
+    try:
+        w = json.loads((DATA_DIR / "blend_weights.json").read_text())
+    except (OSError, ValueError):
+        w = {"x12": [0.0, 1.10], "ou": [0.0, 1.15]}
+    return {k: (max(float(v[0]), 0.0), float(v[1])) for k, v in w.items() if k in ("x12", "ou")}
+
+
+def _combine(c: pd.DataFrame) -> pd.DataFrame:
+    """Pooled chance p ∝ model^a · market^b, renormalised within each market group."""
+    w = blend_weights()
+    groups = {"o1": "x12", "ox": "x12", "o2": "x12", "o1x": "x12", "o12": "x12", "ox2": "x12",
+              "o_over": "ou", "o_under": "ou", "o_btts_yes": "ou", "o_btts_no": "ou"}
+    a = c["market"].map(lambda m: w[groups[m]][0])
+    b = c["market"].map(lambda m: w[groups[m]][1])
+    pm = c["p_model"].astype(float).clip(1e-6, 1 - 1e-6)
+    pq = c["p_market"].astype(float).clip(1e-6, 1 - 1e-6)
+    # binary pooling of "this outcome" vs "not this outcome" (works for 1X2, double chance,
+    # totals and BTTS alike)
+    lo = a * np.log(pm) + b * np.log(pq)
+    lu = a * np.log(1 - pm) + b * np.log(1 - pq)
+    return c.assign(p=1 / (1 + np.exp(lu - lo)))
+
+
+def suggest(events: pd.DataFrame, source: str = "combined") -> list[dict]:
     """Safe, balanced and bold coupons, using different matches where possible.
 
-    source="model": chances are our model's own analysis (bookmaker odds only set the price);
-    source="market": chances from the bookmaker's margin-free odds.
+    source="combined" (default): model and bookmaker pooled with backtest-fitted weights;
+    source="model": our model alone; source="market": bookmaker's margin-free odds alone.
     """
     cands = candidates(events)
     if cands.empty:
@@ -106,6 +134,8 @@ def suggest(events: pd.DataFrame, source: str = "model") -> list[dict]:
     cands = cands.assign(p_market=cands["p"])
     if source == "model":
         cands = cands[cands["p_model"].notna()].assign(p=lambda d: d["p_model"].astype(float))
+    elif source == "combined":
+        cands = _combine(cands[cands["p_model"].notna()])
     out, used = [], set()
     for style in ("safe", "balanced", "bold"):
         cp = build(cands, style, frozenset(used)) or build(cands, style)

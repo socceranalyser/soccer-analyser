@@ -909,7 +909,7 @@ def _coupon() -> list[dict]:
 
 
 def _set_coupon(picks: list[dict]):
-    _set_coupon(picks)
+    st.session_state["coupon"] = picks
     try:
         storage.save_draft(picks)
     except Exception:

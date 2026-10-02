@@ -1,5 +1,4 @@
 home_raw,away_raw,kickoff,status,minute,ended,live,hg,ag
-Müqəddas Lusiya,Qvadelupa,2026-10-02 19:00:00+00:00,ENDED,,True,False,3.0,0.0
 MG Atletik SJDR,Resife PE,2026-10-01 23:30:00+00:00,ENDED,,True,False,1.0,2.0
 Athletic Club Sjdr MG,Sport Resifi,2026-10-01 23:30:00+00:00,ENDED,90.0,True,False,1.0,2.0
 Anqulya,Antiqua və Barbuda,2026-10-01 23:00:00+00:00,ENDED,74.0,True,False,0.0,3.0
@@ -49,11 +48,20 @@ Qremio Novorizontino,Qoias Qp,2026-10-02 00:00:00+00:00,ENDED,,True,False,3.0,0.
 Kayman Adaları,Puerto Riko,2026-10-02 00:00:00+00:00,ENDED,,True,False,0.0,3.0
 CD Inca,Munisipal Limeno,2026-10-02 00:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
 Dominikan Respublikası,Haiti,2026-10-02 00:00:00+00:00,ENDED,,True,False,1.0,4.0
+Qornik Jabrje,Odra Opole,2026-10-02 09:00:00+00:00,ENDED,,True,False,0.0,2.0
+FC Fastav Jlin,1.SK Prosteyov,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,2.0
+Trenkvalder Admira,Avstriya Vyana,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,6.0
+MFK Ruzomberok,SFC Opava,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,1.0
+Vyetnam,Pakistan,2026-10-02 09:00:00+00:00,ENDED,90.0,True,False,4.0,2.0
+Tayland,Filippin,2026-10-02 09:00:00+00:00,ENDED,90.0,True,False,1.0,2.0
+Müqəddas Lusiya,Qvadelupa,2026-10-02 19:00:00+00:00,ENDED,,True,False,3.0,0.0
+Helmond Sport,Herakles Almelo,2026-10-02 19:00:00+00:00,ENDED,,True,False,2.0,2.0
 Encarnacion FC,Resistensia FK,2026-10-02 19:00:00+00:00,ENDED,90.0,True,False,0.0,3.0
 Belçika,Türkiyə,2026-10-02 18:45:00+00:00,ENDED,,True,False,3.0,0.0
 Ukrayna,Şimali İrlandiya,2026-10-02 18:45:00+00:00,ENDED,,True,False,0.0,3.0
 Bosniya və Herseqovina,İsveç,2026-10-02 18:45:00+00:00,ENDED,,True,False,1.0,1.0
 FK Dandolk,Behomians Dublin,2026-10-02 18:45:00+00:00,ENDED,,True,False,1.0,2.0
+Triti Yunayted,Dublin Universitet Kolleci,2026-10-02 18:45:00+00:00,ENDED,,True,False,0.0,4.0
 Farer Adaları,Slovakiya,2026-10-02 18:45:00+00:00,ENDED,,True,False,1.0,1.0
 Veksford FK,Lonqford Taun,2026-10-02 18:45:00+00:00,ENDED,,True,False,3.0,3.0
 Macarıstan,Gürcüstan,2026-10-02 18:45:00+00:00,ENDED,,True,False,1.0,0.0
@@ -188,9 +196,3 @@ Reilac Shiga,Roasso Kumamoto,2026-10-02 10:00:00+00:00,ENDED,90.0,True,False,0.0
 Zaglebie Lubin II,KS Qornik Polkovitse,2026-10-02 10:00:00+00:00,ENDED,90.0,True,False,1.0,1.0
 Sejong Sportstoto (Q),Suwon WFC(Q),2026-10-02 10:00:00+00:00,ENDED,0.0,True,False,0.0,1.0
 FK Luqano,Hellas Verona,2026-10-02 09:30:00+00:00,ENDED,,True,False,1.0,3.0
-Qornik Jabrje,Odra Opole,2026-10-02 09:00:00+00:00,ENDED,,True,False,0.0,2.0
-FC Fastav Jlin,1.SK Prosteyov,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,2.0
-Trenkvalder Admira,Avstriya Vyana,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,6.0
-MFK Ruzomberok,SFC Opava,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,1.0
-Vyetnam,Pakistan,2026-10-02 09:00:00+00:00,ENDED,90.0,True,False,4.0,2.0
-Tayland,Filippin,2026-10-02 09:00:00+00:00,ENDED,90.0,True,False,1.0,2.0

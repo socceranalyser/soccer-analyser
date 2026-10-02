@@ -1302,23 +1302,84 @@ def _app_password() -> str | None:
     return os.environ.get("APP_PASSWORD") or None
 
 
+def _send_login_code() -> bool:
+    """Second factor: a fresh 6-digit code to the owner's Telegram (valid 5 minutes)."""
+    import hashlib
+    import secrets
+    import time
+    from soccer.notify import send
+    code = f"{secrets.randbelow(1_000_000):06d}"
+    st.session_state["2fa"] = {"hash": hashlib.sha256(code.encode()).hexdigest(),
+                               "expires": time.time() + 300, "tries": 0, "sent": time.time()}
+    when = now_in_tz().strftime("%d.%m %H:%M")
+    return send(f"🔐 Код для входа на сайт Soccer Analyser: <b>{code}</b>\n"
+                f"Действует 5 минут ({when}).\n"
+                "Если это не вы — кто-то знает ваш пароль: смените APP_PASSWORD в Streamlit.")
+
+
 def require_login():
+    """Password, then (when the Telegram bot is configured) a one-time code sent to Telegram."""
+    import hashlib
     import hmac
+    import time
+    from soccer.notify import configured as telegram_ready
     password = _app_password()
     if not password or st.session_state.get("authenticated"):
         return
     _inject_css()
     page_header("⚽ Soccer Analyser", "Вход только для владельца")
-    with st.form("login"):
-        entered = st.text_input("Пароль", type="password")
-        ok = st.form_submit_button("Войти")
+    if not st.session_state.get("password_ok"):
+        with st.form("login"):
+            entered = st.text_input("🔑 Пароль", type="password")
+            ok = st.form_submit_button("Войти", type="primary")
+        if ok:
+            if hmac.compare_digest(entered.encode(), password.encode()):
+                if telegram_ready():
+                    st.session_state["password_ok"] = True
+                    if not _send_login_code():
+                        st.session_state.pop("password_ok")
+                        st.error("Не удалось отправить код в Telegram — попробуйте ещё раз.")
+                        st.stop()
+                    st.rerun()
+                st.session_state["authenticated"] = True  # no bot configured: password only
+                st.rerun()
+            time.sleep(1.5)  # slows down password guessing
+            st.error("Неверный пароль")
+        st.stop()
+    # step 2: code from Telegram
+    tf = st.session_state.get("2fa") or {}
+    st.info("📲 Мы отправили 6-значный код в ваш Telegram (бот Soccer Analyser).")
+    with st.form("code"):
+        code = st.text_input("Код из Telegram", max_chars=6)
+        ok = st.form_submit_button("Подтвердить", type="primary")
+    c = st.columns(2)
+    if c[0].button("Отправить код ещё раз"):
+        if time.time() - tf.get("sent", 0) < 60:
+            st.warning("Повторно можно через минуту.")
+        else:
+            _send_login_code()
+            st.success("Новый код отправлен.")
+    if c[1].button("Назад к паролю"):
+        for k in ("password_ok", "2fa"):
+            st.session_state.pop(k, None)
+        st.rerun()
     if ok:
-        if hmac.compare_digest(entered.encode(), password.encode()):
+        tf["tries"] = tf.get("tries", 0) + 1
+        if time.time() > tf.get("expires", 0):
+            st.error("Код истёк — нажмите «Отправить код ещё раз».")
+        elif tf["tries"] > 5:
+            for k in ("password_ok", "2fa"):
+                st.session_state.pop(k, None)
+            st.error("Слишком много попыток. Введите пароль заново.")
+        elif hmac.compare_digest(hashlib.sha256(code.strip().encode()).hexdigest(),
+                                 tf.get("hash", "")):
             st.session_state["authenticated"] = True
+            st.session_state.pop("2fa", None)
             st.rerun()
-        st.error("Неверный пароль")
+        else:
+            time.sleep(1)
+            st.error(f"Неверный код (попытка {tf['tries']} из 5).")
     st.stop()
-
 
 require_login()
 

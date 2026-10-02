@@ -1121,6 +1121,38 @@ def page_about():
 """)
 
 
+# ========================================================================= login
+def _app_password() -> str | None:
+    """Password from Streamlit secrets / environment; none set (local use) -> no login."""
+    import os
+    try:
+        if "APP_PASSWORD" in st.secrets:
+            return str(st.secrets["APP_PASSWORD"])
+    except Exception:  # no secrets file at all
+        pass
+    return os.environ.get("APP_PASSWORD") or None
+
+
+def require_login():
+    import hmac
+    password = _app_password()
+    if not password or st.session_state.get("authenticated"):
+        return
+    st.title("⚽ Soccer Analyser")
+    st.markdown("Вход только для владельца.")
+    with st.form("login"):
+        entered = st.text_input("Пароль", type="password")
+        ok = st.form_submit_button("Войти")
+    if ok:
+        if hmac.compare_digest(entered.encode(), password.encode()):
+            st.session_state["authenticated"] = True
+            st.rerun()
+        st.error("Неверный пароль")
+    st.stop()
+
+
+require_login()
+
 # ======================================================================== layout
 with st.sidebar:
     st.markdown("## ⚽ Soccer Analyser")

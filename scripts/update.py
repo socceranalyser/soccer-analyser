@@ -29,6 +29,11 @@ if __name__ == "__main__":
         n_pred = eng.record_days([today + timedelta(days=i) for i in range(args.days)])
         print(f"results stored: {n_res:,} | forecast rows stored: {n_pred:,} | "
               f"fresh league results: {eng.n_fresh}")
+        try:
+            from soccer.misli import save_market_snapshot
+            print("bookmaker odds stored:", save_market_snapshot(eng))
+        except Exception:
+            traceback.print_exc()
         if args.notify:
             from soccer.notify import send_daily_digest
             print(send_daily_digest(eng))

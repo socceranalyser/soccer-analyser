@@ -388,13 +388,13 @@ def page_today():
                                                             pd.Series(False, index=view.index)))],
         "Турнир": view["comp_name"],
         "Матч": view["home"] + " — " + view["away"],
-        "Кто выиграет": view["call_outcome"],
+        "Кто выиграет (прогноз)": view["call_outcome"],
         "Голов ожидается": view["exp_goals"],
-        "Тотал 2.5": view["call_total"],
-        "Обе забьют": view["call_btts"],
+        "Тотал 2.5 (прогноз)": view["call_total"],
+        "Обе забьют (прогноз)": view["call_btts"],
         "Статус": [status_label(r, now) for _, r in view.iterrows()],
-        "Счёт": [f"{int(h)}:{int(a)}" if pd.notna(h) else "" for h, a in
-                 zip(view["hg"], view["ag"])],
+        "Реальный счёт": [f"{int(h)}:{int(a)}" if pd.notna(h) else "" for h, a in
+                          zip(view["hg"], view["ag"])],
         "Сбылось (исход · тотал · обе)": view["checks"],
     })
     cfg = {"Голов ожидается": st.column_config.NumberColumn(format="%.1f")}
@@ -402,7 +402,7 @@ def page_today():
         pct_col = lambda label: st.column_config.ProgressColumn(label, format="percent",
                                                                 min_value=0, max_value=1)
         for k, c in (("П1", "p_home"), ("Х", "p_draw"), ("П2", "p_away")):
-            table.insert(table.columns.get_loc("Кто выиграет"), k, view.get(c).to_numpy())
+            table.insert(table.columns.get_loc("Кто выиграет (прогноз)"), k, view.get(c).to_numpy())
             cfg[k] = pct_col(k)
     event = st.dataframe(table, hide_index=True, width="stretch", on_select="rerun",
                          selection_mode="single-row", height=min(38 * (len(table) + 1), 700),
@@ -770,29 +770,47 @@ def _accuracy_block(done: pd.DataFrame, run_id: str, key: str):
         fig.update_layout(height=380, margin=dict(l=0, r=0, t=10, b=0))
         st.plotly_chart(fig, width="stretch", key=f"acc_2_{key}")
     st.markdown("**Последние прогнозы и результаты**")
+    from soccer.verdicts import calls_columns
     head_model = "final" if "final" in models else models[0]
     last = done[done["model"] == head_model].sort_values("date", ascending=False).head(50)
     if len(last):
-        probs = last[["p_home", "p_draw", "p_away"]].to_numpy()
+        last = last.assign(played=True).reset_index(drop=True)
+        calls = pd.DataFrame(calls_columns(last))
+        mk = done[done["model"] == "market"].set_index(["league", "date", "home", "away"])
+        key = pd.MultiIndex.from_frame(last[["league", "date", "home", "away"]])
+        book = []
+        for k, r in zip(key, last.itertuples()):
+            if k in mk.index:
+                q = mk.loc[k, ["p_home", "p_draw", "p_away"]]
+                q = q.iloc[0] if isinstance(q, pd.DataFrame) else q
+                from soccer.verdicts import outcome_call, result_index
+                lab, cov, pr = outcome_call(q.to_numpy(float), r.home, r.away)
+                ok = result_index(int(r.hg), int(r.ag)) in cov
+                book.append(f"{'✅' if ok else '❌'} {lab} · {pr:.0%}")
+            else:
+                book.append("—")
         st.dataframe(pd.DataFrame({
             "Дата": last["date"].dt.strftime("%d.%m.%Y"),
             "Турнир": last["league"].map(competition_name),
             "Матч": last["home"] + " — " + last["away"],
-            "П1": last["p_home"], "Х": last["p_draw"], "П2": last["p_away"],
-            "Прогноз": [pick_label(p) for p in probs],
             "Счёт": last["hg"].astype("Int64").astype(str) + ":" + last["ag"].astype("Int64").astype(str),
-            "Верно": np.where(probs.argmax(1) == last["result"].map(OUTCOME_INDEX).to_numpy(),
-                              "✅", "❌")}), hide_index=True, width="stretch",
-            column_config={c: st.column_config.NumberColumn(format="percent")
-                           for c in ("П1", "Х", "П2")})
-
+            "Прогноз модели": calls["call_outcome"],
+            "Сбылось (исход · тотал · обе)": calls["checks"],
+            "Букмекер сказал бы": book}), hide_index=True, width="stretch")
+        st.caption("«Кто выиграет» — как в «Матчах дня»: «Победа X» при шансе от 50%, иначе "
+                   "«X не проиграет». Колонка букмекера — тот же вердикт по коэффициентам misli.az.")
 
 # =================================================================== coupon page
 @st.cache_data(ttl=600, show_spinner="Загружаю коэффициенты misli.az…")
 def get_misli(built_at, refresh_token: int) -> pd.DataFrame:
     """misli.az events linked to our models, with model probabilities per market."""
-    from soccer.misli import events_with_model
-    return events_with_model(get_engine(), force=refresh_token > 0)
+    from soccer.misli import events_with_model, save_market_snapshot
+    ev = events_with_model(get_engine(), force=refresh_token > 0)
+    try:
+        save_market_snapshot(get_engine(), ev)
+    except Exception:
+        pass
+    return ev
 
 
 ODDS_COLS = ["o1", "ox", "o2", "o1x", "o12", "ox2", "o_over", "o_under", "o_btts_yes",

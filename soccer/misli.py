@@ -401,3 +401,30 @@ def events_with_model(engine, force: bool = False) -> pd.DataFrame:
         except Exception:
             probs.append({})
     return pd.concat([df, pd.DataFrame(probs)], axis=1)
+
+
+def save_market_snapshot(engine, events: pd.DataFrame | None = None) -> int:
+    """Store misli.az 1X2 (margin-free) next to our live forecasts as model 'market', for
+    matches that have not started, so the Accuracy page always compares with a bookmaker."""
+    from . import storage
+    from .coupons import market_probs
+    from .fixtures import local_tz
+    ev = events if events is not None else events_with_model(engine)
+    if ev.empty or "kind" not in ev:
+        return 0
+    ev = ev[ev["kind"].notna() & (ev["kickoff"] > pd.Timestamp.now(tz="UTC"))]
+    rows = []
+    for _, r in ev.iterrows():
+        mp = market_probs(r)
+        if "o1" not in mp:
+            continue
+        kick = r["kickoff"].tz_convert(local_tz())
+        rows.append({"model": "market", "league": r["competition"], "season": kick.year,
+                     "date": kick.tz_localize(None).normalize(), "home": r["home"],
+                     "away": r["away"], "p_home": mp["o1"], "p_draw": mp["ox"],
+                     "p_away": mp["o2"], "p_over25": mp.get("o_over"),
+                     "p_btts": mp.get("o_btts_yes")})
+    if not rows:
+        return 0
+    return storage.save_run("live", "live", pd.DataFrame(rows), description="ежедневные прогнозы",
+                            replace_run=False)

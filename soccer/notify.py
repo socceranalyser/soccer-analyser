@@ -41,7 +41,7 @@ def save_env_value(key: str, value: str):
     ENV_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-CHAT_FILE = ROOT / "data" / "state" / "telegram_chat_id.txt"
+CHAT_FILE = ROOT / "data" / "telegram_chat_id.txt"  # local only (git-ignored)
 
 
 def chat_id() -> str | None:
@@ -54,6 +54,8 @@ def chat_id() -> str | None:
         v = CHAT_FILE.read_text(encoding="utf-8").strip()
         if v:
             return v
+    if os.environ.get("GITHUB_ACTIONS"):  # cloud: chat id comes from the TELEGRAM_CHAT_ID secret
+        return None
     token = c.get("TELEGRAM_BOT_TOKEN")
     if not token:
         return None

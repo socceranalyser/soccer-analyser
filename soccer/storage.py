@@ -183,11 +183,10 @@ def export_state(state_dir=STATE_DIR, path=DB_PATH, include_backtests: bool = Fa
     with closing(connect(path)) as con:
         runs = pd.read_sql("SELECT * FROM runs", con)
         live = pd.read_sql("SELECT * FROM predictions WHERE run_id = 'live'", con)
-        coupons = pd.read_sql("SELECT * FROM coupons", con)
         runs.to_csv(state_dir / "runs.csv", index=False)
         live.to_csv(state_dir / "live_predictions.csv", index=False)
-        coupons.to_csv(state_dir / "coupons.csv", index=False)
-        written += ["runs.csv", "live_predictions.csv", "coupons.csv"]
+        # personal betting history (coupons, stakes) never goes to the public repository
+        written += ["runs.csv", "live_predictions.csv"]
         bt = state_dir / "backtests.csv.gz"
         if include_backtests or not bt.exists():
             pd.read_sql("SELECT * FROM predictions WHERE run_id != 'live'", con).to_csv(

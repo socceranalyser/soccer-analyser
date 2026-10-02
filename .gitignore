@@ -8,3 +8,5 @@ data/predictions.db
 .streamlit/secrets.toml
 .env
 data/matches.pkl
+data/telegram_chat_id.txt
+data/state/coupons.csv

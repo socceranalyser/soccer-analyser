@@ -7,6 +7,7 @@ When nobody is a clear favourite the outcome call falls back to a double chance
 from __future__ import annotations
 
 import numpy as np
+import pandas as pd
 
 CLEAR_FAVOURITE = 0.50  # below this a single outcome is a coin-flip -> double chance
 
@@ -46,3 +47,35 @@ def score_calls(p, p_over, p_btts, hg, ag, line: float = 2.5) -> dict:
     if p_btts is not None and not np.isnan(p_btts):
         out["btts"] = (hg > 0 and ag > 0) == btts_call(p_btts)[1]
     return out
+
+
+def calls_columns(view: pd.DataFrame) -> dict:
+    """Plain-language calls for each match plus ✅/❌ once it is finished."""
+    cols = {k: [] for k in ("call_outcome", "call_total", "call_btts", "exp_goals", "checks",
+                            "ok_outcome", "ok_total", "ok_btts")}
+    for _, r in view.iterrows():
+        if pd.isna(r.get("p_home")):
+            for k in cols:
+                cols[k].append("—" if k.startswith("call") or k == "checks" else None)
+            cols["checks"][-1] = ""
+            continue
+        p = [r["p_home"], r["p_draw"], r["p_away"]]
+        lab, _, pr = outcome_call(p, r["home"], r["away"])
+        cols["call_outcome"].append(f"{lab} · {pr:.0%}")
+        po, pb = r.get("p_over25"), r.get("p_btts")
+        cols["call_total"].append("—" if pd.isna(po) else "{} · {:.0%}".format(*total_call(po)[::2]))
+        cols["call_btts"].append("—" if pd.isna(pb) else "{} · {:.0%}".format(*btts_call(pb)[::2]))
+        xg = (r.get("xg_home") or np.nan) + (r.get("xg_away") or np.nan)
+        cols["exp_goals"].append(None if pd.isna(xg) else round(float(xg), 1))
+        if r["played"] and pd.notna(r["hg"]):
+            sc = score_calls(p, po, pb, int(r["hg"]), int(r["ag"]))
+            mark = lambda k: "✅" if sc.get(k) else ("❌" if k in sc else "·")
+            cols["checks"].append(f"{mark('outcome')} {mark('total')} {mark('btts')}")
+            cols["ok_outcome"].append(sc["outcome"])
+            cols["ok_total"].append(sc.get("total"))
+            cols["ok_btts"].append(sc.get("btts"))
+        else:
+            cols["checks"].append("")
+            for k in ("ok_outcome", "ok_total", "ok_btts"):
+                cols[k].append(None)
+    return cols

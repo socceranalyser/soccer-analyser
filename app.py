@@ -463,36 +463,8 @@ def live_panel(day: pd.DataFrame):
 
 
 def _calls_columns(view: pd.DataFrame) -> dict:
-    """Plain-language calls for each match plus ✅/❌ once it is finished."""
-    from soccer.verdicts import btts_call, outcome_call, score_calls, total_call
-    cols = {k: [] for k in ("call_outcome", "call_total", "call_btts", "exp_goals", "checks",
-                            "ok_outcome", "ok_total", "ok_btts")}
-    for _, r in view.iterrows():
-        if pd.isna(r.get("p_home")):
-            for k in cols:
-                cols[k].append("—" if k.startswith("call") or k == "checks" else None)
-            cols["checks"][-1] = ""
-            continue
-        p = [r["p_home"], r["p_draw"], r["p_away"]]
-        lab, _, pr = outcome_call(p, r["home"], r["away"])
-        cols["call_outcome"].append(f"{lab} · {pr:.0%}")
-        po, pb = r.get("p_over25"), r.get("p_btts")
-        cols["call_total"].append("—" if pd.isna(po) else "{} · {:.0%}".format(*total_call(po)[::2]))
-        cols["call_btts"].append("—" if pd.isna(pb) else "{} · {:.0%}".format(*btts_call(pb)[::2]))
-        xg = (r.get("xg_home") or np.nan) + (r.get("xg_away") or np.nan)
-        cols["exp_goals"].append(None if pd.isna(xg) else round(float(xg), 1))
-        if r["played"] and pd.notna(r["hg"]):
-            sc = score_calls(p, po, pb, int(r["hg"]), int(r["ag"]))
-            mark = lambda k: "✅" if sc.get(k) else ("❌" if k in sc else "·")
-            cols["checks"].append(f"{mark('outcome')} {mark('total')} {mark('btts')}")
-            cols["ok_outcome"].append(sc["outcome"])
-            cols["ok_total"].append(sc.get("total"))
-            cols["ok_btts"].append(sc.get("btts"))
-        else:
-            cols["checks"].append("")
-            for k in ("ok_outcome", "ok_total", "ok_btts"):
-                cols[k].append(None)
-    return cols
+    from soccer.verdicts import calls_columns
+    return calls_columns(view)
 
 
 def _upcoming_hint(eng: Engine, date):
@@ -800,22 +772,8 @@ def _accuracy_block(done: pd.DataFrame, run_id: str, key: str):
 @st.cache_data(ttl=600, show_spinner="Загружаю коэффициенты misli.az…")
 def get_misli(built_at, refresh_token: int) -> pd.DataFrame:
     """misli.az events linked to our models, with model probabilities per market."""
-    from soccer.misli import fetch_events, link_events, model_probs
-    eng = get_engine()
-    df = link_events(fetch_events(force=refresh_token > 0), eng)
-    probs = []
-    for r in df.itertuples():
-        if r.kind is None or pd.isna(r.kind):
-            probs.append({})
-            continue
-        try:
-            f = eng.forecast(r.kind, r.competition, r.home, r.away, False,
-                             r.home_key, r.away_key)
-            probs.append({f"p_{k}": v for k, v in model_probs(f, r.ou_line).items()}
-                         | {"p_top_score": f["markets"]["top_scores"][0][0]})
-        except Exception:
-            probs.append({})
-    return pd.concat([df, pd.DataFrame(probs)], axis=1)
+    from soccer.misli import events_with_model
+    return events_with_model(get_engine(), force=refresh_token > 0)
 
 
 ODDS_COLS = ["o1", "ox", "o2", "o1x", "o12", "ox2", "o_over", "o_under", "o_btts_yes",
@@ -843,6 +801,18 @@ def _coupon() -> list[dict]:
     return st.session_state.setdefault("coupon", [])
 
 
+def _market_p(r, col: str):
+    from soccer.coupons import market_probs
+    v = market_probs(r).get(col)
+    return None if v is None else float(v)
+
+
+def _in_ten(p: float) -> str:
+    """0.82 -> 'примерно 8 из 10'."""
+    n = int(round(p * 10))
+    return f"примерно {n} из 10" if 0 < n < 10 else ("почти всегда" if n >= 10 else "редко")
+
+
 def _add_pick(r, col: str):
     picks = [p for p in _coupon() if p["event_id"] != int(r["event_id"])]  # one pick per match
     picks.append({
@@ -850,6 +820,7 @@ def _add_pick(r, col: str):
         "match": f"{r['home_raw']} — {r['away_raw']}", "comp": r["competition_az"],
         "market": col, "label": _market_label(col, r.get("ou_line")), "odds": float(r[col]),
         "p_model": None if pd.isna(r.get(f"p_{col}")) else float(r[f"p_{col}"]),
+        "p_market": _market_p(r, col),
         "home": r["home"] if pd.notna(r.get("home")) else None,
         "away": r["away"] if pd.notna(r.get("away")) else None,
         "line": None if pd.isna(r.get("ou_line")) else float(r["ou_line"]),
@@ -862,28 +833,47 @@ def render_coupon_sidebar():
     with st.sidebar:
         st.markdown(f"### 🎟️ Мой купон ({len(picks)})")
         if not picks:
-            st.caption("Пусто. Выберите матч и нажмите «➕» у нужного исхода.")
+            st.caption("Пусто. Выберите матч и нажмите «➕» у нужного исхода "
+                       "или загрузите готовый купон.")
             return
-        for i, p in enumerate(picks):
+        for p in picks:
             c = st.columns([5, 1])
-            pm = f" · модель {pct(p['p_model'])}" if p["p_model"] is not None else ""
-            c[0].markdown(f"**{p['match']}**  \n{p['label']} @ **{p['odds']:.2f}**{pm}")
+            pm, pk = p.get("p_model"), p.get("p_market")
+            main = pk if pk is not None else pm
+            parts = []
+            if pm is not None:
+                parts.append(f"модель {pct(pm)}")
+            if pk is not None:
+                parts.append(f"букмекер {pct(pk)}")
+            c[0].markdown(f"**{p['match']}**  \n{p['label']} @ **{p['odds']:.2f}**  \n"
+                          +(f"<small>Сыграет {_in_ten(main)} · {' · '.join(parts)}</small>"
+                             if main is not None else ""), unsafe_allow_html=True)
             if c[1].button("✖", key=f"rm_{p['event_id']}", help="убрать"):
                 st.session_state["coupon"] = [q for q in picks if q is not p]
                 st.rerun()
         total = float(np.prod([p["odds"] for p in picks]))
-        known = all(p["p_model"] is not None for p in picks)
-        prob = float(np.prod([p["p_model"] for p in picks])) if known else None
         st.metric("Общий коэффициент", f"{total:.2f}")
         stake = st.number_input("Сумма ставки, ₼", min_value=0.0, value=1.0, step=1.0)
-        st.markdown(f"Возможный выигрыш: **{stake * total:.2f} ₼**")
+        st.markdown(f"Если купон зайдёт, получите **{stake * total:.2f} ₼**")
+        pk_all = [p.get("p_market") for p in picks]
+        pm_all = [p.get("p_model") for p in picks]
+        prob_k = float(np.prod(pk_all)) if all(v is not None for v in pk_all) else None
+        prob_m = float(np.prod(pm_all)) if all(v is not None for v in pm_all) else None
+        prob = prob_k if prob_k is not None else prob_m
         if prob is not None:
-            ev = prob * total - 1
-            st.markdown(f"Шанс, что сыграет весь купон (по модели): **{pct(prob)}**  \n"
-                        f"Ожидание по модели: **{ev:+.0%}** "
-                        + ("🟢" if ev > 0 else "🔴"))
+            src = " · ".join(x for x in (
+                f"модель {pct(prob_m)}" if prob_m is not None else "",
+                f"букмекер {pct(prob_k)}" if prob_k is not None else "") if x)
+            st.markdown(f"**Купон зайдёт {_in_ten(prob)} раз** ({src})")
+            back = prob * total * 100
+            verdict = ("🟢 на дистанции в плюсе" if back > 100 else
+                       "🔴 на дистанции в минусе (маржа букмекера)")
+            st.markdown(f"Если ставить такой купон 100 раз по 1 ₼: потратите 100 ₼, "
+                        f"вернётся ≈ **{back:.0f} ₼** — {verdict}")
+            st.caption("Шанс считается по коэффициентам без маржи букмекера (на истории это "
+                       "точнее модели); модель — второе мнение.")
         else:
-            st.caption("Для части матчей нет прогноза модели — шанс купона не посчитан.")
+            st.caption("Для части матчей нет оценки шанса — шанс купона не посчитан.")
         need = max(p["mbs"] for p in picks)
         if len(picks) < need:
             st.warning(f"По правилам misli для выбранных матчей нужно минимум {need} события "
@@ -922,9 +912,11 @@ def render_suggestions(df: pd.DataFrame):
             st.divider()
             c = st.columns(2)
             c[0].metric("Общий коэф.", f"{cp['total_odds']:.2f}")
-            c[1].metric("Шанс купона", pct(cp["prob"]))
-            st.caption(f"Ставка {stake:.0f} ₼ → выплата {stake * cp['total_odds']:.2f} ₼ · "
-                       f"ожидание {cp['ev']:+.0%} (маржа букмекера)")
+            c[1].metric("Шанс купона", pct(cp["prob"]), _in_ten(cp["prob"]) + " раз",
+                        delta_color="off")
+            st.caption(f"Ставка {stake:.0f} ₼ → если зайдёт, {stake * cp['total_odds']:.2f} ₼. "
+                       f"Если ставить так 100 раз по 1 ₼, вернётся ≈ "
+                       f"{(cp['ev'] + 1) * 100:.0f} ₼ (маржа букмекера).")
             if st.button("➕ Загрузить в мой купон", key=f"load_{cp['style']}",
                          width="stretch"):
                 st.session_state["coupon"] = [
@@ -932,6 +924,7 @@ def render_suggestions(df: pd.DataFrame):
                      "match": pk["match"], "comp": pk["comp"], "market": pk["market"],
                      "label": pk["label"], "odds": float(pk["odds"]),
                      "p_model": float(pk["p_model"]) if pd.notna(pk.get("p_model")) else None,
+                     "p_market": float(pk["p"]),
                      "home": pk["home"], "away": pk["away"], "line": pk["line"],
                      "mbs": int(pk["mbs"])} for _, pk in cp["picks"].iterrows()]
                 st.rerun()

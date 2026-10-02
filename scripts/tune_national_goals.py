@@ -1,4 +1,4 @@
-"""Tune the national-team GOALS model (totals / BTTS), not 1X2 (1X2 comes from Elo).
+r"""Tune the national-team GOALS model (totals / BTTS), not 1X2 (1X2 comes from Elo).
 
 Walk-forward by month; metrics: log loss of Over 2.5 and of BTTS (lower is better).
     python scripts/tune_national_goals.py

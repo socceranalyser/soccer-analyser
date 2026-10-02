@@ -1,4 +1,4 @@
-"""Production-equivalent backtest over every competition; stored as run 'bt_all'.
+r"""Production-equivalent backtest over every competition; stored as run 'bt_all'.
 
 Leagues: Dixon-Coles, Elo, bookmakers and the final 50/50 ensemble (seasons 2023-2025).
 European cups: cross-league Elo (2023-2025). National teams: Elo + Dixon-Coles (2023-2026).

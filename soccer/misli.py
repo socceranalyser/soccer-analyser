@@ -375,3 +375,21 @@ def link_live(live: pd.DataFrame, day: pd.DataFrame) -> pd.DataFrame:
         if score >= 0.75:
             live.at[i, "our_idx"] = best
     return live
+
+
+def events_with_model(engine, force: bool = False) -> pd.DataFrame:
+    """misli.az events linked to our models, with model probabilities per market."""
+    df = link_events(fetch_events(force=force), engine)
+    probs = []
+    for r in df.itertuples():
+        if r.kind is None or pd.isna(r.kind):
+            probs.append({})
+            continue
+        try:
+            f = engine.forecast(r.kind, r.competition, r.home, r.away, False,
+                                r.home_key, r.away_key)
+            probs.append({f"p_{k}": v for k, v in model_probs(f, r.ou_line).items()}
+                         | {"p_top_score": f["markets"]["top_scores"][0][0]})
+        except Exception:
+            probs.append({})
+    return pd.concat([df, pd.DataFrame(probs)], axis=1)

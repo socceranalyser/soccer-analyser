@@ -1,22 +1,5 @@
 home_raw,away_raw,kickoff,status,minute,ended,live,hg,ag
-Qornik Jabrje,Odra Opole,2026-10-02 09:00:00+00:00,ENDED,,True,False,0.0,2.0
-FC Fastav Jlin,1.SK Prosteyov,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,2.0
-Trenkvalder Admira,Avstriya Vyana,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,6.0
-MFK Ruzomberok,SFC Opava,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,1.0
-Vyetnam,Pakistan,2026-10-02 09:00:00+00:00,ENDED,90.0,True,False,4.0,2.0
-NK Aluminiy,NK Varajdin,2026-10-02 08:00:00+00:00,ENDED,,True,False,0.0,0.0
-Mfa Moscow U20,FC Chernomorets Novorossi,2026-10-02 08:00:00+00:00,ENDED,90.0,True,False,2.0,3.0
-Çin (Q),Cənubi Koreya  (Q),2026-10-02 06:00:00+00:00,ENDED,91.0,True,False,0.0,1.0
-Nikaraqua,Kosta Rika,2026-10-02 02:00:00+00:00,ENDED,,True,False,0.0,3.0
-Sietl Saunders,Sportinq Kansas Siti,2026-10-02 01:30:00+00:00,ENDED,,True,False,2.0,1.0
-Bluminq,Independiente Petrolero,2026-10-02 00:30:00+00:00,ENDED,90.0,True,False,0.0,1.0
-CA Platense,Estudiantes de la Plata,2026-10-02 00:15:00+00:00,ENDED,,True,False,1.0,0.0
-Qremio Novorizontino,Qoias Qp,2026-10-02 00:00:00+00:00,ENDED,,True,False,3.0,0.0
-Kayman Adaları,Puerto Riko,2026-10-02 00:00:00+00:00,ENDED,,True,False,0.0,3.0
-CD Inca,Munisipal Limeno,2026-10-02 00:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
-Dominikan Respublikası,Haiti,2026-10-02 00:00:00+00:00,ENDED,,True,False,1.0,4.0
-MG Atletik SJDR,Resife PE,2026-10-01 23:30:00+00:00,ENDED,,True,False,1.0,2.0
-Anqulya,Antiqua və Barbuda,2026-10-01 23:00:00+00:00,ENDED,,True,False,0.0,3.0
+Anqulya,Antiqua və Barbuda,2026-10-01 23:00:00+00:00,ENDED,74.0,True,False,0.0,3.0
 Klab Bolivar,GV Club Deportivo San Jos,2026-10-01 22:30:00+00:00,ENDED,90.0,True,False,3.0,2.0
 River Pleyt 2,Atletiko Sarmento 2,2026-10-01 22:00:00+00:00,ENDED,90.0,True,False,1.0,0.0
 Fortaleza EC CE U20,Seara CE U20,2026-10-01 22:00:00+00:00,ENDED,106.0,True,False,2.0,2.0
@@ -52,3 +35,20 @@ Csd Flandria Rezerv,CA Ituzaingo Reserves,2026-10-01 18:00:00+00:00,ENDED,90.0,T
 CA Los Andes Rezerv,Deportivo Moron Rezerv,2026-10-01 18:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
 AD Berazategui Reserve,Central Ballester Reserve,2026-10-01 17:00:00+00:00,ENDED,90.0,True,False,3.0,1.0
 Defensores de Cambaceres,Sacachispas FC Rezerves,2026-10-01 17:00:00+00:00,ENDED,90.0,True,False,3.0,1.0
+Qornik Jabrje,Odra Opole,2026-10-02 09:00:00+00:00,ENDED,,True,False,0.0,2.0
+FC Fastav Jlin,1.SK Prosteyov,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,2.0
+Trenkvalder Admira,Avstriya Vyana,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,6.0
+MFK Ruzomberok,SFC Opava,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,1.0
+Vyetnam,Pakistan,2026-10-02 09:00:00+00:00,ENDED,90.0,True,False,4.0,2.0
+NK Aluminiy,NK Varajdin,2026-10-02 08:00:00+00:00,ENDED,,True,False,0.0,0.0
+Mfa Moscow U20,FC Chernomorets Novorossi,2026-10-02 08:00:00+00:00,ENDED,90.0,True,False,2.0,3.0
+Çin (Q),Cənubi Koreya  (Q),2026-10-02 06:00:00+00:00,ENDED,91.0,True,False,0.0,1.0
+Nikaraqua,Kosta Rika,2026-10-02 02:00:00+00:00,ENDED,,True,False,0.0,3.0
+Sietl Saunders,Sportinq Kansas Siti,2026-10-02 01:30:00+00:00,ENDED,,True,False,2.0,1.0
+Bluminq,Independiente Petrolero,2026-10-02 00:30:00+00:00,ENDED,90.0,True,False,0.0,1.0
+CA Platense,Estudiantes de la Plata,2026-10-02 00:15:00+00:00,ENDED,,True,False,1.0,0.0
+Qremio Novorizontino,Qoias Qp,2026-10-02 00:00:00+00:00,ENDED,,True,False,3.0,0.0
+Kayman Adaları,Puerto Riko,2026-10-02 00:00:00+00:00,ENDED,,True,False,0.0,3.0
+CD Inca,Munisipal Limeno,2026-10-02 00:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
+Dominikan Respublikası,Haiti,2026-10-02 00:00:00+00:00,ENDED,,True,False,1.0,4.0
+MG Atletik SJDR,Resife PE,2026-10-01 23:30:00+00:00,ENDED,,True,False,1.0,2.0

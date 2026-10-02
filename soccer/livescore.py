@@ -19,7 +19,7 @@ ENDED = {"FT", "AET", "AP", "Pen.", "FT Pen", "AP."}
 NOT_LIVE = {"NS", "Postp.", "Canc.", "Abd.", "Susp.", "TBA", "Int.", "Aband.", "Del."}
 ARCHIVE = DATA_DIR / "livescore_results.csv"
 COLS = ["home_raw", "away_raw", "kickoff", "status", "minute", "ended", "live", "hg", "ag",
-        "competition"]
+        "competition", "red_h", "red_a"]
 
 
 def _get(path: str):
@@ -68,7 +68,7 @@ def fetch_results(dates) -> pd.DataFrame:
             rows += _events(_get(f"date/soccer/{pd.Timestamp(d):%Y%m%d}/0?MD=1"))
         except (requests.RequestException, ValueError):
             continue
-    df = pd.DataFrame(rows, columns=COLS + ["red_h", "red_a", "id", "top"])
+    df = pd.DataFrame(rows, columns=COLS + ["id", "top"])
     done = df[df["ended"] & df["hg"].notna()] if len(df) else df
     try:
         old = pd.read_csv(ARCHIVE) if ARCHIVE.exists() else pd.DataFrame(columns=COLS)

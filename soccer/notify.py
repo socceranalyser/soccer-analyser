@@ -147,9 +147,17 @@ def daily_digest(engine, coupons: bool = True) -> str:
             s = lambda k: f"{int(done[k].sum())}/{done[k].notna().sum()}"
             lines += ["", f"📊 <b>Вчера ({yesterday:%d.%m})</b>: исход {s('ok_outcome')} · "
                           f"тотал {s('ok_total')} · обе забьют {s('ok_btts')}"]
+            try:
+                from .analysis import misses, scored_live
+                why = {m.match: m.reasons for m in misses(scored_live(), n=200).itertuples()}
+            except Exception:
+                why = {}
             for _, r in done.head(15).iterrows():
                 lines.append(f"{r['checks']}  {_e(r['home'])} <b>{int(r['hg'])}:{int(r['ag'])}"
                              f"</b> {_e(r['away'])} — {_e(r['call_outcome'])}")
+                reason = why.get(f"{r['home']} — {r['away']}")
+                if reason and not r["ok_outcome"]:
+                    lines.append(f"      ↳ <i>{_e(reason)}</i>")
 
     t = _day(engine, today)
     t = t[t["p_home"].notna()] if len(t) and "p_home" in t else t

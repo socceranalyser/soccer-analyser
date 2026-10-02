@@ -5,3 +5,19 @@ port = 8501
 
 [browser]
 gatherUsageStats = false
+
+[theme]
+base = "dark"
+primaryColor = "#22c55e"
+backgroundColor = "#0b1220"
+secondaryBackgroundColor = "#131c2e"
+textColor = "#e6edf7"
+linkColor = "#4ade80"
+borderColor = "#24324d"
+showWidgetBorder = true
+baseRadius = "large"
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap"
+
+[theme.sidebar]
+backgroundColor = "#0f1a2c"
+secondaryBackgroundColor = "#17233a"

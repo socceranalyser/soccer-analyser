@@ -1,433 +1,433 @@
-home_raw,away_raw,kickoff,status,minute,ended,live,hg,ag,competition
-Germany,Serbia,2026-10-01 18:45:00+00:00,FT,,True,False,2.0,0.0,UEFA Nations League · League A: Group 2
-Greece,Netherlands,2026-10-01 18:45:00+00:00,FT,,True,False,2.0,2.0,UEFA Nations League · League A: Group 2
-Denmark,Portugal,2026-10-01 18:45:00+00:00,FT,,True,False,2.0,4.0,UEFA Nations League · League A: Group 4
-Wales,Norway,2026-10-01 18:45:00+00:00,FT,,True,False,2.0,1.0,UEFA Nations League · League A: Group 4
-Ireland,Austria,2026-10-01 18:45:00+00:00,FT,,True,False,2.0,2.0,UEFA Nations League · League B: Group 3
-Israel,Kosovo,2026-10-01 18:45:00+00:00,FT,,True,False,0.0,0.0,UEFA Nations League · League B: Group 3
-Malta,Gibraltar,2026-10-01 18:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League D: Group 1
-Azerbaijan,Liechtenstein,2026-10-01 16:00:00+00:00,FT,,True,False,0.0,0.0,UEFA Nations League · League D: Group 2
-Guinea,Kenya,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,0.0,Africa Cup of Nations Qualification · Qualification: Group D
-Curacao,Trinidad and Tobago,2026-10-01 22:00:00+00:00,FT,,True,False,1.0,0.0,CONCACAF Nations League · League A: Group 1
-Dominica,Guyana,2026-10-01 21:00:00+00:00,FT,,True,False,1.0,5.0,CONCACAF Nations League · League B: Group 1
-British Virgin Islands,Montserrat,2026-10-01 20:00:00+00:00,FT,,True,False,0.0,2.0,CONCACAF Nations League · League C: Group 1
-Anguilla,Antigua and Barbuda,2026-10-01 23:00:00+00:00,FT,,True,False,0.0,3.0,CONCACAF Nations League · League C: Group 2
-U.S. Virgin Islands,Saint Martin,2026-10-01 20:00:00+00:00,FT,,True,False,0.0,5.0,CONCACAF Nations League · League C: Group 3
-Argentina,Bolivia,2026-10-01 00:00:00+00:00,FT,,True,False,4.0,0.0,International Friendlies · Friendlies
-Cook Islands,Tahiti,2026-10-01 02:00:00+00:00,FT,,True,False,3.0,2.0,International Friendlies · Friendlies
-Panama,New Zealand,2026-10-01 06:10:00+00:00,AP,,True,False,1.0,1.0,International Friendlies · Friendlies
-Japan,Ecuador,2026-10-01 10:10:00+00:00,AP,,True,False,0.0,0.0,International Friendlies · Friendlies
-Maldives,Lebanon,2026-10-01 14:00:00+00:00,FT,,True,False,0.0,6.0,International Friendlies · Friendlies
-Uzbekistan,Syria,2026-10-01 14:00:00+00:00,FT,,True,False,4.0,1.0,International Friendlies · Friendlies
-Jahn Regensburg,WSG Tirol,2026-10-01 12:00:00+00:00,FT,,True,False,0.0,6.0,Club Friendlies · Club Friendlies 2026
-VfB Stuttgart,Greuther Furth,2026-10-01 15:30:00+00:00,FT,,True,False,5.0,0.0,Club Friendlies · Club Friendlies 2026
-Trabzonspor,Drogheda United,2026-10-01 16:00:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026
-San Marino U21,Spain U21,2026-10-01 18:15:00+00:00,FT,,True,False,0.0,13.0,Euro U21 2027 · Qualification: Group A
-North Macedonia U21,Montenegro U21,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,1.0,Euro U21 2027 · Qualification: Group E
-Armenia U21,Italy U21,2026-10-01 16:30:00+00:00,FT,,True,False,0.0,1.0,Euro U21 2027 · Qualification: Group E
-Greece U21,Latvia U21,2026-10-01 15:00:00+00:00,FT,,True,False,4.0,2.0,Euro U21 2027 · Qualification: Group F
-Northern Ireland U21,Georgia U21,2026-10-01 18:45:00+00:00,FT,,True,False,1.0,1.0,Euro U21 2027 · Qualification: Group F
-Hungary U21,Lithuania U21,2026-10-01 17:00:00+00:00,FT,,True,False,2.0,1.0,Euro U21 2027 · Qualification: Group H
-Austria Wien W,Inter W,2026-10-01 16:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Women's Champions League · Final Stage
-HB Koege W,Servette W,2026-10-01 16:45:00+00:00,FT,,True,False,5.0,1.0,UEFA Women's Champions League · Final Stage
-Manchester City W,Real Madrid W,2026-10-01 19:00:00+00:00,FT,,True,False,1.0,1.0,UEFA Women's Champions League · Final Stage
-Paris Saint-Germain W,Oud-Heverlee Leuven,2026-10-01 19:00:00+00:00,FT,,True,False,5.0,0.0,UEFA Women's Champions League · Final Stage
-Athletic Club,Sport Recife,2026-10-01 23:30:00+00:00,FT,,True,False,1.0,2.0,Brazil · Serie B
-Atletico Nacional,Atletico Junior,2026-10-01 01:00:00+00:00,FT,,True,False,3.0,1.0,Colombia · Primera A: Clausura
-Envigado,Orsomarso,2026-10-01 20:30:00+00:00,FT,,True,False,0.0,0.0,Colombia · Primera B: Clausura
-El Mansura,FC Masar,2026-10-01 12:30:00+00:00,FT,,True,False,2.0,0.0,Egypt · 2. Division A
-El Sekka El Hadid,El Entag El Harby,2026-10-01 12:30:00+00:00,FT,,True,False,5.0,4.0,Egypt · 2. Division A
-La Viena FC,Al Nasr,2026-10-01 12:30:00+00:00,FT,,True,False,1.0,3.0,Egypt · 2. Division A
-Pharco FC,Al Tersana,2026-10-01 12:30:00+00:00,FT,,True,False,0.0,1.0,Egypt · 2. Division A
-Alianza FC,CD Platense Municipal,2026-10-01 00:00:00+00:00,FT,,True,False,2.0,1.0,El Salvador · Primera Division: Apertura
-CD Fuerte San Francisco,CD Luis Angel Firpo,2026-10-01 21:30:00+00:00,FT,,True,False,0.0,3.0,El Salvador · Primera Division: Apertura
-Kosovo U17 W,Azerbaijan Women U17,2026-10-01 10:00:00+00:00,FT,,True,False,8.0,3.0,Women's Euro U17 · Qualification Round 1: Group B1
-Ireland Women U17,Albania Women U17,2026-10-01 13:00:00+00:00,FT,,True,False,2.0,0.0,Women's Euro U17 · Qualification Round 1: Group B1
-SC Bastia,Orleans,2026-10-01 18:45:00+00:00,FT,,True,False,1.0,1.0,France · Ligue 3
-Asante Kotoko SC,Karela United,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,0.0,Ghana · Premier League
-Bnei Yehuda Tel Aviv,Maccabi Kiryat Gat,2026-10-01 16:00:00+00:00,FT,,True,False,2.0,1.0,Israel · Liga Leumit
-FC Ashdod,Maccabi Herzliya,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,0.0,Israel · Liga Leumit
-Hapoel Afula,Hapoel Rishon LeZion,2026-10-01 16:00:00+00:00,FT,,True,False,2.0,2.0,Israel · Liga Leumit
-Hapoel Raanana,SC Kfar Kasem,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,2.0,Israel · Liga Leumit
-Kiryat Yam,Hapoel Kfar Saba,2026-10-01 16:00:00+00:00,FT,,True,False,2.0,0.0,Israel · Liga Leumit
-Maccabi Ahi Nazareth,Ironi Modiin,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,2.0,Israel · Liga Leumit
-Maccabi Bnei Reineh,Hapoel Kfar Shalem,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,2.0,Israel · Liga Leumit
-Maccabi Kabilio Jaffa,Hapoel Ironi Akko,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,0.0,Israel · Liga Leumit
-Mombasa United,Kariobangi Sharks,2026-10-01 11:00:00+00:00,FT,,True,False,2.0,1.0,Kenya · Premier League: Relegation Play-off
-Baerum,Lillestroem,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,5.0,Norway · NM Cup: Round 2
-Madla,Viking,2026-10-01 16:00:00+00:00,FT,,True,False,0.0,3.0,Norway · NM Cup: Round 2
-Rana FK,Bodoe/Glimt,2026-10-01 16:00:00+00:00,FT,,True,False,2.0,6.0,Norway · NM Cup: Round 2
-Olimpia,Luqueno,2026-10-01 22:00:00+00:00,AP,,True,False,1.0,1.0,Paraguay · Copa Paraguay
-FC Tulsa,New Mexico United,2026-10-01 00:00:00+00:00,FT,,True,False,1.0,0.0,USA · USL Championship
-Sacramento Republic FC,Las Vegas Lights FC,2026-10-01 02:00:00+00:00,FT,,True,False,3.0,2.0,USA · USL Championship
-Eritrea,South Africa,2026-09-30 16:00:00+00:00,FT,,True,False,0.0,5.0,Africa Cup of Nations Qualification · Qualification: Group D
-Belize,Saint Vincent and The Grenadines,2026-09-30 02:00:00+00:00,FT,,True,False,0.0,1.0,CONCACAF Nations League · League B: Group 4
-USA,Chile,2026-09-30 00:00:00+00:00,FT,,True,False,4.0,2.0,International Friendlies · Friendlies
-Mexico,Peru,2026-09-30 01:00:00+00:00,FT,,True,False,1.0,1.0,International Friendlies · Friendlies
-Papua New Guinea,Solomon Islands,2026-09-30 04:00:00+00:00,FT,,True,False,1.0,1.0,International Friendlies · Friendlies
-Fiji,New Caledonia,2026-09-30 07:00:00+00:00,FT,,True,False,2.0,1.0,International Friendlies · Friendlies
-Seychelles,Sri Lanka,2026-09-30 13:00:00+00:00,FT,,True,False,0.0,2.0,International Friendlies · Friendlies
-Botswana,Mozambique,2026-09-30 14:00:00+00:00,FT,,True,False,0.0,2.0,International Friendlies · Friendlies
-Lithuania,Andorra,2026-09-30 16:00:00+00:00,FT,,True,False,3.0,0.0,International Friendlies · Friendlies
-Eastleigh,Southend United,2026-09-30 18:45:00+00:00,FT,,True,False,1.0,1.0,England · National League
-Tamworth,Sutton United,2026-09-30 18:45:00+00:00,FT,,True,False,2.0,0.0,England · National League
-DC United,Paderborn,2026-09-30 23:30:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026
-New York Red Bulls,St. Louis City,2026-09-30 23:30:00+00:00,FT,,True,False,0.0,3.0,USA · MLS
-Ethiopia,Seychelles W,2026-09-30 12:00:00+00:00,FT,,True,False,16.0,0.0,International Friendlies · Women's Friendlies
-Romania U21,Finland U21,2026-09-30 16:00:00+00:00,FT,,True,False,0.0,2.0,Euro U21 2027 · Qualification: Group A
-Kosovo U21,Cyprus U21,2026-09-30 17:00:00+00:00,FT,,True,False,2.0,1.0,Euro U21 2027 · Qualification: Group A
-Czechia U21,Bulgaria U21,2026-09-30 16:00:00+00:00,FT,,True,False,1.0,0.0,Euro U21 2027 · Qualification: Group B
-Scotland U21,Azerbaijan U21,2026-09-30 18:30:00+00:00,FT,,True,False,5.0,2.0,Euro U21 2027 · Qualification: Group B
-Portugal U21,Gibraltar U21,2026-09-30 19:00:00+00:00,FT,,True,False,4.0,0.0,Euro U21 2027 · Qualification: Group B
-Faroe Islands U21,Luxembourg U21,2026-09-30 16:00:00+00:00,FT,,True,False,0.0,1.0,Euro U21 2027 · Qualification: Group C
-Poland U21,Sweden U21,2026-09-30 16:00:00+00:00,FT,,True,False,3.0,0.0,Euro U21 2027 · Qualification: Group E
-Malta U21,Germany U21,2026-09-30 16:00:00+00:00,FT,,True,False,1.0,4.0,Euro U21 2027 · Qualification: Group F
-BK Haecken W,Juventus W,2026-09-30 16:45:00+00:00,FT,,True,False,0.0,3.0,UEFA Women's Champions League · Final Stage
-Paris FC W,Arsenal W,2026-09-30 16:45:00+00:00,FT,,True,False,2.0,2.0,UEFA Women's Champions League · Final Stage
-Roma W,Barcelona W,2026-09-30 16:45:00+00:00,FT,,True,False,0.0,6.0,UEFA Women's Champions League · Final Stage
-Benfica W,Bayern Munich W,2026-09-30 19:00:00+00:00,FT,,True,False,0.0,3.0,UEFA Women's Champions League · Final Stage
-Lyon W,Chelsea W,2026-09-30 19:00:00+00:00,FT,,True,False,0.0,0.0,UEFA Women's Champions League · Final Stage
-Bahrain,Yemen,2026-09-30 17:30:00+00:00,FT,,True,False,2.0,5.0,International · Gulf Cup: Group B
-UAE,Qatar,2026-09-30 17:30:00+00:00,FT,,True,False,1.0,1.0,International · Gulf Cup: Group B
-South Korea U23,China U23,2026-09-30 06:00:00+00:00,FT,,True,False,2.0,1.0,International · Asian Games: U23 Final Stage
-Uzbekistan U23,Japan U23,2026-09-30 10:30:00+00:00,AP,,True,False,1.0,1.0,International · Asian Games: U23 Final Stage
-Flenu,Olympic Charleroi Chatelet Farciennes,2026-09-30 18:00:00+00:00,FT,,True,False,3.0,4.0,Belgium · National Division 1 ACFF
-RWD Molenbeek,Union Rochefortoise,2026-09-30 18:00:00+00:00,FT,,True,False,1.0,1.0,Belgium · National Division 1 ACFF
-Sporting Charleroi U21,Habay La Neuve,2026-09-30 18:00:00+00:00,FT,,True,False,0.0,0.0,Belgium · National Division 1 ACFF
-Belisia Bilzen SV,KSK Heist,2026-09-30 18:00:00+00:00,FT,,True,False,3.0,1.0,Belgium · National Division 1 VV
-Houtvenne,KFC Mandel United,2026-09-30 18:00:00+00:00,FT,,True,False,2.0,1.0,Belgium · National Division 1 VV
-KFC Merelbeke,Dessel,2026-09-30 18:00:00+00:00,FT,,True,False,1.0,1.0,Belgium · National Division 1 VV
-KVV Zelzate,Royal Knokke FC,2026-09-30 18:00:00+00:00,FT,,True,False,0.0,0.0,Belgium · National Division 1 VV
-Roeselare,Thes Sport,2026-09-30 18:00:00+00:00,FT,,True,False,0.0,1.0,Belgium · National Division 1 VV
-Harelbeke,Hoogstraten,2026-09-30 18:30:00+00:00,FT,,True,False,3.0,3.0,Belgium · National Division 1 VV
-Atletico Ottawa,Cavalry FC,2026-09-30 23:00:00+00:00,FT,,True,False,3.0,2.0,Canada · Premier League
-Union San Felipe,San Luis,2026-09-30 21:00:00+00:00,FT,,True,False,0.0,1.0,Chile · Primera B
-Deportes Concepcion,O'Higgins,2026-09-30 23:00:00+00:00,FT,,True,False,0.0,1.0,Chile · Cup Final Stage
-Independiente Medellin,Millonarios,2026-09-30 01:05:00+00:00,FT,,True,False,2.0,2.0,Colombia · Primera A: Clausura
-FC Vsetin,Bohemians 1905,2026-09-30 13:30:00+00:00,FT,,True,False,0.0,5.0,Czech Republic · Cup
-Hobro II,IF Lyseng,2026-09-30 17:15:00+00:00,FT,,True,False,1.0,1.0,Denmark · Danmarksserien: Group 4
-CD Aguila,Inter FA,2026-09-30 21:30:00+00:00,FT,,True,False,2.0,1.0,El Salvador · Primera Division: Apertura
-Frome Town,Taunton Town,2026-09-30 18:45:00+00:00,FT,,True,False,2.0,2.0,England · Southern League Premier: South
-Gosport Borough,Bracknell Town,2026-09-30 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Southern League Premier: South
-Whyteleafe,Brentwood Town,2026-09-30 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Isthmian League Premier Division
-Grays Athletic,Takeley,2026-09-30 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Isthmian League: North Division
-Birmingham City W,Liverpool W,2026-09-30 18:00:00+00:00,FT,,True,False,3.0,4.0,England · Women's League Cup
-Crystal Palace W,Charlton Athletic W,2026-09-30 18:00:00+00:00,FT,,True,False,3.0,0.0,England · Women's League Cup
-Durham W,Manchester United W,2026-09-30 18:00:00+00:00,FT,,True,False,1.0,5.0,England · Women's League Cup
-West Ham United W,Southampton W,2026-09-30 18:00:00+00:00,FT,,True,False,3.0,1.0,England · Women's League Cup
-Aston Villa W,Newcastle United W,2026-09-30 18:30:00+00:00,FT,,True,False,3.0,1.0,England · Women's League Cup
-Ipswich Town W,London City Lionesses,2026-09-30 18:30:00+00:00,FT,,True,False,0.0,1.0,England · Women's League Cup
-Brighton W,Tottenham Hotspur W,2026-09-30 18:45:00+00:00,FT,,True,False,0.0,1.0,England · Women's League Cup
-SC Wiedenbrueck,Sportfreunde Siegen,2026-09-30 17:30:00+00:00,FT,,True,False,1.0,3.0,Germany · Regionalliga West
-SC Verl II,FC Gievenbeck,2026-09-30 17:45:00+00:00,FT,,True,False,6.0,0.0,Germany · Oberliga: Westfalen
-Medeama SC,Port City,2026-09-30 15:00:00+00:00,FT,,True,False,1.0,0.0,Ghana · Premier League
-Alessandria,ASD Imperia,2026-09-30 13:00:00+00:00,FT,,True,False,2.0,1.0,Italy · Serie D: Group A
-Chisola,Borgosesia,2026-09-30 14:00:00+00:00,FT,,True,False,2.0,2.0,Italy · Serie D: Group A
-Correcaminos de la UAT II,Heroes de Zaci,2026-09-30 23:00:00+00:00,FT,,True,False,3.0,0.0,Mexico · Liga Premier: Serie A Clausura
-Enyimba,Shooting Stars,2026-09-30 15:00:00+00:00,FT,,True,False,4.0,2.0,Nigeria · NPFL
-Katsina United,Rivers United FC,2026-09-30 15:00:00+00:00,FT,,True,False,1.0,1.0,Nigeria · NPFL
-Sporting Lagos,Ikorodu City,2026-09-30 15:00:00+00:00,FT,,True,False,0.0,0.0,Nigeria · NPFL
-Warri Wolves FC,Enugu Rangers,2026-09-30 15:00:00+00:00,FT,,True,False,0.0,1.0,Nigeria · NPFL
-Follo,Sarpsborg 08,2026-09-30 14:00:00+00:00,FT,,True,False,0.0,2.0,Norway · NM Cup: Round 2
-Flint,Sandefjord,2026-09-30 16:00:00+00:00,FT,,True,False,0.0,1.0,Norway · NM Cup: Round 2
-Hoenefoss,KFUM Oslo,2026-09-30 16:00:00+00:00,FT,,True,False,0.0,2.0,Norway · NM Cup: Round 2
-Bryne W,Kolbotn W,2026-09-30 14:00:00+00:00,FT,,True,False,1.0,0.0,Norway · Women's 1. Division
-Arna-Bjoernar W,Frigg W,2026-09-30 14:30:00+00:00,FT,,True,False,5.0,0.0,Norway · Women's 1. Division
-Independiente CG,Nacional Asuncion,2026-09-30 20:00:00+00:00,AP,,True,False,2.0,2.0,Paraguay · Copa Paraguay
-Cerro Porteno,Rubio Nu,2026-09-30 22:30:00+00:00,FT,,True,False,2.0,1.0,Paraguay · Copa Paraguay
-Cienciano,Los Chankas CYC,2026-09-30 20:00:00+00:00,FT,,True,False,1.0,1.0,Peru · Liga 1: Clausura
-Umeaa FC Akademi,IFK Umeaa,2026-09-30 17:00:00+00:00,FT,,True,False,6.0,0.0,Sweden · 2.Division Norrland: Relegation Group
-FC Kreuzlingen,SC Bruehl,2026-09-30 18:00:00+00:00,FT,,True,False,3.0,0.0,Switzerland · Promotion League
-Montevideo City Torque,Club Atletico Penarol,2026-09-30 23:00:00+00:00,FT,,True,False,1.0,1.0,Uruguay · Primera División: Clausura
-Brooklyn,Detroit City FC,2026-09-30 23:00:00+00:00,FT,,True,False,1.0,3.0,USA · USL Championship
-Miami FC,Sporting Jax,2026-09-30 23:00:00+00:00,FT,,True,False,4.0,1.0,USA · USL Championship
-Rhode Island,Indy Eleven,2026-09-30 23:30:00+00:00,FT,,True,False,1.0,0.0,USA · USL Championship
-Chattanooga Red Wolves SC,Spokane Velocity,2026-09-30 23:00:00+00:00,FT,,True,False,0.0,1.0,USA · USL League One
-Atletico Barinas,Academia Rey,2026-09-30 19:30:00+00:00,FT,,True,False,1.0,2.0,Venezuela · Segunda División: Occidental
-Atletico El Vigia,Zamora FC B,2026-09-30 19:30:00+00:00,FT,,True,False,4.0,3.0,Venezuela · Segunda División: Occidental
-Yaracuyanos FC,Academia Puerto Cabello B,2026-09-30 20:00:00+00:00,FT,,True,False,3.0,0.0,Venezuela · Segunda División: Occidental
-Deportivo Lara,Real Frontera,2026-09-30 23:00:00+00:00,FT,,True,False,4.0,0.0,Venezuela · Segunda División: Occidental
-Grimsby Borough,Hallam,2026-09-30 18:45:00+00:00,FT,,True,False,3.0,0.0,England · Northern Premier League: East Division
-Corby Town,Carlton Town,2026-09-30 18:45:00+00:00,FT,,True,False,0.0,0.0,England · Northern Premier League: Midlands Division
-Lower Breck,Prescot Cables,2026-09-30 18:45:00+00:00,FT,,True,False,0.0,1.0,England · Northern Premier League: West Division
-Aylesbury United,Waltham Abbey,2026-09-30 18:45:00+00:00,FT,,True,False,2.0,3.0,England · Southern League: Central Divison
-London Lions,Biggleswade Town,2026-09-30 18:45:00+00:00,FT,,True,False,1.0,0.0,England · Southern League: Central Divison
-Czechia,England,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,2.0,UEFA Nations League · League A: Group 3
-Spain,Croatia,2026-09-29 18:45:00+00:00,FT,,True,False,4.0,1.0,UEFA Nations League · League A: Group 3
-Scotland,Switzerland,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,3.0,UEFA Nations League · League B: Group 1
-Slovenia,North Macedonia,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,0.0,UEFA Nations League · League B: Group 1
-Finland,Belarus,2026-09-29 16:00:00+00:00,FT,,True,False,0.0,0.0,UEFA Nations League · League C: Group 1
-San Marino,Albania,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,3.0,UEFA Nations League · League C: Group 1
-Moldova,Faroe Islands,2026-09-29 16:00:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League C: Group 3
-Slovakia,Kazakhstan,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,UEFA Nations League · League C: Group 3
-Bulgaria,Estonia,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,0.0,UEFA Nations League · League C: Group 4
-Luxembourg,Iceland,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,3.0,UEFA Nations League · League C: Group 4
-Lesotho,Morocco,2026-09-29 13:00:00+00:00,FT,,True,False,0.0,2.0,Africa Cup of Nations Qualification · Qualification: Group A
-Gabon,Niger,2026-09-29 19:00:00+00:00,FT,,True,False,2.0,0.0,Africa Cup of Nations Qualification · Qualification: Group A
-South Sudan,Egypt,2026-09-29 13:00:00+00:00,FT,,True,False,0.0,5.0,Africa Cup of Nations Qualification · Qualification: Group B
-Ghana,Gambia,2026-09-29 16:00:00+00:00,FT,,True,False,2.0,4.0,Africa Cup of Nations Qualification · Qualification: Group C
-Somalia,Ivory Coast,2026-09-29 19:00:00+00:00,FT,,True,False,0.0,2.0,Africa Cup of Nations Qualification · Qualification: Group C
-Benin,Mauritania,2026-09-29 19:00:00+00:00,FT,,True,False,2.0,1.0,Africa Cup of Nations Qualification · Qualification: Group F
-Comoros,Namibia,2026-09-29 12:00:00+00:00,FT,,True,False,1.0,0.0,Africa Cup of Nations Qualification · Qualification: Group G
-Congo,Cameroon,2026-09-29 19:00:00+00:00,FT,,True,False,1.0,1.0,Africa Cup of Nations Qualification · Qualification: Group G
-Uganda,Libya,2026-09-29 16:00:00+00:00,FT,,True,False,1.0,0.0,Africa Cup of Nations Qualification · Qualification: Group H
-Burundi,Algeria,2026-09-29 13:00:00+00:00,FT,,True,False,2.0,2.0,Africa Cup of Nations Qualification · Qualification: Group I
-Zambia,Togo,2026-09-29 16:00:00+00:00,FT,,True,False,2.0,0.0,Africa Cup of Nations Qualification · Qualification: Group I
-Ethiopia,Senegal,2026-09-29 13:00:00+00:00,FT,,True,False,0.0,1.0,Africa Cup of Nations Qualification · Qualification: Group J
-Mozambique,Sudan,2026-09-29 13:00:00+00:00,FT,,True,False,4.0,1.0,Africa Cup of Nations Qualification · Qualification: Group J
-Cape Verde,Rwanda,2026-09-29 16:00:00+00:00,FT,,True,False,1.0,2.0,Africa Cup of Nations Qualification · Qualification: Group K
-Liberia,Mali,2026-09-29 19:00:00+00:00,FT,,True,False,0.0,1.0,Africa Cup of Nations Qualification · Qualification: Group K
-Madagascar,Tanzania,2026-09-29 14:00:00+00:00,FT,,True,False,1.0,1.0,Africa Cup of Nations Qualification · Qualification: Group L
-Guinea-Bissau,Nigeria,2026-09-29 16:00:00+00:00,FT,,True,False,3.0,0.0,Africa Cup of Nations Qualification · Qualification: Group L
-Jamaica,Honduras,2026-09-29 00:00:00+00:00,FT,,True,False,0.0,1.0,CONCACAF Nations League · League A: Group 2
-Guatemala,El Salvador,2026-09-29 02:00:00+00:00,FT,,True,False,6.0,0.0,CONCACAF Nations League · League A: Group 2
-Saint Lucia,Bermuda,2026-09-29 00:00:00+00:00,FT,,True,False,5.0,2.0,CONCACAF Nations League · League B: Group 2
-St. Kitts and Nevis,Grenada,2026-09-29 00:00:00+00:00,FT,,True,False,3.0,0.0,CONCACAF Nations League · League B: Group 3
-French Guiana,Sint Maarten,2026-09-29 21:00:00+00:00,FT,,True,False,1.0,0.0,CONCACAF Nations League · League B: Group 4
-British Virgin Islands,Turks and Caicos Islands,2026-09-29 19:00:00+00:00,FT,,True,False,0.0,3.0,CONCACAF Nations League · League C: Group 1
-Anguilla,Aruba,2026-09-29 23:00:00+00:00,FT,,True,False,0.0,2.0,CONCACAF Nations League · League C: Group 2
-U.S. Virgin Islands,Bahamas,2026-09-29 20:00:00+00:00,FT,,True,False,3.0,1.0,CONCACAF Nations League · League C: Group 3
-Australia,Brazil,2026-09-29 10:00:00+00:00,FT,,True,False,2.0,4.0,International Friendlies · Friendlies
-Boreham Wood,Kidderminster Harriers,2026-09-29 18:00:00+00:00,FT,,True,False,3.0,1.0,England · National League
-AFC Fylde,Carlisle United,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,2.0,England · National League
-Barrow,Scunthorpe United,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,0.0,England · National League
-FC Halifax Town,Boston United,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · National League
-Forest Green Rovers,Wealdstone,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · National League
-Gateshead FC,Altrincham,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,1.0,England · National League
-Hartlepool United,Harrogate Town,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,1.0,England · National League
-Hornchurch,Aldershot Town,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · National League
-Woking,Solihull Moors,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,4.0,England · National League
-Yeovil Town,Worthing,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · National League
-Papua New Guinea W,Solomon Islands Women,2026-09-29 04:00:00+00:00,FT,,True,False,5.0,1.0,International Friendlies · Women's Friendlies
-Fiji W,New Caledonia,2026-09-29 07:00:00+00:00,FT,,True,False,1.0,0.0,International Friendlies · Women's Friendlies
-Botswana W,Namibia Women,2026-09-29 09:30:00+00:00,FT,,True,False,4.0,1.0,International Friendlies · Women's Friendlies
-Iceland U21,Switzerland U21,2026-09-29 15:00:00+00:00,FT,,True,False,5.0,1.0,Euro U21 2027 · Qualification: Group C
-Estonia U21,France U21,2026-09-29 16:00:00+00:00,FT,,True,False,0.0,2.0,Euro U21 2027 · Qualification: Group C
-Ireland U21,Kazakhstan U21,2026-09-29 18:00:00+00:00,FT,,True,False,4.0,3.0,Euro U21 2027 · Qualification: Group D
-Slovenia U21,Israel U21,2026-09-29 14:00:00+00:00,FT,,True,False,2.0,3.0,Euro U21 2027 · Qualification: Group G
-Norway U21,Bosnia and Herzegovina U21,2026-09-29 16:00:00+00:00,FT,,True,False,6.0,1.0,Euro U21 2027 · Qualification: Group G
-Belgium U21,Wales U21,2026-09-29 18:00:00+00:00,FT,,True,False,1.0,0.0,Euro U21 2027 · Qualification: Group I
-Oman,Kuwait,2026-09-29 17:30:00+00:00,FT,,True,False,3.0,1.0,International · Gulf Cup: Group A
-Saudi Arabia,Iraq,2026-09-29 17:30:00+00:00,FT,,True,False,2.0,0.0,International · Gulf Cup: Group A
-Botafogo SP,Ponte Preta,2026-09-29 22:30:00+00:00,FT,,True,False,2.0,0.0,Brazil · Serie B
-Puerto Montt,Colo Colo,2026-09-29 21:00:00+00:00,FT,,True,False,0.0,1.0,Chile · Cup Final Stage
-Wuxi Wugou FC,Ningbo Professional,2026-09-29 11:00:00+00:00,FT,,True,False,1.0,0.0,China · League One
-Deportivo Pereira,Santa Fe,2026-09-29 20:30:00+00:00,FT,,True,False,1.0,2.0,Colombia · Primera A: Clausura
-Union Magdalena,Real Cartagena,2026-09-29 23:00:00+00:00,FT,,True,False,1.0,1.0,Colombia · Primera B: Clausura
-Cariari,CS Uruguay,2026-09-29 01:00:00+00:00,FT,,True,False,1.0,1.0,Costa Rica · Liga de Ascenso: Apertura: Group B
-OB Q W,AGF W,2026-09-29 16:00:00+00:00,FT,,True,False,1.0,0.0,Denmark · A-Liga Women
-Atletico Balboa,CD Cacahuatique U20,2026-09-29 21:00:00+00:00,FT,,True,False,0.0,2.0,El Salvador · Primera Division: Apertura
-Brackley Town,South Shields,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,2.0,England · National League: North
-Slough Town,Ebbsfleet United,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · National League: South
-Alfreton Town,Guiseley,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,0.0,England · Northern Premier League
-Emley,Workington,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,3.0,England · Northern Premier League
-Ilkeston Town,Warrington Rylands,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,1.0,England · Northern Premier League
-Whitby,Lancaster City,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Northern Premier League
-Alvechurch,Stourbridge,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,0.0,England · Southern League Premier: Central
-Banbury United,Stratford Town,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,3.0,England · Southern League Premier: Central
-Bishop's Stortford,Bury Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Southern League Premier: Central
-Bromsgrove Sporting,Leamington,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Southern League Premier: Central
-Halesowen Town FC,Rushall Olympic,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,0.0,England · Southern League Premier: Central
-Hitchin Town,Leighton Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,0.0,England · Southern League Premier: Central
-Kettering Town,Anstey Nomads,2026-09-29 18:45:00+00:00,FT,,True,False,4.0,1.0,England · Southern League Premier: Central
-Needham Market,Stamford AFC,2026-09-29 18:45:00+00:00,FT,,True,False,4.0,0.0,England · Southern League Premier: Central
-Peterborough Sports,Redditch United,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,2.0,England · Southern League Premier: Central
-Racing Club Warwick,Worcester City,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,2.0,England · Southern League Premier: Central
-Real Bedford,Leiston,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,2.0,England · Southern League Premier: Central
-Wimborne Town,Yate Town,2026-09-29 18:30:00+00:00,FT,,True,False,4.0,0.0,England · Southern League Premier: South
-Bath City,Malvern Town,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Southern League Premier: South
-Chertsey Town,Poole Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,3.0,England · Southern League Premier: South
-Evesham United,Chippenham Town,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,0.0,England · Southern League Premier: South
-Gloucester City,Plymouth Parkway,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Southern League Premier: South
-Hanworth Villa,Chichester City,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Southern League Premier: South
-Havant & Waterlooville,Hanwell Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Southern League Premier: South
-Sholing,Berkhamsted,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,0.0,England · Southern League Premier: South
-Uxbridge,Basingstoke,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Southern League Premier: South
-Dartford,Whitehawk,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Isthmian League Premier Division
-Dulwich Hamlet,Aveley,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,0.0,England · Isthmian League Premier Division
-Maldon & Tiptree,Cray Wanderers,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,5.0,England · Isthmian League Premier Division
-Brightlingsea Regent,AFC Sudbury,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Isthmian League: North Division
-Buckhurst Hill,Gorleston,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,2.0,England · Isthmian League: North Division
-Canvey Island,Newmarket Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Isthmian League: North Division
-Fakenham Town,Felixstowe & Walton United,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,3.0,England · Isthmian League: North Division
-Hashtag United,Wroxham,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,2.0,England · Isthmian League: North Division
-Egham Town FC,Jersey Bulls,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,3.0,England · Isthmian League: South Central Division
-Hendon,Ashford Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Isthmian League: South Central Division
-Steyning Town,Faversham Town,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,2.0,England · Isthmian League: South East Division
-Woodford Town,Mulbarton Wanderers,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,2.0,England · FA Cup: Qualification
-Gibraltar U17,Bosnia and Herzegovina U17,2026-09-29 12:00:00+00:00,FT,,True,False,1.0,9.0,Euro U17 · Qualification: Group 7
-Greece U17,Iceland U17,2026-09-29 12:00:00+00:00,FT,,True,False,2.0,3.0,Euro U17 · Qualification: Group 7
-Unterhaching,TSV Buchbach,2026-09-29 17:00:00+00:00,FT,,True,False,2.0,2.0,Germany · Regionalliga Bayern
-Teutonia Ottensen,TSV Buchholz,2026-09-29 17:45:00+00:00,FT,,True,False,6.0,3.0,Germany · Oberliga: Hamburg
-MTSV Hohenwestedt,Eckernfoerder SV,2026-09-29 17:30:00+00:00,FT,,True,False,1.0,2.0,Germany · Oberliga: Flens
-Mes Rafsanjan,Beasat Kermanshah,2026-09-29 13:30:00+00:00,FT,,True,False,1.0,0.0,Iran · Azadegan League
-Consadole Sapporo,Fagiano Okayama FC,2026-09-29 10:00:00+00:00,FT,,True,False,1.0,2.0,Japan · J.League Cup
-Ehime FC,FC Tokyo,2026-09-29 10:00:00+00:00,FT,,True,False,0.0,2.0,Japan · J.League Cup
-FC Gifu,Yokohama FC,2026-09-29 10:00:00+00:00,FT,,True,False,1.0,2.0,Japan · J.League Cup
-FC Osaka,Avispa Fukuoka,2026-09-29 10:00:00+00:00,AET,,True,False,1.0,2.0,Japan · J.League Cup
-Fujieda MYFC,Cerezo Osaka,2026-09-29 10:00:00+00:00,FT,,True,False,1.0,2.0,Japan · J.League Cup
-Fukushima United,Mito Hollyhock,2026-09-29 10:00:00+00:00,FT,,True,False,0.0,7.0,Japan · J.League Cup
-Gainare Tottori,V-Varen Nagasaki,2026-09-29 10:00:00+00:00,FT,,True,False,2.0,0.0,Japan · J.League Cup
-Giravanz Kitakyushu,Nagoya Grampus Eight,2026-09-29 10:00:00+00:00,FT,,True,False,1.0,3.0,Japan · J.League Cup
-Jubilo Iwata,JEF United Chiba,2026-09-29 10:00:00+00:00,FT,,True,False,4.0,2.0,Japan · J.League Cup
-Kataller Toyama,Urawa Red Diamonds,2026-09-29 10:00:00+00:00,FT,,True,False,2.0,3.0,Japan · J.League Cup
-Matsumoto Yamaga,Albirex Niigata,2026-09-29 10:00:00+00:00,FT,,True,False,1.0,0.0,Japan · J.League Cup
-Montedio Yamagata,Yokohama F.Marinos,2026-09-29 10:00:00+00:00,FT,,True,False,1.0,2.0,Japan · J.League Cup
-Roasso Kumamoto,Kawasaki Frontale,2026-09-29 10:00:00+00:00,FT,,True,False,0.0,1.0,Japan · J.League Cup
-Sagan Tosu,Tokyo Verdy,2026-09-29 10:00:00+00:00,AET,,True,False,2.0,1.0,Japan · J.League Cup
-Tochigi City FC,Sanfrecce Hiroshima,2026-09-29 10:00:00+00:00,FT,,True,False,0.0,2.0,Japan · J.League Cup
-Zweigen Kanazawa,Shimizu S-Pulse,2026-09-29 10:00:00+00:00,FT,,True,False,0.0,2.0,Japan · J.League Cup
-Jaguares Chiapas,Racing FC Porto Palmeiras,2026-09-29 02:05:00+00:00,FT,,True,False,1.0,1.0,Mexico · Primera Premier
-Necaxa W,Toluca W,2026-09-29 01:06:00+00:00,FT,,True,False,0.0,4.0,Mexico · Women's Liga MX: Apertura
-Union Carl Berner,KFUM 2,2026-09-29 18:15:00+00:00,FT,,True,False,1.0,1.0,Norway · 3. Division: Group 1
-Forfar Athletic,Formartine United,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,0.0,Scotland · Challenge Cup
-Vozdovac,Napredak,2026-09-29 16:00:00+00:00,FT,,True,False,0.0,0.0,Serbia · Prva Liga
-Inter Bratislava,Zeleziarne Podbrezova,2026-09-29 13:30:00+00:00,FT,,True,False,0.0,2.0,Slovakia · Slovak Cup
-Cardiff Met University,Haverfordwest,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,0.0,Wales · JD Cymru Premier
-Deportivo Muniz,El Porvenir,2026-09-29 18:00:00+00:00,FT,,True,False,3.0,2.0,Argentina · Primera C
-Blyth Spartans,Heaton Stannington FC,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Northern Premier League: East Division
-Dunston UTS,Guisborough Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,0.0,England · Northern Premier League: East Division
-Garforth Town,Stocksbridge Park Steels,2026-09-29 18:45:00+00:00,FT,,True,False,4.0,1.0,England · Northern Premier League: East Division
-Liversedge,North Ferriby FC,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Northern Premier League: East Division
-Matlock Town,Bradford PA,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,1.0,England · Northern Premier League: East Division
-Ossett United,Bridlington Town,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,1.0,England · Northern Premier League: East Division
-West Auckland Town,Ashington AFC,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,2.0,England · Northern Premier League: East Division
-Bedworth United,Grantham Town,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Northern Premier League: Midlands Division
-Long Eaton United,Boston Town,2026-09-29 18:45:00+00:00,FT,,True,False,4.0,1.0,England · Northern Premier League: Midlands Division
-Shepshed Dynamo,Boldmere St Michaels,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,3.0,England · Northern Premier League: Midlands Division
-Sutton Coldfield Town,Mickleover Sports,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Northern Premier League: Midlands Division
-Wellingborough Town,Barwell FC,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,0.0,England · Northern Premier League: Midlands Division
-1874 Northwich,Stalybridge,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,2.0,England · Northern Premier League: West Division
-Atherton Collieries,Vauxhall Motors,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Northern Premier League: West Division
-Bootle,Nantwich Town,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,0.0,England · Northern Premier League: West Division
-Chasetown,Hanley Town,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,4.0,England · Northern Premier League: West Division
-Clitheroe,Runcorn Linnets,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Northern Premier League: West Division
-Congleton Town,Shifnal Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Northern Premier League: West Division
-Kidsgrove Athletic,Lichfield City,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,0.0,England · Northern Premier League: West Division
-Newcastle Town,Stafford Rangers,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,2.0,England · Northern Premier League: West Division
-Didcot Town,Milton Keynes Irish,2026-09-29 18:45:00+00:00,FT,,True,False,4.0,1.0,England · Southern League: Central Divison
-Flackwell Heath,Haringey Borough,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Southern League: Central Divison
-Leverstock Green,Ware,2026-09-29 18:45:00+00:00,FT,,True,False,5.0,0.0,England · Southern League: Central Divison
-Marlow,Hadley,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,0.0,England · Southern League: Central Divison
-Potters Bar Town,Stotfold,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Southern League: Central Divison
-Thame United,Beaconsfield Town,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,0.0,England · Southern League: Central Divison
-Welwyn Garden City,Royston Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Southern League: Central Divison
-Winslow United,Barton Rovers,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Southern League: Central Divison
-Belgium,Turkiye,2026-10-02 18:45:00+00:00,FT,,True,False,3.0,0.0,UEFA Nations League · League A: Group 1
-France,Italy,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League A: Group 1
-Hungary,Georgia,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,0.0,UEFA Nations League · League B: Group 2
-Ukraine,Northern Ireland,2026-10-02 18:45:00+00:00,FT,,True,False,0.0,3.0,UEFA Nations League · League B: Group 2
-Bosnia and Herzegovina,Sweden,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League B: Group 4
-Poland,Romania,2026-10-02 18:45:00+00:00,FT,,True,False,6.0,0.0,UEFA Nations League · League B: Group 4
-Cyprus,Armenia,2026-10-02 16:00:00+00:00,FT,,True,False,2.0,0.0,UEFA Nations League · League C: Group 2
-Latvia,Montenegro,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,2.0,UEFA Nations League · League C: Group 2
-Kazakhstan,Moldova,2026-10-02 14:00:00+00:00,FT,,True,False,1.0,2.0,UEFA Nations League · League C: Group 3
-Faroe Islands,Slovakia,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League C: Group 3
-Dominican Republic,Haiti,2026-10-02 00:00:00+00:00,FT,,True,False,1.0,4.0,CONCACAF Nations League · League A: Group 1
-Nicaragua,Costa Rica,2026-10-02 02:00:00+00:00,FT,,True,False,0.0,3.0,CONCACAF Nations League · League A: Group 1
-Cayman Islands,Puerto Rico,2026-10-02 00:00:00+00:00,FT,,True,False,0.0,3.0,CONCACAF Nations League · League B: Group 1
-Saint Lucia,Guadeloupe,2026-10-02 19:00:00+00:00,FT,,True,False,3.0,0.0,CONCACAF Nations League · League B: Group 2
-South Korea,Venezuela,2026-10-02 11:00:00+00:00,FT,,True,False,0.0,0.0,International Friendlies · Friendlies
-China,Palestine,2026-10-02 11:35:00+00:00,FT,,True,False,0.0,5.0,International Friendlies · Friendlies
-DR Congo,Uganda,2026-10-02 13:00:00+00:00,FT,,True,False,0.0,2.0,International Friendlies · Friendlies
-Mauritius,Sri Lanka,2026-10-02 15:00:00+00:00,FT,,True,False,3.0,0.0,International Friendlies · Friendlies
-FC Admira Wacker Modling,Austria Wien,2026-10-02 09:00:00+00:00,FT,,True,False,1.0,6.0,Club Friendlies · Club Friendlies 2026
-Saint-Etienne,Sion,2026-10-02 09:00:00+00:00,FT,,True,False,5.0,1.0,Club Friendlies · Club Friendlies 2026
-Lugano,Hellas Verona,2026-10-02 09:30:00+00:00,FT,,True,False,1.0,3.0,Club Friendlies · Club Friendlies 2026
-AC Horsens,Vejle Boldklub,2026-10-02 10:00:00+00:00,FT,,True,False,2.0,1.0,Club Friendlies · Club Friendlies 2026
-AGF,Vendsyssel FF,2026-10-02 10:00:00+00:00,FT,,True,False,2.0,1.0,Club Friendlies · Club Friendlies 2026
-Dunkerque,Raal La Louviere,2026-10-02 10:00:00+00:00,FT,,True,False,0.0,4.0,Club Friendlies · Club Friendlies 2026
-Elfsborg,BK Haecken,2026-10-02 10:00:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026
-Le Havre,Boulogne,2026-10-02 10:00:00+00:00,FT,,True,False,6.0,1.0,Club Friendlies · Club Friendlies 2026
-Juventus,Cremonese,2026-10-02 10:30:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026
-Kolding IF,OB,2026-10-02 11:00:00+00:00,FT,,True,False,5.0,4.0,Club Friendlies · Club Friendlies 2026
-IK Start,Brann,2026-10-02 12:00:00+00:00,FT,,True,False,2.0,1.0,Club Friendlies · Club Friendlies 2026
-Eintracht Frankfurt,Eintracht Braunschweig,2026-10-02 14:00:00+00:00,FT,,True,False,4.0,0.0,Club Friendlies · Club Friendlies 2026
-Broendby IF,Sirius,2026-10-02 15:30:00+00:00,FT,,True,False,1.0,1.0,Club Friendlies · Club Friendlies 2026
-Deportivo A Coruna,FC Porto,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,3.0,Club Friendlies · Club Friendlies 2026
-Real Sociedad,Athletic Club,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026
-Sevilla,Aston Villa,2026-10-02 18:30:00+00:00,FT,,True,False,1.0,3.0,Club Friendlies · Club Friendlies 2026
-Seattle Sounders FC,Sporting Kansas City,2026-10-02 01:30:00+00:00,FT,,True,False,2.0,1.0,USA · MLS
-CD Eldense,Real Oviedo,2026-10-02 18:30:00+00:00,FT,,True,False,4.0,1.0,Spain · LaLiga 2
-Helmond Sport,Heracles,2026-10-02 19:00:00+00:00,FT,,True,False,2.0,2.0,Netherlands · Eerste Divisie
-Club Atletico Platense,Estudiantes de la Plata,2026-10-02 00:15:00+00:00,FT,,True,False,1.0,0.0,Argentina · Copa Argentina
-Dundalk,Bohemian FC,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,2.0,Ireland · League of Ireland Premier Division
-Andorra U21,Moldova U21,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,0.0,Euro U21 2027 · Qualification: Group D
-England U21,Slovakia U21,2026-10-02 18:45:00+00:00,FT,,True,False,0.0,0.0,Euro U21 2027 · Qualification: Group D
-Slovenia U21,Netherlands U21,2026-10-02 16:00:00+00:00,FT,,True,False,2.0,4.0,Euro U21 2027 · Qualification: Group G
-Ukraine U21,Croatia U21,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,0.0,Euro U21 2027 · Qualification: Group H
-Austria U21,Denmark U21,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,1.0,Euro U21 2027 · Qualification: Group I
-Bayer Leverkusen W,Werder Bremen W,2026-10-02 16:30:00+00:00,FT,,True,False,3.0,2.0,Germany · Frauen-Bundesliga
-Serbia U21,Russia U21,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,3.0,International Friendlies · Friendlies U21
-Novorizontino,Goias,2026-10-02 00:00:00+00:00,FT,,True,False,3.0,0.0,Brazil · Serie B
-Salitas,Real du Faso,2026-10-02 15:30:00+00:00,FT,,True,False,1.0,3.0,Burkina Faso · Ligue 1
-Cariari,Santa Ana,2026-10-02 01:00:00+00:00,FT,,True,False,1.0,2.0,Costa Rica · Liga de Ascenso: Apertura: Group B
-Dukla Praha,Jablonec,2026-10-02 16:00:00+00:00,FT,,True,False,0.0,1.0,Czech Republic · Cup
-Fremad Amager,B 93,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,3.0,Denmark · 2nd Division
-Naestved,Nykoebing FC,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Denmark · 2nd Division
-VSK Aarhus,Brabrand,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,2.0,Denmark · 2nd Division
-Inca Aruba,Municipal Limeno,2026-10-02 00:00:00+00:00,FT,,True,False,2.0,1.0,El Salvador · Primera Division: Apertura
-PK-35 Vantaa W,FC Honka W,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,1.0,Finland · Women's Kansallinen Liiga: Qualification Play-offs 2026
-Aviron Bayonnais FC,Les Herbiers,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,France · National 1: Group B
-Stade Briochin,Lorient B,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,3.0,France · National 1: Group B
-Chauray,Avranches,2026-10-02 18:00:00+00:00,FT,,True,False,0.0,2.0,France · National 1: Group B
-Istres,Chateauroux,2026-10-02 18:30:00+00:00,FT,,True,False,0.0,0.0,France · National 1: Group C
-TSV Buchbach,SC Eltersdorf,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,2.0,Germany · Regionalliga Bayern
-Unterhaching,FC Schweinfurt,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Regionalliga Bayern
-VfB Lubeck,Eimsbutteler TV,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,0.0,Germany · Regionalliga Nord
-Sandhausen,Kaiserslautern II,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Regionalliga Südwest
-Stuttgarter Kickers,Kickers Offenbach,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,0.0,Germany · Regionalliga Südwest
-Bonner SC,Westfalia Rhynern,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,1.0,Germany · Regionalliga West
-Borussia M'gladbach II,Bochum II,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,3.0,Germany · Regionalliga West
-1. FC Muehlhausen,1. CfR Pforzheim,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,2.0,Germany · Oberliga: Baden-Wurttemberg
-DJK Don Bosco Bamberg,Eintracht Bamberg,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Bayern North
-SpVgg Weiden,Viktoria Aschaffenburg,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Bayern North
-TSV Kornburg,TSV 1861 Noerdlingen,2026-10-02 17:30:00+00:00,FT,,True,False,5.0,0.0,Germany · Oberliga: Bayern North
-1860 Munich II,1860 Rosenheim,2026-10-02 17:00:00+00:00,FT,,True,False,4.0,0.0,Germany · Oberliga: Bayern South
-Sportfreunde Schwaig,TSV Kottern,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,0.0,Germany · Oberliga: Bayern South
-Niendorfer TSV,TSV Concordia,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,2.0,Germany · Oberliga: Hamburg
-Vorwarts-Wacker,TuS Dassendorf,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,4.0,Germany · Oberliga: Hamburg
-Harksheide,HEBC Hamburg,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,3.0,Germany · Oberliga: Hamburg
-Victoria Hamburg,TSV Sasel,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,2.0,Germany · Oberliga: Hamburg
-Eintracht Norderstedt II,Altonaer FC 93,2026-10-02 18:00:00+00:00,FT,,True,False,1.0,4.0,Germany · Oberliga: Hamburg
-Eintracht Stadtallendorf,Turk Gucu Friedberg,2026-10-02 18:30:00+00:00,FT,,True,False,2.0,1.0,Germany · Oberliga: Hessen
-1. FC Duren,Koenigsdorf,2026-10-02 18:00:00+00:00,FT,,True,False,0.0,0.0,Germany · Oberliga: Mittelrhein
-FC Monheim,SW Essen,2026-10-02 17:30:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Niederrhein
-KFC Uerdingen,Velbert,2026-10-02 17:30:00+00:00,FT,,True,False,1.0,2.0,Germany · Oberliga: Niederrhein
-Ratinger SV,Scherpenberg,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,0.0,Germany · Oberliga: Niederrhein
-Wuppertaler SV,Sportfreunde Baumberg,2026-10-02 17:30:00+00:00,FT,,True,False,4.0,0.0,Germany · Oberliga: Niederrhein
-Blau-Weiss Dingden,DJK Teutonia St. Toenis,2026-10-02 18:00:00+00:00,FT,,True,False,1.0,0.0,Germany · Oberliga: Niederrhein
-Viktoria Juechen-Garzweiler,SV Sonsbeck,2026-10-02 18:00:00+00:00,FT,,True,False,3.0,2.0,Germany · Oberliga: Niederrhein
-Hertha Wiesbach,FV Diefflen,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Rheinland-Pfalz/Saar
-Koblenz,Eisbachtaler Sportfreunde,2026-10-02 17:30:00+00:00,FT,,True,False,3.0,2.0,Germany · Oberliga: Rheinland-Pfalz/Saar
-Athlone Town,Cork City,2026-10-02 18:45:00+00:00,FT,,True,False,2.0,1.0,Ireland · 1st Division
-Bray Wanderers,Cobh Ramblers,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,4.0,Ireland · 1st Division
-Finn Harps,Kerry,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,2.0,Ireland · 1st Division
-Wexford FC,Longford Town,2026-10-02 18:45:00+00:00,FT,,True,False,3.0,3.0,Ireland · 1st Division
-Treaty United,UCD,2026-10-02 19:15:00+00:00,FT,,True,False,0.0,4.0,Ireland · 1st Division
-MIO Biwako Shiga,Roasso Kumamoto,2026-10-02 10:00:00+00:00,FT,,True,False,0.0,0.0,Japan · J3 League
-FUS Rabat,US Amal Tiznit,2026-10-02 16:00:00+00:00,FT,,True,False,0.0,1.0,Morocco · Botola Pro
-Widad Temara,Union Touarga Sport,2026-10-02 18:00:00+00:00,FT,,True,False,0.0,1.0,Morocco · Botola Pro
-Strabane Athletic,Armagh,2026-10-02 18:45:00+00:00,FT,,True,False,0.0,0.0,Northern Ireland · Championship
-Ranheim,Egersund,2026-10-02 17:00:00+00:00,FT,,True,False,5.0,0.0,Norway · 1. Division
-Molde 2,Herd,2026-10-02 16:30:00+00:00,FT,,True,False,6.0,2.0,Norway · 3. Division: Group 2
-Rosenborg 2,Melhus,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,4.0,Norway · 3. Division: Group 2
-Hinna FK,Staal Joerpeland,2026-10-02 16:00:00+00:00,FT,,True,False,2.0,4.0,Norway · 3. Division: Group 4
-Encarnacion FC,Resistencia,2026-10-02 19:00:00+00:00,FT,,True,False,0.0,3.0,Paraguay · Division Intermedia
-Daejeon Korail,Gangneung City,2026-10-02 10:00:00+00:00,FT,,True,False,2.0,1.0,Republic of Korea · K3 League
-Cumnock Juniors,Auchinleck Talbot,2026-10-02 18:30:00+00:00,FT,,True,False,2.0,0.0,Scotland · Scottish Cup: Round 1
-Real Aviles Industrial,Lugo,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,2.0,Spain · Primera Division RFEF: Group 1
-Karlbergs BK,Sollentuna FK,2026-10-02 17:00:00+00:00,FT,,True,False,3.0,2.0,Sweden · Division 1: North
-Kristianstad FC,Ariana FC,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 1: South
-Lunds BK,Laholms FK,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 1: South
-Kungsaengens IF,Sunnersta AIF,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,1.0,Sweden · Division 2: Norra Svealand
-Lilla Torg FF,Nosaby IF,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,3.0,Sweden · Division 2: Soedra Goetaland
-Staffanstorp United FC,Soelvesborgs GOIF,2026-10-02 17:00:00+00:00,FT,,True,False,4.0,0.0,Sweden · Division 2: Soedra Goetaland
-Smedby AIS,Nykoepings BIS,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Sweden · Division 2: Soedra Svealand
-FOC Farsta,Fittja IF,2026-10-02 18:00:00+00:00,FT,,True,False,2.0,1.0,Sweden · Division 2: Soedra Svealand
-Hestrafors IF,Onsala BK,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 2: Vaestra Goetaland
-Lindome GIF,Galtabaecks BK,2026-10-02 17:00:00+00:00,FT,,True,False,4.0,3.0,Sweden · Division 2: Vaestra Goetaland
-Torslanda IK,IK Kongahaella,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,0.0,Sweden · Division 2: Vaestra Goetaland
-Qviding FIF,Landvetter IS,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 2: Vaestra Goetaland
-Jitex BK W,Linkoepings FC W,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,1.0,Sweden · Women's Elitettan
-CD Aguila,CD Cacahuatique U20,2026-10-03 21:00:00+00:00,FT,,True,False,2.0,2.0,El Salvador · Primera Division: Apertura
+home_raw,away_raw,kickoff,status,minute,ended,live,hg,ag,competition,red_h,red_a
+Germany,Serbia,2026-10-01 18:45:00+00:00,FT,,True,False,2.0,0.0,UEFA Nations League · League A: Group 2,0.0,0.0
+Greece,Netherlands,2026-10-01 18:45:00+00:00,FT,,True,False,2.0,2.0,UEFA Nations League · League A: Group 2,0.0,0.0
+Denmark,Portugal,2026-10-01 18:45:00+00:00,FT,,True,False,2.0,4.0,UEFA Nations League · League A: Group 4,0.0,0.0
+Wales,Norway,2026-10-01 18:45:00+00:00,FT,,True,False,2.0,1.0,UEFA Nations League · League A: Group 4,0.0,0.0
+Ireland,Austria,2026-10-01 18:45:00+00:00,FT,,True,False,2.0,2.0,UEFA Nations League · League B: Group 3,0.0,0.0
+Israel,Kosovo,2026-10-01 18:45:00+00:00,FT,,True,False,0.0,0.0,UEFA Nations League · League B: Group 3,0.0,0.0
+Malta,Gibraltar,2026-10-01 18:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League D: Group 1,0.0,0.0
+Azerbaijan,Liechtenstein,2026-10-01 16:00:00+00:00,FT,,True,False,0.0,0.0,UEFA Nations League · League D: Group 2,0.0,0.0
+Guinea,Kenya,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,0.0,Africa Cup of Nations Qualification · Qualification: Group D,0.0,0.0
+Curacao,Trinidad and Tobago,2026-10-01 22:00:00+00:00,FT,,True,False,1.0,0.0,CONCACAF Nations League · League A: Group 1,0.0,0.0
+Dominica,Guyana,2026-10-01 21:00:00+00:00,FT,,True,False,1.0,5.0,CONCACAF Nations League · League B: Group 1,0.0,0.0
+British Virgin Islands,Montserrat,2026-10-01 20:00:00+00:00,FT,,True,False,0.0,2.0,CONCACAF Nations League · League C: Group 1,0.0,0.0
+Anguilla,Antigua and Barbuda,2026-10-01 23:00:00+00:00,FT,,True,False,0.0,3.0,CONCACAF Nations League · League C: Group 2,0.0,0.0
+U.S. Virgin Islands,Saint Martin,2026-10-01 20:00:00+00:00,FT,,True,False,0.0,5.0,CONCACAF Nations League · League C: Group 3,0.0,0.0
+Argentina,Bolivia,2026-10-01 00:00:00+00:00,FT,,True,False,4.0,0.0,International Friendlies · Friendlies,0.0,0.0
+Cook Islands,Tahiti,2026-10-01 02:00:00+00:00,FT,,True,False,3.0,2.0,International Friendlies · Friendlies,0.0,0.0
+Panama,New Zealand,2026-10-01 06:10:00+00:00,AP,,True,False,1.0,1.0,International Friendlies · Friendlies,0.0,0.0
+Japan,Ecuador,2026-10-01 10:10:00+00:00,AP,,True,False,0.0,0.0,International Friendlies · Friendlies,0.0,0.0
+Maldives,Lebanon,2026-10-01 14:00:00+00:00,FT,,True,False,0.0,6.0,International Friendlies · Friendlies,0.0,0.0
+Uzbekistan,Syria,2026-10-01 14:00:00+00:00,FT,,True,False,4.0,1.0,International Friendlies · Friendlies,0.0,0.0
+Jahn Regensburg,WSG Tirol,2026-10-01 12:00:00+00:00,FT,,True,False,0.0,6.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+VfB Stuttgart,Greuther Furth,2026-10-01 15:30:00+00:00,FT,,True,False,5.0,0.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+Trabzonspor,Drogheda United,2026-10-01 16:00:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+San Marino U21,Spain U21,2026-10-01 18:15:00+00:00,FT,,True,False,0.0,13.0,Euro U21 2027 · Qualification: Group A,0.0,0.0
+North Macedonia U21,Montenegro U21,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,1.0,Euro U21 2027 · Qualification: Group E,0.0,0.0
+Armenia U21,Italy U21,2026-10-01 16:30:00+00:00,FT,,True,False,0.0,1.0,Euro U21 2027 · Qualification: Group E,0.0,0.0
+Greece U21,Latvia U21,2026-10-01 15:00:00+00:00,FT,,True,False,4.0,2.0,Euro U21 2027 · Qualification: Group F,0.0,0.0
+Northern Ireland U21,Georgia U21,2026-10-01 18:45:00+00:00,FT,,True,False,1.0,1.0,Euro U21 2027 · Qualification: Group F,0.0,0.0
+Hungary U21,Lithuania U21,2026-10-01 17:00:00+00:00,FT,,True,False,2.0,1.0,Euro U21 2027 · Qualification: Group H,0.0,0.0
+Austria Wien W,Inter W,2026-10-01 16:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Women's Champions League · Final Stage,0.0,0.0
+HB Koege W,Servette W,2026-10-01 16:45:00+00:00,FT,,True,False,5.0,1.0,UEFA Women's Champions League · Final Stage,0.0,0.0
+Manchester City W,Real Madrid W,2026-10-01 19:00:00+00:00,FT,,True,False,1.0,1.0,UEFA Women's Champions League · Final Stage,0.0,0.0
+Paris Saint-Germain W,Oud-Heverlee Leuven,2026-10-01 19:00:00+00:00,FT,,True,False,5.0,0.0,UEFA Women's Champions League · Final Stage,0.0,0.0
+Athletic Club,Sport Recife,2026-10-01 23:30:00+00:00,FT,,True,False,1.0,2.0,Brazil · Serie B,0.0,0.0
+Atletico Nacional,Atletico Junior,2026-10-01 01:00:00+00:00,FT,,True,False,3.0,1.0,Colombia · Primera A: Clausura,0.0,0.0
+Envigado,Orsomarso,2026-10-01 20:30:00+00:00,FT,,True,False,0.0,0.0,Colombia · Primera B: Clausura,0.0,0.0
+El Mansura,FC Masar,2026-10-01 12:30:00+00:00,FT,,True,False,2.0,0.0,Egypt · 2. Division A,0.0,0.0
+El Sekka El Hadid,El Entag El Harby,2026-10-01 12:30:00+00:00,FT,,True,False,5.0,4.0,Egypt · 2. Division A,0.0,0.0
+La Viena FC,Al Nasr,2026-10-01 12:30:00+00:00,FT,,True,False,1.0,3.0,Egypt · 2. Division A,0.0,0.0
+Pharco FC,Al Tersana,2026-10-01 12:30:00+00:00,FT,,True,False,0.0,1.0,Egypt · 2. Division A,0.0,0.0
+Alianza FC,CD Platense Municipal,2026-10-01 00:00:00+00:00,FT,,True,False,2.0,1.0,El Salvador · Primera Division: Apertura,0.0,0.0
+CD Fuerte San Francisco,CD Luis Angel Firpo,2026-10-01 21:30:00+00:00,FT,,True,False,0.0,3.0,El Salvador · Primera Division: Apertura,0.0,0.0
+Kosovo U17 W,Azerbaijan Women U17,2026-10-01 10:00:00+00:00,FT,,True,False,8.0,3.0,Women's Euro U17 · Qualification Round 1: Group B1,0.0,0.0
+Ireland Women U17,Albania Women U17,2026-10-01 13:00:00+00:00,FT,,True,False,2.0,0.0,Women's Euro U17 · Qualification Round 1: Group B1,0.0,0.0
+SC Bastia,Orleans,2026-10-01 18:45:00+00:00,FT,,True,False,1.0,1.0,France · Ligue 3,0.0,0.0
+Asante Kotoko SC,Karela United,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,0.0,Ghana · Premier League,0.0,0.0
+Bnei Yehuda Tel Aviv,Maccabi Kiryat Gat,2026-10-01 16:00:00+00:00,FT,,True,False,2.0,1.0,Israel · Liga Leumit,0.0,0.0
+FC Ashdod,Maccabi Herzliya,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,0.0,Israel · Liga Leumit,0.0,0.0
+Hapoel Afula,Hapoel Rishon LeZion,2026-10-01 16:00:00+00:00,FT,,True,False,2.0,2.0,Israel · Liga Leumit,0.0,0.0
+Hapoel Raanana,SC Kfar Kasem,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,2.0,Israel · Liga Leumit,0.0,0.0
+Kiryat Yam,Hapoel Kfar Saba,2026-10-01 16:00:00+00:00,FT,,True,False,2.0,0.0,Israel · Liga Leumit,0.0,0.0
+Maccabi Ahi Nazareth,Ironi Modiin,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,2.0,Israel · Liga Leumit,0.0,0.0
+Maccabi Bnei Reineh,Hapoel Kfar Shalem,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,2.0,Israel · Liga Leumit,0.0,0.0
+Maccabi Kabilio Jaffa,Hapoel Ironi Akko,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,0.0,Israel · Liga Leumit,0.0,0.0
+Mombasa United,Kariobangi Sharks,2026-10-01 11:00:00+00:00,FT,,True,False,2.0,1.0,Kenya · Premier League: Relegation Play-off,0.0,0.0
+Baerum,Lillestroem,2026-10-01 16:00:00+00:00,FT,,True,False,1.0,5.0,Norway · NM Cup: Round 2,0.0,0.0
+Madla,Viking,2026-10-01 16:00:00+00:00,FT,,True,False,0.0,3.0,Norway · NM Cup: Round 2,0.0,0.0
+Rana FK,Bodoe/Glimt,2026-10-01 16:00:00+00:00,FT,,True,False,2.0,6.0,Norway · NM Cup: Round 2,0.0,0.0
+Olimpia,Luqueno,2026-10-01 22:00:00+00:00,AP,,True,False,1.0,1.0,Paraguay · Copa Paraguay,0.0,0.0
+FC Tulsa,New Mexico United,2026-10-01 00:00:00+00:00,FT,,True,False,1.0,0.0,USA · USL Championship,0.0,0.0
+Sacramento Republic FC,Las Vegas Lights FC,2026-10-01 02:00:00+00:00,FT,,True,False,3.0,2.0,USA · USL Championship,0.0,0.0
+Eritrea,South Africa,2026-09-30 16:00:00+00:00,FT,,True,False,0.0,5.0,Africa Cup of Nations Qualification · Qualification: Group D,0.0,0.0
+Belize,Saint Vincent and The Grenadines,2026-09-30 02:00:00+00:00,FT,,True,False,0.0,1.0,CONCACAF Nations League · League B: Group 4,0.0,0.0
+USA,Chile,2026-09-30 00:00:00+00:00,FT,,True,False,4.0,2.0,International Friendlies · Friendlies,0.0,0.0
+Mexico,Peru,2026-09-30 01:00:00+00:00,FT,,True,False,1.0,1.0,International Friendlies · Friendlies,0.0,0.0
+Papua New Guinea,Solomon Islands,2026-09-30 04:00:00+00:00,FT,,True,False,1.0,1.0,International Friendlies · Friendlies,0.0,0.0
+Fiji,New Caledonia,2026-09-30 07:00:00+00:00,FT,,True,False,2.0,1.0,International Friendlies · Friendlies,0.0,0.0
+Seychelles,Sri Lanka,2026-09-30 13:00:00+00:00,FT,,True,False,0.0,2.0,International Friendlies · Friendlies,0.0,0.0
+Botswana,Mozambique,2026-09-30 14:00:00+00:00,FT,,True,False,0.0,2.0,International Friendlies · Friendlies,0.0,0.0
+Lithuania,Andorra,2026-09-30 16:00:00+00:00,FT,,True,False,3.0,0.0,International Friendlies · Friendlies,0.0,0.0
+Eastleigh,Southend United,2026-09-30 18:45:00+00:00,FT,,True,False,1.0,1.0,England · National League,0.0,0.0
+Tamworth,Sutton United,2026-09-30 18:45:00+00:00,FT,,True,False,2.0,0.0,England · National League,0.0,0.0
+DC United,Paderborn,2026-09-30 23:30:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+New York Red Bulls,St. Louis City,2026-09-30 23:30:00+00:00,FT,,True,False,0.0,3.0,USA · MLS,0.0,0.0
+Ethiopia,Seychelles W,2026-09-30 12:00:00+00:00,FT,,True,False,16.0,0.0,International Friendlies · Women's Friendlies,0.0,0.0
+Romania U21,Finland U21,2026-09-30 16:00:00+00:00,FT,,True,False,0.0,2.0,Euro U21 2027 · Qualification: Group A,0.0,0.0
+Kosovo U21,Cyprus U21,2026-09-30 17:00:00+00:00,FT,,True,False,2.0,1.0,Euro U21 2027 · Qualification: Group A,0.0,0.0
+Czechia U21,Bulgaria U21,2026-09-30 16:00:00+00:00,FT,,True,False,1.0,0.0,Euro U21 2027 · Qualification: Group B,0.0,0.0
+Scotland U21,Azerbaijan U21,2026-09-30 18:30:00+00:00,FT,,True,False,5.0,2.0,Euro U21 2027 · Qualification: Group B,0.0,0.0
+Portugal U21,Gibraltar U21,2026-09-30 19:00:00+00:00,FT,,True,False,4.0,0.0,Euro U21 2027 · Qualification: Group B,0.0,0.0
+Faroe Islands U21,Luxembourg U21,2026-09-30 16:00:00+00:00,FT,,True,False,0.0,1.0,Euro U21 2027 · Qualification: Group C,0.0,0.0
+Poland U21,Sweden U21,2026-09-30 16:00:00+00:00,FT,,True,False,3.0,0.0,Euro U21 2027 · Qualification: Group E,0.0,0.0
+Malta U21,Germany U21,2026-09-30 16:00:00+00:00,FT,,True,False,1.0,4.0,Euro U21 2027 · Qualification: Group F,0.0,0.0
+BK Haecken W,Juventus W,2026-09-30 16:45:00+00:00,FT,,True,False,0.0,3.0,UEFA Women's Champions League · Final Stage,0.0,0.0
+Paris FC W,Arsenal W,2026-09-30 16:45:00+00:00,FT,,True,False,2.0,2.0,UEFA Women's Champions League · Final Stage,0.0,0.0
+Roma W,Barcelona W,2026-09-30 16:45:00+00:00,FT,,True,False,0.0,6.0,UEFA Women's Champions League · Final Stage,0.0,0.0
+Benfica W,Bayern Munich W,2026-09-30 19:00:00+00:00,FT,,True,False,0.0,3.0,UEFA Women's Champions League · Final Stage,0.0,0.0
+Lyon W,Chelsea W,2026-09-30 19:00:00+00:00,FT,,True,False,0.0,0.0,UEFA Women's Champions League · Final Stage,0.0,0.0
+Bahrain,Yemen,2026-09-30 17:30:00+00:00,FT,,True,False,2.0,5.0,International · Gulf Cup: Group B,0.0,0.0
+UAE,Qatar,2026-09-30 17:30:00+00:00,FT,,True,False,1.0,1.0,International · Gulf Cup: Group B,0.0,0.0
+South Korea U23,China U23,2026-09-30 06:00:00+00:00,FT,,True,False,2.0,1.0,International · Asian Games: U23 Final Stage,0.0,0.0
+Uzbekistan U23,Japan U23,2026-09-30 10:30:00+00:00,AP,,True,False,1.0,1.0,International · Asian Games: U23 Final Stage,0.0,0.0
+Flenu,Olympic Charleroi Chatelet Farciennes,2026-09-30 18:00:00+00:00,FT,,True,False,3.0,4.0,Belgium · National Division 1 ACFF,0.0,0.0
+RWD Molenbeek,Union Rochefortoise,2026-09-30 18:00:00+00:00,FT,,True,False,1.0,1.0,Belgium · National Division 1 ACFF,0.0,0.0
+Sporting Charleroi U21,Habay La Neuve,2026-09-30 18:00:00+00:00,FT,,True,False,0.0,0.0,Belgium · National Division 1 ACFF,0.0,0.0
+Belisia Bilzen SV,KSK Heist,2026-09-30 18:00:00+00:00,FT,,True,False,3.0,1.0,Belgium · National Division 1 VV,0.0,0.0
+Houtvenne,KFC Mandel United,2026-09-30 18:00:00+00:00,FT,,True,False,2.0,1.0,Belgium · National Division 1 VV,0.0,0.0
+KFC Merelbeke,Dessel,2026-09-30 18:00:00+00:00,FT,,True,False,1.0,1.0,Belgium · National Division 1 VV,0.0,0.0
+KVV Zelzate,Royal Knokke FC,2026-09-30 18:00:00+00:00,FT,,True,False,0.0,0.0,Belgium · National Division 1 VV,0.0,0.0
+Roeselare,Thes Sport,2026-09-30 18:00:00+00:00,FT,,True,False,0.0,1.0,Belgium · National Division 1 VV,0.0,0.0
+Harelbeke,Hoogstraten,2026-09-30 18:30:00+00:00,FT,,True,False,3.0,3.0,Belgium · National Division 1 VV,0.0,0.0
+Atletico Ottawa,Cavalry FC,2026-09-30 23:00:00+00:00,FT,,True,False,3.0,2.0,Canada · Premier League,0.0,0.0
+Union San Felipe,San Luis,2026-09-30 21:00:00+00:00,FT,,True,False,0.0,1.0,Chile · Primera B,0.0,0.0
+Deportes Concepcion,O'Higgins,2026-09-30 23:00:00+00:00,FT,,True,False,0.0,1.0,Chile · Cup Final Stage,0.0,0.0
+Independiente Medellin,Millonarios,2026-09-30 01:05:00+00:00,FT,,True,False,2.0,2.0,Colombia · Primera A: Clausura,0.0,0.0
+FC Vsetin,Bohemians 1905,2026-09-30 13:30:00+00:00,FT,,True,False,0.0,5.0,Czech Republic · Cup,0.0,0.0
+Hobro II,IF Lyseng,2026-09-30 17:15:00+00:00,FT,,True,False,1.0,1.0,Denmark · Danmarksserien: Group 4,0.0,0.0
+CD Aguila,Inter FA,2026-09-30 21:30:00+00:00,FT,,True,False,2.0,1.0,El Salvador · Primera Division: Apertura,0.0,0.0
+Frome Town,Taunton Town,2026-09-30 18:45:00+00:00,FT,,True,False,2.0,2.0,England · Southern League Premier: South,0.0,0.0
+Gosport Borough,Bracknell Town,2026-09-30 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Southern League Premier: South,0.0,0.0
+Whyteleafe,Brentwood Town,2026-09-30 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Isthmian League Premier Division,0.0,0.0
+Grays Athletic,Takeley,2026-09-30 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Isthmian League: North Division,0.0,0.0
+Birmingham City W,Liverpool W,2026-09-30 18:00:00+00:00,FT,,True,False,3.0,4.0,England · Women's League Cup,0.0,0.0
+Crystal Palace W,Charlton Athletic W,2026-09-30 18:00:00+00:00,FT,,True,False,3.0,0.0,England · Women's League Cup,0.0,0.0
+Durham W,Manchester United W,2026-09-30 18:00:00+00:00,FT,,True,False,1.0,5.0,England · Women's League Cup,0.0,0.0
+West Ham United W,Southampton W,2026-09-30 18:00:00+00:00,FT,,True,False,3.0,1.0,England · Women's League Cup,0.0,0.0
+Aston Villa W,Newcastle United W,2026-09-30 18:30:00+00:00,FT,,True,False,3.0,1.0,England · Women's League Cup,0.0,0.0
+Ipswich Town W,London City Lionesses,2026-09-30 18:30:00+00:00,FT,,True,False,0.0,1.0,England · Women's League Cup,0.0,0.0
+Brighton W,Tottenham Hotspur W,2026-09-30 18:45:00+00:00,FT,,True,False,0.0,1.0,England · Women's League Cup,0.0,0.0
+SC Wiedenbrueck,Sportfreunde Siegen,2026-09-30 17:30:00+00:00,FT,,True,False,1.0,3.0,Germany · Regionalliga West,0.0,0.0
+SC Verl II,FC Gievenbeck,2026-09-30 17:45:00+00:00,FT,,True,False,6.0,0.0,Germany · Oberliga: Westfalen,0.0,0.0
+Medeama SC,Port City,2026-09-30 15:00:00+00:00,FT,,True,False,1.0,0.0,Ghana · Premier League,0.0,0.0
+Alessandria,ASD Imperia,2026-09-30 13:00:00+00:00,FT,,True,False,2.0,1.0,Italy · Serie D: Group A,0.0,0.0
+Chisola,Borgosesia,2026-09-30 14:00:00+00:00,FT,,True,False,2.0,2.0,Italy · Serie D: Group A,0.0,0.0
+Correcaminos de la UAT II,Heroes de Zaci,2026-09-30 23:00:00+00:00,FT,,True,False,3.0,0.0,Mexico · Liga Premier: Serie A Clausura,0.0,0.0
+Enyimba,Shooting Stars,2026-09-30 15:00:00+00:00,FT,,True,False,4.0,2.0,Nigeria · NPFL,0.0,0.0
+Katsina United,Rivers United FC,2026-09-30 15:00:00+00:00,FT,,True,False,1.0,1.0,Nigeria · NPFL,0.0,0.0
+Sporting Lagos,Ikorodu City,2026-09-30 15:00:00+00:00,FT,,True,False,0.0,0.0,Nigeria · NPFL,0.0,0.0
+Warri Wolves FC,Enugu Rangers,2026-09-30 15:00:00+00:00,FT,,True,False,0.0,1.0,Nigeria · NPFL,0.0,0.0
+Follo,Sarpsborg 08,2026-09-30 14:00:00+00:00,FT,,True,False,0.0,2.0,Norway · NM Cup: Round 2,0.0,0.0
+Flint,Sandefjord,2026-09-30 16:00:00+00:00,FT,,True,False,0.0,1.0,Norway · NM Cup: Round 2,0.0,0.0
+Hoenefoss,KFUM Oslo,2026-09-30 16:00:00+00:00,FT,,True,False,0.0,2.0,Norway · NM Cup: Round 2,0.0,0.0
+Bryne W,Kolbotn W,2026-09-30 14:00:00+00:00,FT,,True,False,1.0,0.0,Norway · Women's 1. Division,0.0,0.0
+Arna-Bjoernar W,Frigg W,2026-09-30 14:30:00+00:00,FT,,True,False,5.0,0.0,Norway · Women's 1. Division,0.0,0.0
+Independiente CG,Nacional Asuncion,2026-09-30 20:00:00+00:00,AP,,True,False,2.0,2.0,Paraguay · Copa Paraguay,0.0,0.0
+Cerro Porteno,Rubio Nu,2026-09-30 22:30:00+00:00,FT,,True,False,2.0,1.0,Paraguay · Copa Paraguay,0.0,0.0
+Cienciano,Los Chankas CYC,2026-09-30 20:00:00+00:00,FT,,True,False,1.0,1.0,Peru · Liga 1: Clausura,0.0,0.0
+Umeaa FC Akademi,IFK Umeaa,2026-09-30 17:00:00+00:00,FT,,True,False,6.0,0.0,Sweden · 2.Division Norrland: Relegation Group,0.0,0.0
+FC Kreuzlingen,SC Bruehl,2026-09-30 18:00:00+00:00,FT,,True,False,3.0,0.0,Switzerland · Promotion League,0.0,0.0
+Montevideo City Torque,Club Atletico Penarol,2026-09-30 23:00:00+00:00,FT,,True,False,1.0,1.0,Uruguay · Primera División: Clausura,0.0,0.0
+Brooklyn,Detroit City FC,2026-09-30 23:00:00+00:00,FT,,True,False,1.0,3.0,USA · USL Championship,0.0,0.0
+Miami FC,Sporting Jax,2026-09-30 23:00:00+00:00,FT,,True,False,4.0,1.0,USA · USL Championship,0.0,0.0
+Rhode Island,Indy Eleven,2026-09-30 23:30:00+00:00,FT,,True,False,1.0,0.0,USA · USL Championship,0.0,0.0
+Chattanooga Red Wolves SC,Spokane Velocity,2026-09-30 23:00:00+00:00,FT,,True,False,0.0,1.0,USA · USL League One,0.0,0.0
+Atletico Barinas,Academia Rey,2026-09-30 19:30:00+00:00,FT,,True,False,1.0,2.0,Venezuela · Segunda División: Occidental,0.0,0.0
+Atletico El Vigia,Zamora FC B,2026-09-30 19:30:00+00:00,FT,,True,False,4.0,3.0,Venezuela · Segunda División: Occidental,0.0,0.0
+Yaracuyanos FC,Academia Puerto Cabello B,2026-09-30 20:00:00+00:00,FT,,True,False,3.0,0.0,Venezuela · Segunda División: Occidental,0.0,0.0
+Deportivo Lara,Real Frontera,2026-09-30 23:00:00+00:00,FT,,True,False,4.0,0.0,Venezuela · Segunda División: Occidental,0.0,0.0
+Grimsby Borough,Hallam,2026-09-30 18:45:00+00:00,FT,,True,False,3.0,0.0,England · Northern Premier League: East Division,0.0,0.0
+Corby Town,Carlton Town,2026-09-30 18:45:00+00:00,FT,,True,False,0.0,0.0,England · Northern Premier League: Midlands Division,0.0,0.0
+Lower Breck,Prescot Cables,2026-09-30 18:45:00+00:00,FT,,True,False,0.0,1.0,England · Northern Premier League: West Division,0.0,0.0
+Aylesbury United,Waltham Abbey,2026-09-30 18:45:00+00:00,FT,,True,False,2.0,3.0,England · Southern League: Central Divison,0.0,0.0
+London Lions,Biggleswade Town,2026-09-30 18:45:00+00:00,FT,,True,False,1.0,0.0,England · Southern League: Central Divison,0.0,0.0
+Czechia,England,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,2.0,UEFA Nations League · League A: Group 3,0.0,0.0
+Spain,Croatia,2026-09-29 18:45:00+00:00,FT,,True,False,4.0,1.0,UEFA Nations League · League A: Group 3,0.0,0.0
+Scotland,Switzerland,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,3.0,UEFA Nations League · League B: Group 1,0.0,0.0
+Slovenia,North Macedonia,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,0.0,UEFA Nations League · League B: Group 1,0.0,0.0
+Finland,Belarus,2026-09-29 16:00:00+00:00,FT,,True,False,0.0,0.0,UEFA Nations League · League C: Group 1,0.0,0.0
+San Marino,Albania,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,3.0,UEFA Nations League · League C: Group 1,0.0,0.0
+Moldova,Faroe Islands,2026-09-29 16:00:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League C: Group 3,0.0,0.0
+Slovakia,Kazakhstan,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,UEFA Nations League · League C: Group 3,0.0,0.0
+Bulgaria,Estonia,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,0.0,UEFA Nations League · League C: Group 4,0.0,0.0
+Luxembourg,Iceland,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,3.0,UEFA Nations League · League C: Group 4,0.0,0.0
+Lesotho,Morocco,2026-09-29 13:00:00+00:00,FT,,True,False,0.0,2.0,Africa Cup of Nations Qualification · Qualification: Group A,0.0,0.0
+Gabon,Niger,2026-09-29 19:00:00+00:00,FT,,True,False,2.0,0.0,Africa Cup of Nations Qualification · Qualification: Group A,0.0,0.0
+South Sudan,Egypt,2026-09-29 13:00:00+00:00,FT,,True,False,0.0,5.0,Africa Cup of Nations Qualification · Qualification: Group B,0.0,0.0
+Ghana,Gambia,2026-09-29 16:00:00+00:00,FT,,True,False,2.0,4.0,Africa Cup of Nations Qualification · Qualification: Group C,0.0,0.0
+Somalia,Ivory Coast,2026-09-29 19:00:00+00:00,FT,,True,False,0.0,2.0,Africa Cup of Nations Qualification · Qualification: Group C,0.0,0.0
+Benin,Mauritania,2026-09-29 19:00:00+00:00,FT,,True,False,2.0,1.0,Africa Cup of Nations Qualification · Qualification: Group F,0.0,0.0
+Comoros,Namibia,2026-09-29 12:00:00+00:00,FT,,True,False,1.0,0.0,Africa Cup of Nations Qualification · Qualification: Group G,0.0,0.0
+Congo,Cameroon,2026-09-29 19:00:00+00:00,FT,,True,False,1.0,1.0,Africa Cup of Nations Qualification · Qualification: Group G,0.0,0.0
+Uganda,Libya,2026-09-29 16:00:00+00:00,FT,,True,False,1.0,0.0,Africa Cup of Nations Qualification · Qualification: Group H,0.0,0.0
+Burundi,Algeria,2026-09-29 13:00:00+00:00,FT,,True,False,2.0,2.0,Africa Cup of Nations Qualification · Qualification: Group I,0.0,0.0
+Zambia,Togo,2026-09-29 16:00:00+00:00,FT,,True,False,2.0,0.0,Africa Cup of Nations Qualification · Qualification: Group I,0.0,0.0
+Ethiopia,Senegal,2026-09-29 13:00:00+00:00,FT,,True,False,0.0,1.0,Africa Cup of Nations Qualification · Qualification: Group J,0.0,0.0
+Mozambique,Sudan,2026-09-29 13:00:00+00:00,FT,,True,False,4.0,1.0,Africa Cup of Nations Qualification · Qualification: Group J,0.0,0.0
+Cape Verde,Rwanda,2026-09-29 16:00:00+00:00,FT,,True,False,1.0,2.0,Africa Cup of Nations Qualification · Qualification: Group K,0.0,0.0
+Liberia,Mali,2026-09-29 19:00:00+00:00,FT,,True,False,0.0,1.0,Africa Cup of Nations Qualification · Qualification: Group K,0.0,0.0
+Madagascar,Tanzania,2026-09-29 14:00:00+00:00,FT,,True,False,1.0,1.0,Africa Cup of Nations Qualification · Qualification: Group L,0.0,0.0
+Guinea-Bissau,Nigeria,2026-09-29 16:00:00+00:00,FT,,True,False,3.0,0.0,Africa Cup of Nations Qualification · Qualification: Group L,0.0,0.0
+Jamaica,Honduras,2026-09-29 00:00:00+00:00,FT,,True,False,0.0,1.0,CONCACAF Nations League · League A: Group 2,0.0,0.0
+Guatemala,El Salvador,2026-09-29 02:00:00+00:00,FT,,True,False,6.0,0.0,CONCACAF Nations League · League A: Group 2,0.0,0.0
+Saint Lucia,Bermuda,2026-09-29 00:00:00+00:00,FT,,True,False,5.0,2.0,CONCACAF Nations League · League B: Group 2,0.0,0.0
+St. Kitts and Nevis,Grenada,2026-09-29 00:00:00+00:00,FT,,True,False,3.0,0.0,CONCACAF Nations League · League B: Group 3,0.0,0.0
+French Guiana,Sint Maarten,2026-09-29 21:00:00+00:00,FT,,True,False,1.0,0.0,CONCACAF Nations League · League B: Group 4,0.0,0.0
+British Virgin Islands,Turks and Caicos Islands,2026-09-29 19:00:00+00:00,FT,,True,False,0.0,3.0,CONCACAF Nations League · League C: Group 1,0.0,0.0
+Anguilla,Aruba,2026-09-29 23:00:00+00:00,FT,,True,False,0.0,2.0,CONCACAF Nations League · League C: Group 2,0.0,0.0
+U.S. Virgin Islands,Bahamas,2026-09-29 20:00:00+00:00,FT,,True,False,3.0,1.0,CONCACAF Nations League · League C: Group 3,0.0,0.0
+Australia,Brazil,2026-09-29 10:00:00+00:00,FT,,True,False,2.0,4.0,International Friendlies · Friendlies,0.0,0.0
+Boreham Wood,Kidderminster Harriers,2026-09-29 18:00:00+00:00,FT,,True,False,3.0,1.0,England · National League,0.0,0.0
+AFC Fylde,Carlisle United,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,2.0,England · National League,0.0,0.0
+Barrow,Scunthorpe United,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,0.0,England · National League,0.0,0.0
+FC Halifax Town,Boston United,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · National League,0.0,0.0
+Forest Green Rovers,Wealdstone,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · National League,0.0,0.0
+Gateshead FC,Altrincham,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,1.0,England · National League,0.0,0.0
+Hartlepool United,Harrogate Town,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,1.0,England · National League,0.0,0.0
+Hornchurch,Aldershot Town,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · National League,0.0,0.0
+Woking,Solihull Moors,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,4.0,England · National League,0.0,0.0
+Yeovil Town,Worthing,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · National League,0.0,0.0
+Papua New Guinea W,Solomon Islands Women,2026-09-29 04:00:00+00:00,FT,,True,False,5.0,1.0,International Friendlies · Women's Friendlies,0.0,0.0
+Fiji W,New Caledonia,2026-09-29 07:00:00+00:00,FT,,True,False,1.0,0.0,International Friendlies · Women's Friendlies,0.0,0.0
+Botswana W,Namibia Women,2026-09-29 09:30:00+00:00,FT,,True,False,4.0,1.0,International Friendlies · Women's Friendlies,0.0,0.0
+Iceland U21,Switzerland U21,2026-09-29 15:00:00+00:00,FT,,True,False,5.0,1.0,Euro U21 2027 · Qualification: Group C,0.0,0.0
+Estonia U21,France U21,2026-09-29 16:00:00+00:00,FT,,True,False,0.0,2.0,Euro U21 2027 · Qualification: Group C,0.0,0.0
+Ireland U21,Kazakhstan U21,2026-09-29 18:00:00+00:00,FT,,True,False,4.0,3.0,Euro U21 2027 · Qualification: Group D,0.0,0.0
+Slovenia U21,Israel U21,2026-09-29 14:00:00+00:00,FT,,True,False,2.0,3.0,Euro U21 2027 · Qualification: Group G,0.0,0.0
+Norway U21,Bosnia and Herzegovina U21,2026-09-29 16:00:00+00:00,FT,,True,False,6.0,1.0,Euro U21 2027 · Qualification: Group G,0.0,0.0
+Belgium U21,Wales U21,2026-09-29 18:00:00+00:00,FT,,True,False,1.0,0.0,Euro U21 2027 · Qualification: Group I,0.0,0.0
+Oman,Kuwait,2026-09-29 17:30:00+00:00,FT,,True,False,3.0,1.0,International · Gulf Cup: Group A,0.0,0.0
+Saudi Arabia,Iraq,2026-09-29 17:30:00+00:00,FT,,True,False,2.0,0.0,International · Gulf Cup: Group A,0.0,0.0
+Botafogo SP,Ponte Preta,2026-09-29 22:30:00+00:00,FT,,True,False,2.0,0.0,Brazil · Serie B,0.0,0.0
+Puerto Montt,Colo Colo,2026-09-29 21:00:00+00:00,FT,,True,False,0.0,1.0,Chile · Cup Final Stage,0.0,0.0
+Wuxi Wugou FC,Ningbo Professional,2026-09-29 11:00:00+00:00,FT,,True,False,1.0,0.0,China · League One,0.0,0.0
+Deportivo Pereira,Santa Fe,2026-09-29 20:30:00+00:00,FT,,True,False,1.0,2.0,Colombia · Primera A: Clausura,0.0,0.0
+Union Magdalena,Real Cartagena,2026-09-29 23:00:00+00:00,FT,,True,False,1.0,1.0,Colombia · Primera B: Clausura,0.0,0.0
+Cariari,CS Uruguay,2026-09-29 01:00:00+00:00,FT,,True,False,1.0,1.0,Costa Rica · Liga de Ascenso: Apertura: Group B,0.0,0.0
+OB Q W,AGF W,2026-09-29 16:00:00+00:00,FT,,True,False,1.0,0.0,Denmark · A-Liga Women,0.0,0.0
+Atletico Balboa,CD Cacahuatique U20,2026-09-29 21:00:00+00:00,FT,,True,False,0.0,2.0,El Salvador · Primera Division: Apertura,0.0,0.0
+Brackley Town,South Shields,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,2.0,England · National League: North,0.0,0.0
+Slough Town,Ebbsfleet United,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · National League: South,0.0,0.0
+Alfreton Town,Guiseley,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,0.0,England · Northern Premier League,0.0,0.0
+Emley,Workington,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,3.0,England · Northern Premier League,0.0,0.0
+Ilkeston Town,Warrington Rylands,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,1.0,England · Northern Premier League,0.0,0.0
+Whitby,Lancaster City,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Northern Premier League,0.0,0.0
+Alvechurch,Stourbridge,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,0.0,England · Southern League Premier: Central,0.0,0.0
+Banbury United,Stratford Town,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,3.0,England · Southern League Premier: Central,0.0,0.0
+Bishop's Stortford,Bury Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Southern League Premier: Central,0.0,0.0
+Bromsgrove Sporting,Leamington,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Southern League Premier: Central,0.0,0.0
+Halesowen Town FC,Rushall Olympic,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,0.0,England · Southern League Premier: Central,0.0,0.0
+Hitchin Town,Leighton Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,0.0,England · Southern League Premier: Central,0.0,0.0
+Kettering Town,Anstey Nomads,2026-09-29 18:45:00+00:00,FT,,True,False,4.0,1.0,England · Southern League Premier: Central,0.0,0.0
+Needham Market,Stamford AFC,2026-09-29 18:45:00+00:00,FT,,True,False,4.0,0.0,England · Southern League Premier: Central,0.0,0.0
+Peterborough Sports,Redditch United,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,2.0,England · Southern League Premier: Central,0.0,0.0
+Racing Club Warwick,Worcester City,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,2.0,England · Southern League Premier: Central,0.0,0.0
+Real Bedford,Leiston,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,2.0,England · Southern League Premier: Central,0.0,0.0
+Wimborne Town,Yate Town,2026-09-29 18:30:00+00:00,FT,,True,False,4.0,0.0,England · Southern League Premier: South,0.0,0.0
+Bath City,Malvern Town,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Southern League Premier: South,0.0,0.0
+Chertsey Town,Poole Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,3.0,England · Southern League Premier: South,0.0,0.0
+Evesham United,Chippenham Town,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,0.0,England · Southern League Premier: South,0.0,0.0
+Gloucester City,Plymouth Parkway,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Southern League Premier: South,0.0,0.0
+Hanworth Villa,Chichester City,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Southern League Premier: South,0.0,0.0
+Havant & Waterlooville,Hanwell Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Southern League Premier: South,0.0,0.0
+Sholing,Berkhamsted,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,0.0,England · Southern League Premier: South,0.0,0.0
+Uxbridge,Basingstoke,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Southern League Premier: South,0.0,0.0
+Dartford,Whitehawk,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Isthmian League Premier Division,0.0,0.0
+Dulwich Hamlet,Aveley,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,0.0,England · Isthmian League Premier Division,0.0,0.0
+Maldon & Tiptree,Cray Wanderers,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,5.0,England · Isthmian League Premier Division,0.0,0.0
+Brightlingsea Regent,AFC Sudbury,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Isthmian League: North Division,0.0,0.0
+Buckhurst Hill,Gorleston,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,2.0,England · Isthmian League: North Division,0.0,0.0
+Canvey Island,Newmarket Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Isthmian League: North Division,0.0,0.0
+Fakenham Town,Felixstowe & Walton United,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,3.0,England · Isthmian League: North Division,0.0,0.0
+Hashtag United,Wroxham,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,2.0,England · Isthmian League: North Division,0.0,0.0
+Egham Town FC,Jersey Bulls,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,3.0,England · Isthmian League: South Central Division,0.0,0.0
+Hendon,Ashford Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Isthmian League: South Central Division,0.0,0.0
+Steyning Town,Faversham Town,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,2.0,England · Isthmian League: South East Division,0.0,0.0
+Woodford Town,Mulbarton Wanderers,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,2.0,England · FA Cup: Qualification,0.0,0.0
+Gibraltar U17,Bosnia and Herzegovina U17,2026-09-29 12:00:00+00:00,FT,,True,False,1.0,9.0,Euro U17 · Qualification: Group 7,0.0,0.0
+Greece U17,Iceland U17,2026-09-29 12:00:00+00:00,FT,,True,False,2.0,3.0,Euro U17 · Qualification: Group 7,0.0,0.0
+Unterhaching,TSV Buchbach,2026-09-29 17:00:00+00:00,FT,,True,False,2.0,2.0,Germany · Regionalliga Bayern,0.0,0.0
+Teutonia Ottensen,TSV Buchholz,2026-09-29 17:45:00+00:00,FT,,True,False,6.0,3.0,Germany · Oberliga: Hamburg,0.0,0.0
+MTSV Hohenwestedt,Eckernfoerder SV,2026-09-29 17:30:00+00:00,FT,,True,False,1.0,2.0,Germany · Oberliga: Flens,0.0,0.0
+Mes Rafsanjan,Beasat Kermanshah,2026-09-29 13:30:00+00:00,FT,,True,False,1.0,0.0,Iran · Azadegan League,0.0,0.0
+Consadole Sapporo,Fagiano Okayama FC,2026-09-29 10:00:00+00:00,FT,,True,False,1.0,2.0,Japan · J.League Cup,0.0,0.0
+Ehime FC,FC Tokyo,2026-09-29 10:00:00+00:00,FT,,True,False,0.0,2.0,Japan · J.League Cup,0.0,0.0
+FC Gifu,Yokohama FC,2026-09-29 10:00:00+00:00,FT,,True,False,1.0,2.0,Japan · J.League Cup,0.0,0.0
+FC Osaka,Avispa Fukuoka,2026-09-29 10:00:00+00:00,AET,,True,False,1.0,2.0,Japan · J.League Cup,0.0,0.0
+Fujieda MYFC,Cerezo Osaka,2026-09-29 10:00:00+00:00,FT,,True,False,1.0,2.0,Japan · J.League Cup,0.0,0.0
+Fukushima United,Mito Hollyhock,2026-09-29 10:00:00+00:00,FT,,True,False,0.0,7.0,Japan · J.League Cup,0.0,0.0
+Gainare Tottori,V-Varen Nagasaki,2026-09-29 10:00:00+00:00,FT,,True,False,2.0,0.0,Japan · J.League Cup,0.0,0.0
+Giravanz Kitakyushu,Nagoya Grampus Eight,2026-09-29 10:00:00+00:00,FT,,True,False,1.0,3.0,Japan · J.League Cup,0.0,0.0
+Jubilo Iwata,JEF United Chiba,2026-09-29 10:00:00+00:00,FT,,True,False,4.0,2.0,Japan · J.League Cup,0.0,0.0
+Kataller Toyama,Urawa Red Diamonds,2026-09-29 10:00:00+00:00,FT,,True,False,2.0,3.0,Japan · J.League Cup,0.0,0.0
+Matsumoto Yamaga,Albirex Niigata,2026-09-29 10:00:00+00:00,FT,,True,False,1.0,0.0,Japan · J.League Cup,0.0,0.0
+Montedio Yamagata,Yokohama F.Marinos,2026-09-29 10:00:00+00:00,FT,,True,False,1.0,2.0,Japan · J.League Cup,0.0,0.0
+Roasso Kumamoto,Kawasaki Frontale,2026-09-29 10:00:00+00:00,FT,,True,False,0.0,1.0,Japan · J.League Cup,0.0,0.0
+Sagan Tosu,Tokyo Verdy,2026-09-29 10:00:00+00:00,AET,,True,False,2.0,1.0,Japan · J.League Cup,0.0,0.0
+Tochigi City FC,Sanfrecce Hiroshima,2026-09-29 10:00:00+00:00,FT,,True,False,0.0,2.0,Japan · J.League Cup,0.0,0.0
+Zweigen Kanazawa,Shimizu S-Pulse,2026-09-29 10:00:00+00:00,FT,,True,False,0.0,2.0,Japan · J.League Cup,0.0,0.0
+Jaguares Chiapas,Racing FC Porto Palmeiras,2026-09-29 02:05:00+00:00,FT,,True,False,1.0,1.0,Mexico · Primera Premier,0.0,0.0
+Necaxa W,Toluca W,2026-09-29 01:06:00+00:00,FT,,True,False,0.0,4.0,Mexico · Women's Liga MX: Apertura,0.0,0.0
+Union Carl Berner,KFUM 2,2026-09-29 18:15:00+00:00,FT,,True,False,1.0,1.0,Norway · 3. Division: Group 1,0.0,0.0
+Forfar Athletic,Formartine United,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,0.0,Scotland · Challenge Cup,0.0,0.0
+Vozdovac,Napredak,2026-09-29 16:00:00+00:00,FT,,True,False,0.0,0.0,Serbia · Prva Liga,0.0,0.0
+Inter Bratislava,Zeleziarne Podbrezova,2026-09-29 13:30:00+00:00,FT,,True,False,0.0,2.0,Slovakia · Slovak Cup,0.0,0.0
+Cardiff Met University,Haverfordwest,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,0.0,Wales · JD Cymru Premier,0.0,0.0
+Deportivo Muniz,El Porvenir,2026-09-29 18:00:00+00:00,FT,,True,False,3.0,2.0,Argentina · Primera C,0.0,0.0
+Blyth Spartans,Heaton Stannington FC,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Northern Premier League: East Division,0.0,0.0
+Dunston UTS,Guisborough Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,0.0,England · Northern Premier League: East Division,0.0,0.0
+Garforth Town,Stocksbridge Park Steels,2026-09-29 18:45:00+00:00,FT,,True,False,4.0,1.0,England · Northern Premier League: East Division,0.0,0.0
+Liversedge,North Ferriby FC,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Northern Premier League: East Division,0.0,0.0
+Matlock Town,Bradford PA,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,1.0,England · Northern Premier League: East Division,0.0,0.0
+Ossett United,Bridlington Town,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,1.0,England · Northern Premier League: East Division,0.0,0.0
+West Auckland Town,Ashington AFC,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,2.0,England · Northern Premier League: East Division,0.0,0.0
+Bedworth United,Grantham Town,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Northern Premier League: Midlands Division,0.0,0.0
+Long Eaton United,Boston Town,2026-09-29 18:45:00+00:00,FT,,True,False,4.0,1.0,England · Northern Premier League: Midlands Division,0.0,0.0
+Shepshed Dynamo,Boldmere St Michaels,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,3.0,England · Northern Premier League: Midlands Division,0.0,0.0
+Sutton Coldfield Town,Mickleover Sports,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Northern Premier League: Midlands Division,0.0,0.0
+Wellingborough Town,Barwell FC,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,0.0,England · Northern Premier League: Midlands Division,0.0,0.0
+1874 Northwich,Stalybridge,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,2.0,England · Northern Premier League: West Division,0.0,0.0
+Atherton Collieries,Vauxhall Motors,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Northern Premier League: West Division,0.0,0.0
+Bootle,Nantwich Town,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,0.0,England · Northern Premier League: West Division,0.0,0.0
+Chasetown,Hanley Town,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,4.0,England · Northern Premier League: West Division,0.0,0.0
+Clitheroe,Runcorn Linnets,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Northern Premier League: West Division,0.0,0.0
+Congleton Town,Shifnal Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Northern Premier League: West Division,0.0,0.0
+Kidsgrove Athletic,Lichfield City,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,0.0,England · Northern Premier League: West Division,0.0,0.0
+Newcastle Town,Stafford Rangers,2026-09-29 18:45:00+00:00,FT,,True,False,0.0,2.0,England · Northern Premier League: West Division,0.0,0.0
+Didcot Town,Milton Keynes Irish,2026-09-29 18:45:00+00:00,FT,,True,False,4.0,1.0,England · Southern League: Central Divison,0.0,0.0
+Flackwell Heath,Haringey Borough,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Southern League: Central Divison,0.0,0.0
+Leverstock Green,Ware,2026-09-29 18:45:00+00:00,FT,,True,False,5.0,0.0,England · Southern League: Central Divison,0.0,0.0
+Marlow,Hadley,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,0.0,England · Southern League: Central Divison,0.0,0.0
+Potters Bar Town,Stotfold,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,England · Southern League: Central Divison,0.0,0.0
+Thame United,Beaconsfield Town,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,0.0,England · Southern League: Central Divison,0.0,0.0
+Welwyn Garden City,Royston Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Southern League: Central Divison,0.0,0.0
+Winslow United,Barton Rovers,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Southern League: Central Divison,0.0,0.0
+Belgium,Turkiye,2026-10-02 18:45:00+00:00,FT,,True,False,3.0,0.0,UEFA Nations League · League A: Group 1,0.0,0.0
+France,Italy,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League A: Group 1,0.0,0.0
+Hungary,Georgia,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,0.0,UEFA Nations League · League B: Group 2,0.0,0.0
+Ukraine,Northern Ireland,2026-10-02 18:45:00+00:00,FT,,True,False,0.0,3.0,UEFA Nations League · League B: Group 2,0.0,0.0
+Bosnia and Herzegovina,Sweden,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League B: Group 4,0.0,0.0
+Poland,Romania,2026-10-02 18:45:00+00:00,FT,,True,False,6.0,0.0,UEFA Nations League · League B: Group 4,0.0,0.0
+Cyprus,Armenia,2026-10-02 16:00:00+00:00,FT,,True,False,2.0,0.0,UEFA Nations League · League C: Group 2,0.0,0.0
+Latvia,Montenegro,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,2.0,UEFA Nations League · League C: Group 2,0.0,0.0
+Kazakhstan,Moldova,2026-10-02 14:00:00+00:00,FT,,True,False,1.0,2.0,UEFA Nations League · League C: Group 3,0.0,0.0
+Faroe Islands,Slovakia,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League C: Group 3,0.0,0.0
+Dominican Republic,Haiti,2026-10-02 00:00:00+00:00,FT,,True,False,1.0,4.0,CONCACAF Nations League · League A: Group 1,0.0,0.0
+Nicaragua,Costa Rica,2026-10-02 02:00:00+00:00,FT,,True,False,0.0,3.0,CONCACAF Nations League · League A: Group 1,0.0,0.0
+Cayman Islands,Puerto Rico,2026-10-02 00:00:00+00:00,FT,,True,False,0.0,3.0,CONCACAF Nations League · League B: Group 1,0.0,0.0
+Saint Lucia,Guadeloupe,2026-10-02 19:00:00+00:00,FT,,True,False,3.0,0.0,CONCACAF Nations League · League B: Group 2,0.0,0.0
+South Korea,Venezuela,2026-10-02 11:00:00+00:00,FT,,True,False,0.0,0.0,International Friendlies · Friendlies,0.0,0.0
+China,Palestine,2026-10-02 11:35:00+00:00,FT,,True,False,0.0,5.0,International Friendlies · Friendlies,0.0,0.0
+DR Congo,Uganda,2026-10-02 13:00:00+00:00,FT,,True,False,0.0,2.0,International Friendlies · Friendlies,0.0,0.0
+Mauritius,Sri Lanka,2026-10-02 15:00:00+00:00,FT,,True,False,3.0,0.0,International Friendlies · Friendlies,0.0,0.0
+FC Admira Wacker Modling,Austria Wien,2026-10-02 09:00:00+00:00,FT,,True,False,1.0,6.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+Saint-Etienne,Sion,2026-10-02 09:00:00+00:00,FT,,True,False,5.0,1.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+Lugano,Hellas Verona,2026-10-02 09:30:00+00:00,FT,,True,False,1.0,3.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+AC Horsens,Vejle Boldklub,2026-10-02 10:00:00+00:00,FT,,True,False,2.0,1.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+AGF,Vendsyssel FF,2026-10-02 10:00:00+00:00,FT,,True,False,2.0,1.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+Dunkerque,Raal La Louviere,2026-10-02 10:00:00+00:00,FT,,True,False,0.0,4.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+Elfsborg,BK Haecken,2026-10-02 10:00:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+Le Havre,Boulogne,2026-10-02 10:00:00+00:00,FT,,True,False,6.0,1.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+Juventus,Cremonese,2026-10-02 10:30:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+Kolding IF,OB,2026-10-02 11:00:00+00:00,FT,,True,False,5.0,4.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+IK Start,Brann,2026-10-02 12:00:00+00:00,FT,,True,False,2.0,1.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+Eintracht Frankfurt,Eintracht Braunschweig,2026-10-02 14:00:00+00:00,FT,,True,False,4.0,0.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+Broendby IF,Sirius,2026-10-02 15:30:00+00:00,FT,,True,False,1.0,1.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+Deportivo A Coruna,FC Porto,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,3.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+Real Sociedad,Athletic Club,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+Sevilla,Aston Villa,2026-10-02 18:30:00+00:00,FT,,True,False,1.0,3.0,Club Friendlies · Club Friendlies 2026,0.0,0.0
+Seattle Sounders FC,Sporting Kansas City,2026-10-02 01:30:00+00:00,FT,,True,False,2.0,1.0,USA · MLS,0.0,0.0
+CD Eldense,Real Oviedo,2026-10-02 18:30:00+00:00,FT,,True,False,4.0,1.0,Spain · LaLiga 2,0.0,0.0
+Helmond Sport,Heracles,2026-10-02 19:00:00+00:00,FT,,True,False,2.0,2.0,Netherlands · Eerste Divisie,0.0,0.0
+Club Atletico Platense,Estudiantes de la Plata,2026-10-02 00:15:00+00:00,FT,,True,False,1.0,0.0,Argentina · Copa Argentina,0.0,0.0
+Dundalk,Bohemian FC,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,2.0,Ireland · League of Ireland Premier Division,0.0,0.0
+Andorra U21,Moldova U21,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,0.0,Euro U21 2027 · Qualification: Group D,0.0,0.0
+England U21,Slovakia U21,2026-10-02 18:45:00+00:00,FT,,True,False,0.0,0.0,Euro U21 2027 · Qualification: Group D,0.0,0.0
+Slovenia U21,Netherlands U21,2026-10-02 16:00:00+00:00,FT,,True,False,2.0,4.0,Euro U21 2027 · Qualification: Group G,0.0,0.0
+Ukraine U21,Croatia U21,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,0.0,Euro U21 2027 · Qualification: Group H,0.0,0.0
+Austria U21,Denmark U21,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,1.0,Euro U21 2027 · Qualification: Group I,0.0,0.0
+Bayer Leverkusen W,Werder Bremen W,2026-10-02 16:30:00+00:00,FT,,True,False,3.0,2.0,Germany · Frauen-Bundesliga,0.0,0.0
+Serbia U21,Russia U21,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,3.0,International Friendlies · Friendlies U21,0.0,0.0
+Novorizontino,Goias,2026-10-02 00:00:00+00:00,FT,,True,False,3.0,0.0,Brazil · Serie B,0.0,0.0
+Salitas,Real du Faso,2026-10-02 15:30:00+00:00,FT,,True,False,1.0,3.0,Burkina Faso · Ligue 1,0.0,0.0
+Cariari,Santa Ana,2026-10-02 01:00:00+00:00,FT,,True,False,1.0,2.0,Costa Rica · Liga de Ascenso: Apertura: Group B,0.0,0.0
+Dukla Praha,Jablonec,2026-10-02 16:00:00+00:00,FT,,True,False,0.0,1.0,Czech Republic · Cup,0.0,0.0
+Fremad Amager,B 93,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,3.0,Denmark · 2nd Division,0.0,0.0
+Naestved,Nykoebing FC,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Denmark · 2nd Division,0.0,0.0
+VSK Aarhus,Brabrand,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,2.0,Denmark · 2nd Division,0.0,0.0
+Inca Aruba,Municipal Limeno,2026-10-02 00:00:00+00:00,FT,,True,False,2.0,1.0,El Salvador · Primera Division: Apertura,0.0,0.0
+PK-35 Vantaa W,FC Honka W,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,1.0,Finland · Women's Kansallinen Liiga: Qualification Play-offs 2026,0.0,0.0
+Aviron Bayonnais FC,Les Herbiers,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,France · National 1: Group B,0.0,0.0
+Stade Briochin,Lorient B,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,3.0,France · National 1: Group B,0.0,0.0
+Chauray,Avranches,2026-10-02 18:00:00+00:00,FT,,True,False,0.0,2.0,France · National 1: Group B,0.0,0.0
+Istres,Chateauroux,2026-10-02 18:30:00+00:00,FT,,True,False,0.0,0.0,France · National 1: Group C,0.0,0.0
+TSV Buchbach,SC Eltersdorf,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,2.0,Germany · Regionalliga Bayern,0.0,0.0
+Unterhaching,FC Schweinfurt,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Regionalliga Bayern,0.0,0.0
+VfB Lubeck,Eimsbutteler TV,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,0.0,Germany · Regionalliga Nord,0.0,0.0
+Sandhausen,Kaiserslautern II,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Regionalliga Südwest,0.0,0.0
+Stuttgarter Kickers,Kickers Offenbach,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,0.0,Germany · Regionalliga Südwest,0.0,0.0
+Bonner SC,Westfalia Rhynern,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,1.0,Germany · Regionalliga West,0.0,0.0
+Borussia M'gladbach II,Bochum II,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,3.0,Germany · Regionalliga West,0.0,0.0
+1. FC Muehlhausen,1. CfR Pforzheim,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,2.0,Germany · Oberliga: Baden-Wurttemberg,0.0,0.0
+DJK Don Bosco Bamberg,Eintracht Bamberg,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Bayern North,0.0,0.0
+SpVgg Weiden,Viktoria Aschaffenburg,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Bayern North,0.0,0.0
+TSV Kornburg,TSV 1861 Noerdlingen,2026-10-02 17:30:00+00:00,FT,,True,False,5.0,0.0,Germany · Oberliga: Bayern North,0.0,0.0
+1860 Munich II,1860 Rosenheim,2026-10-02 17:00:00+00:00,FT,,True,False,4.0,0.0,Germany · Oberliga: Bayern South,0.0,0.0
+Sportfreunde Schwaig,TSV Kottern,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,0.0,Germany · Oberliga: Bayern South,0.0,0.0
+Niendorfer TSV,TSV Concordia,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,2.0,Germany · Oberliga: Hamburg,0.0,0.0
+Vorwarts-Wacker,TuS Dassendorf,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,4.0,Germany · Oberliga: Hamburg,0.0,0.0
+Harksheide,HEBC Hamburg,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,3.0,Germany · Oberliga: Hamburg,0.0,0.0
+Victoria Hamburg,TSV Sasel,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,2.0,Germany · Oberliga: Hamburg,0.0,0.0
+Eintracht Norderstedt II,Altonaer FC 93,2026-10-02 18:00:00+00:00,FT,,True,False,1.0,4.0,Germany · Oberliga: Hamburg,0.0,0.0
+Eintracht Stadtallendorf,Turk Gucu Friedberg,2026-10-02 18:30:00+00:00,FT,,True,False,2.0,1.0,Germany · Oberliga: Hessen,0.0,0.0
+1. FC Duren,Koenigsdorf,2026-10-02 18:00:00+00:00,FT,,True,False,0.0,0.0,Germany · Oberliga: Mittelrhein,0.0,0.0
+FC Monheim,SW Essen,2026-10-02 17:30:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Niederrhein,0.0,0.0
+KFC Uerdingen,Velbert,2026-10-02 17:30:00+00:00,FT,,True,False,1.0,2.0,Germany · Oberliga: Niederrhein,0.0,0.0
+Ratinger SV,Scherpenberg,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,0.0,Germany · Oberliga: Niederrhein,0.0,0.0
+Wuppertaler SV,Sportfreunde Baumberg,2026-10-02 17:30:00+00:00,FT,,True,False,4.0,0.0,Germany · Oberliga: Niederrhein,0.0,0.0
+Blau-Weiss Dingden,DJK Teutonia St. Toenis,2026-10-02 18:00:00+00:00,FT,,True,False,1.0,0.0,Germany · Oberliga: Niederrhein,0.0,0.0
+Viktoria Juechen-Garzweiler,SV Sonsbeck,2026-10-02 18:00:00+00:00,FT,,True,False,3.0,2.0,Germany · Oberliga: Niederrhein,0.0,0.0
+Hertha Wiesbach,FV Diefflen,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Rheinland-Pfalz/Saar,0.0,0.0
+Koblenz,Eisbachtaler Sportfreunde,2026-10-02 17:30:00+00:00,FT,,True,False,3.0,2.0,Germany · Oberliga: Rheinland-Pfalz/Saar,0.0,0.0
+Athlone Town,Cork City,2026-10-02 18:45:00+00:00,FT,,True,False,2.0,1.0,Ireland · 1st Division,0.0,0.0
+Bray Wanderers,Cobh Ramblers,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,4.0,Ireland · 1st Division,0.0,0.0
+Finn Harps,Kerry,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,2.0,Ireland · 1st Division,0.0,0.0
+Wexford FC,Longford Town,2026-10-02 18:45:00+00:00,FT,,True,False,3.0,3.0,Ireland · 1st Division,0.0,0.0
+Treaty United,UCD,2026-10-02 19:15:00+00:00,FT,,True,False,0.0,4.0,Ireland · 1st Division,0.0,0.0
+MIO Biwako Shiga,Roasso Kumamoto,2026-10-02 10:00:00+00:00,FT,,True,False,0.0,0.0,Japan · J3 League,0.0,0.0
+FUS Rabat,US Amal Tiznit,2026-10-02 16:00:00+00:00,FT,,True,False,0.0,1.0,Morocco · Botola Pro,0.0,0.0
+Widad Temara,Union Touarga Sport,2026-10-02 18:00:00+00:00,FT,,True,False,0.0,1.0,Morocco · Botola Pro,0.0,0.0
+Strabane Athletic,Armagh,2026-10-02 18:45:00+00:00,FT,,True,False,0.0,0.0,Northern Ireland · Championship,0.0,0.0
+Ranheim,Egersund,2026-10-02 17:00:00+00:00,FT,,True,False,5.0,0.0,Norway · 1. Division,0.0,0.0
+Molde 2,Herd,2026-10-02 16:30:00+00:00,FT,,True,False,6.0,2.0,Norway · 3. Division: Group 2,0.0,0.0
+Rosenborg 2,Melhus,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,4.0,Norway · 3. Division: Group 2,0.0,0.0
+Hinna FK,Staal Joerpeland,2026-10-02 16:00:00+00:00,FT,,True,False,2.0,4.0,Norway · 3. Division: Group 4,0.0,0.0
+Encarnacion FC,Resistencia,2026-10-02 19:00:00+00:00,FT,,True,False,0.0,3.0,Paraguay · Division Intermedia,0.0,0.0
+Daejeon Korail,Gangneung City,2026-10-02 10:00:00+00:00,FT,,True,False,2.0,1.0,Republic of Korea · K3 League,0.0,0.0
+Cumnock Juniors,Auchinleck Talbot,2026-10-02 18:30:00+00:00,FT,,True,False,2.0,0.0,Scotland · Scottish Cup: Round 1,0.0,0.0
+Real Aviles Industrial,Lugo,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,2.0,Spain · Primera Division RFEF: Group 1,0.0,0.0
+Karlbergs BK,Sollentuna FK,2026-10-02 17:00:00+00:00,FT,,True,False,3.0,2.0,Sweden · Division 1: North,0.0,0.0
+Kristianstad FC,Ariana FC,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 1: South,0.0,0.0
+Lunds BK,Laholms FK,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 1: South,0.0,0.0
+Kungsaengens IF,Sunnersta AIF,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,1.0,Sweden · Division 2: Norra Svealand,0.0,0.0
+Lilla Torg FF,Nosaby IF,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,3.0,Sweden · Division 2: Soedra Goetaland,0.0,0.0
+Staffanstorp United FC,Soelvesborgs GOIF,2026-10-02 17:00:00+00:00,FT,,True,False,4.0,0.0,Sweden · Division 2: Soedra Goetaland,0.0,0.0
+Smedby AIS,Nykoepings BIS,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Sweden · Division 2: Soedra Svealand,0.0,0.0
+FOC Farsta,Fittja IF,2026-10-02 18:00:00+00:00,FT,,True,False,2.0,1.0,Sweden · Division 2: Soedra Svealand,0.0,0.0
+Hestrafors IF,Onsala BK,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 2: Vaestra Goetaland,0.0,0.0
+Lindome GIF,Galtabaecks BK,2026-10-02 17:00:00+00:00,FT,,True,False,4.0,3.0,Sweden · Division 2: Vaestra Goetaland,0.0,0.0
+Torslanda IK,IK Kongahaella,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,0.0,Sweden · Division 2: Vaestra Goetaland,0.0,0.0
+Qviding FIF,Landvetter IS,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 2: Vaestra Goetaland,0.0,0.0
+Jitex BK W,Linkoepings FC W,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,1.0,Sweden · Women's Elitettan,0.0,0.0
+CD Aguila,CD Cacahuatique U20,2026-10-03 21:00:00+00:00,FT,,True,False,2.0,2.0,El Salvador · Primera Division: Apertura,0.0,0.0

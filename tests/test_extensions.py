@@ -130,3 +130,15 @@ def test_absences_lookup(monkeypatch):
     assert a["home"] == ["A (Knee Injury)"] and a["home_doubt"] == ["B (Illness)"]
     assert a["away"] == ["C (Red Card)"]
     assert eng.absences("E3", "Man United", "Arsenal", day) is None  # league not covered
+
+
+def test_miss_reasons():
+    from soccer.analysis import miss_reasons
+    base = {"p_home": 0.75, "p_draw": 0.18, "p_away": 0.07, "y": 1, "goals": 2,
+            "xg_home": 1.8, "xg_away": 0.6}
+    upset = miss_reasons(pd.Series({**base, "q_home": 0.8, "q_draw": 0.15, "q_away": 0.05}))
+    assert any("Сенсация" in r for r in upset) and any("Букмекер ошибся так же" in r for r in upset)
+    only_model = miss_reasons(pd.Series({**base, "y": 2, "q_home": 0.3, "q_draw": 0.3,
+                                         "q_away": 0.4}), reds=1)
+    assert any("Ошиблась только модель" in r for r in only_model)
+    assert any("Красная карточка" in r for r in only_model)

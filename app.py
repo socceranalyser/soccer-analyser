@@ -21,6 +21,26 @@ from soccer.simulation import add_probabilities, league_table, simulate_season
 
 st.set_page_config(page_title="Soccer Analyser", page_icon="⚽", layout="wide")
 
+
+def _inject_css():
+    from pathlib import Path
+    css = Path(__file__).with_name("assets") / "style.css"
+    if css.exists():
+        st.markdown(f"<style>{css.read_text(encoding='utf-8')}</style>", unsafe_allow_html=True)
+
+
+def page_header(title: str, subtitle: str = ""):
+    """Gradient banner instead of a plain st.title."""
+    import html as _html
+    icon, _, text = title.partition(" ")  # emoji stays outside the gradient text
+    st.markdown(f'<div class="sa-hero"><h1><span class="sa-emoji">{icon}</span> '
+                f'<span class="sa-title">{_html.escape(text)}</span></h1>'
+                + (f"<p>{_html.escape(subtitle)}</p>" if subtitle else "") + "</div>",
+                unsafe_allow_html=True)
+
+
+_inject_css()
+
 COLORS = {"П1": "#2E7D32", "Х": "#9E9E9E", "П2": "#1565C0"}
 MODEL_LABELS = {"final": "Итоговый прогноз", "dixon_coles": "Dixon-Coles", "elo": "Elo",
                 "market": "Букмекеры"}
@@ -333,7 +353,7 @@ def _league_of(eng: Engine, key, team) -> str | None:
 # ======================================================================== pages
 def page_today():
     eng = get_engine()
-    st.title("📅 Матчи дня и прогнозы")
+    page_header("📅 Матчи дня и прогнозы", "Кто выиграет, сколько голов, тотал и «обе забьют» — для каждого матча, плюс live-счёт")
     today = now_in_tz().tz_localize(None).normalize()
     today_day = get_day(today, eng.built_at, user_tz())
     if not today_day.empty and "p_home" in today_day:
@@ -342,10 +362,10 @@ def page_today():
     with st.container(border=True):
         live_panel(today_day)
     c = st.columns([2, 3, 3])
-    choice = c[0].segmented_control("День", ["Вчера", "Сегодня", "Завтра", "Дата…"],
+    choice = c[0].segmented_control("📅 День", ["Вчера", "Сегодня", "Завтра", "Дата…"],
                                     default="Сегодня")
     if choice == "Дата…":
-        date = pd.Timestamp(c[0].date_input("Дата", today, format="DD.MM.YYYY"))
+        date = pd.Timestamp(c[0].date_input("📆 Дата", today, format="DD.MM.YYYY"))
     else:
         date = today + timedelta(days={"Вчера": -1, "Сегодня": 0, "Завтра": 1}.get(choice, 0))
     query = c[1].text_input("🔎 Поиск команды", placeholder="например: Arsenal, Spain…")
@@ -364,7 +384,7 @@ def page_today():
         _upcoming_hint(eng, date)
         return
     comps = list(dict.fromkeys(day["comp_name"]))
-    sel = c[2].multiselect("Турниры", comps, placeholder="все турниры")
+    sel = c[2].multiselect("🏆 Турниры", comps, placeholder="все турниры")
     view = day.copy()
     if sel:
         view = view[view["comp_name"].isin(sel)]
@@ -393,7 +413,7 @@ def page_today():
         st.warning("Ничего не найдено.")
         return
     now = now_in_tz()
-    show_probs = st.toggle("Показать вероятности П1 / Х / П2", value=False)
+    show_probs = st.toggle("📊 Показать вероятности П1 / Х / П2", value=False)
     table = pd.DataFrame({
         "Время": [("вчера " if y is True else "") + (k.strftime("%H:%M") if pd.notna(k) else "")
                   for k, y in zip(view["kickoff"], view.get("from_yesterday",
@@ -483,8 +503,13 @@ def live_panel(day: pd.DataFrame):
                 away = d["away"] if d is not None else r["away_raw"]
                 goal = now - flash.get(r["id"], 0) < 120
                 st.caption(r["competition"])
-                st.markdown(f"{'⚽ **ГОЛ!** ' if goal else ''}**{home}**  "
-                            f"`{int(r['hg'])} : {int(r['ag'])}`  **{away}**")
+                import html as _h
+                st.markdown(f"<div class='sa-live{' goal' if goal else ''}'>"
+                            + ("<div class='sa-goal'>⚽ ГОЛ!</div>" if goal else "")
+                            + f"<span class='sa-team'>{_h.escape(str(home))}</span>"
+                            f"<span class='sa-score'>{int(r['hg'])} : {int(r['ag'])}</span>"
+                            f"<span class='sa-team'>{_h.escape(str(away))}</span></div>",
+                            unsafe_allow_html=True)
                 minute = f"{int(r['minute'])}'" if pd.notna(r["minute"]) else ""
                 reds = " " + "🟥" * int(r["red_h"]) + "|" + "🟥" * int(r["red_a"])                     if (r["red_h"] or r["red_a"]) else ""
                 st.caption(f"🔴 {minute} · {r['status']}{reds}")
@@ -506,7 +531,7 @@ def _upcoming_hint(eng: Engine, date):
 
 def page_match():
     eng = get_engine()
-    st.title("🔮 Прогноз любого матча")
+    page_header("🔮 Прогноз любого матча", "Любые две команды: одна лига, разные лиги или сборные")
     kind = st.radio("Тип матча", ["Клубы одной лиги", "Клубы разных лиг (еврокубок)",
                                   "Сборные"], horizontal=True)
     if kind == "Клубы одной лиги":
@@ -551,7 +576,7 @@ def _idx(items, value) -> int:
 
 def page_leagues():
     eng = get_engine()
-    st.title("🏆 Лиги: таблица, симуляция сезона, сила команд")
+    page_header("🏆 Лиги и симуляция сезона", "Таблица, шансы на чемпионство и вылет, сила атаки и обороны")
     c = st.columns(2)
     countries = list(dict.fromkeys(v["country"] for v in LEAGUES.values()))
     country = c[0].selectbox("Страна", countries)
@@ -638,7 +663,7 @@ def page_leagues():
 
 def page_ratings():
     eng = get_engine()
-    st.title("📊 Рейтинги силы")
+    page_header("📊 Рейтинги силы", "Все клубы на единой шкале и сборные мира")
     t1, t2 = st.tabs(["Клубы (все лиги, единая шкала)", "Сборные"])
     with t1:
         recent = eng.matches[eng.matches["season"] >= eng.matches["season"].max() - 1]
@@ -673,8 +698,36 @@ def page_ratings():
                      column_config={"Elo": st.column_config.NumberColumn(format="%.0f")})
 
 
+def render_auto_analysis():
+    """Automatic error analysis of live forecasts: findings + reasons for each miss."""
+    from soccer import analysis
+    try:
+        fin = analysis.scored_live()
+        fs = analysis.findings(fin)
+        ms = analysis.misses(fin, n=40)
+    except Exception as exc:
+        st.caption(f"Автоанализ недоступен: {exc}")
+        return
+    icon = {"act": "🔴", "watch": "🟡", "ok": "🟢"}
+    with st.expander(f"🔍 Автоанализ живых прогнозов · {len(fin)} сыгранных матчей", expanded=True):
+        st.caption("Система сама ищет систематические ошибки (с проверкой на случайность), "
+                   "раз в неделю присылает отчёт в Telegram и переучивает калибровку, когда "
+                   "данных достаточно. Задачи, требующие новой идеи, Claude берёт в работу "
+                   "в начале каждой сессии.")
+        for f in fs:
+            st.markdown(f"{icon[f['severity']]} **{f['title']}** — {f['text']}"
+                        + (f"  \n&nbsp;&nbsp;&nbsp;➜ *{f['todo']}*" if f.get("todo") else ""))
+        if len(ms):
+            st.markdown("**Разбор промахов** — почему не сбылось:")
+            st.dataframe(pd.DataFrame({
+                "Дата": ms["date"].dt.strftime("%d.%m"), "Матч": ms["match"],
+                "Счёт": ms["score"], "Прогноз": ms["call"], "Вероятная причина": ms["reasons"]}),
+                hide_index=True, width="stretch")
+
+
 def page_accuracy():
-    st.title("🎯 Точность прогнозов")
+    page_header("🎯 Точность прогнозов", "Как часто сбываются прогнозы — живые и на истории, в сравнении с букмекером")
+    render_auto_analysis()
     runs = storage.load_runs()
     if runs.empty:
         st.info("Прогнозов пока нет.")
@@ -1011,12 +1064,12 @@ def render_suggestions(df: pd.DataFrame):
 def page_coupon():
     from soccer.misli import outcome_won
     eng = get_engine()
-    st.title("🎟️ Купон: коэффициенты misli.az и модель")
+    page_header("🎟️ Купоны", "Коэффициенты misli.az, оценка модели и готовые купоны дня")
     c = st.columns([2, 3, 2, 2])
-    day = c[0].segmented_control("Когда", ["Сегодня", "Завтра", "Все"], default="Все")
+    day = c[0].segmented_control("🗓️ Когда", ["Сегодня", "Завтра", "Все"], default="Все")
     query = c[1].text_input("🔎 Поиск команды или турнира", key="coupon_q")
-    only_model = c[2].toggle("Только с прогнозом модели", value=True)
-    sort = c[3].selectbox("Сортировка", ["По времени", "По преимуществу модели"])
+    only_model = c[2].toggle("🧠 Только с прогнозом модели", value=True)
+    sort = c[3].selectbox("↕️ Сортировка", ["По времени", "По преимуществу модели"])
     if c[3].button("🔄 Обновить коэффициенты"):
         st.session_state["misli_token"] = st.session_state.get("misli_token", 0) + 1
     try:
@@ -1156,7 +1209,7 @@ def _status_lines(picks: list[dict]) -> tuple[str, list[str]]:
 
 
 def page_my_coupons():
-    st.title("🧾 Мои купоны")
+    page_header("🧾 Мои купоны", "Ваши купоны и их результаты — обновляются сами")
     st.caption("Результаты подтягиваются сами (livescore.com + misli.az), обновление раз в 2 минуты.")
     draft = _coupon()
     if draft:
@@ -1208,7 +1261,7 @@ def page_my_coupons():
 
 
 def page_about():
-    st.title("ℹ️ Как это работает")
+    page_header("ℹ️ Как это работает", "Модели, данные и проверка качества — простыми словами")
     st.markdown("""
 **Что прогнозирует анализатор.** Вероятности исходов (П1 / Х / П2), точные счета, тоталы,
 «обе забьют» — для матчей 38 национальных лиг, Лиги чемпионов, Лиги Европы, Лиги конференций,
@@ -1254,8 +1307,8 @@ def require_login():
     password = _app_password()
     if not password or st.session_state.get("authenticated"):
         return
-    st.title("⚽ Soccer Analyser")
-    st.markdown("Вход только для владельца.")
+    _inject_css()
+    page_header("⚽ Soccer Analyser", "Вход только для владельца")
     with st.form("login"):
         entered = st.text_input("Пароль", type="password")
         ok = st.form_submit_button("Войти")
@@ -1271,7 +1324,9 @@ require_login()
 
 # ======================================================================== layout
 with st.sidebar:
-    st.markdown("## ⚽ Soccer Analyser")
+    st.markdown('<div class="sa-brand"><div style="font-size:1.8rem">⚽</div><div>'
+                '<b>Soccer Analyser</b><span>прогнозы · купоны · live</span></div></div>',
+                unsafe_allow_html=True)
 pages = st.navigation([
     st.Page(page_today, title="Матчи дня", icon="📅", default=True, url_path="today"),
     st.Page(page_coupon, title="Купон (misli.az)", icon="🎟️", url_path="coupon"),

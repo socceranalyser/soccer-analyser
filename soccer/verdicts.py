@@ -60,11 +60,19 @@ def calls_columns(view: pd.DataFrame) -> dict:
             cols["checks"][-1] = ""
             continue
         p = [r["p_home"], r["p_draw"], r["p_away"]]
-        lab, _, pr = outcome_call(p, r["home"], r["away"])
-        cols["call_outcome"].append(f"{lab} · {pr:.0%}")
+        lab, cov, pr = outcome_call(p, r["home"], r["away"])
+        cols["call_outcome"].append(f"{'🏆' if len(cov) == 1 else '🛡️'} {lab} · {pr:.0%}")
         po, pb = r.get("p_over25"), r.get("p_btts")
-        cols["call_total"].append("—" if pd.isna(po) else "{} · {:.0%}".format(*total_call(po)[::2]))
-        cols["call_btts"].append("—" if pd.isna(pb) else "{} · {:.0%}".format(*btts_call(pb)[::2]))
+        if pd.isna(po):
+            cols["call_total"].append("—")
+        else:
+            tl, over, tp = total_call(po)
+            cols["call_total"].append(f"{'⬆️' if over else '⬇️'} {tl} · {tp:.0%}")
+        if pd.isna(pb):
+            cols["call_btts"].append("—")
+        else:
+            bl, yes, bp = btts_call(pb)
+            cols["call_btts"].append(f"{'⚽' if yes else '🚫'} {bl} · {bp:.0%}")
         xg = (r.get("xg_home") or np.nan) + (r.get("xg_away") or np.nan)
         cols["exp_goals"].append(None if pd.isna(xg) else round(float(xg), 1))
         if r["played"] and pd.notna(r["hg"]):

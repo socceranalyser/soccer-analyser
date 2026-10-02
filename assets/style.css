@@ -1,0 +1,106 @@
+/* Soccer Analyser — visual layer on top of the Streamlit theme (.streamlit/config.toml) */
+
+/* page header banner */
+.sa-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  padding: 22px 26px;
+  margin: 0 0 18px 0;
+  background:
+    radial-gradient(circle at 92% -20%, rgba(74, 222, 128, .35), transparent 45%),
+    radial-gradient(circle at 10% 130%, rgba(56, 189, 248, .25), transparent 50%),
+    linear-gradient(135deg, #0f2a1c 0%, #10213a 60%, #0b1220 100%);
+  border: 1px solid #24324d;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+}
+.sa-hero::after {               /* faint pitch lines */
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, transparent 49.8%, rgba(255, 255, 255, .06) 50%, transparent 50.2%),
+    radial-gradient(circle at 50% 50%, transparent 58px, rgba(255, 255, 255, .06) 59px, transparent 61px);
+  pointer-events: none;
+}
+.sa-hero h1 {
+  margin: 0; padding: 0;
+  font-size: 2rem; font-weight: 800; letter-spacing: -.02em;
+}
+.sa-hero .sa-title {
+  background: linear-gradient(90deg, #ffffff, #86efac);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.sa-hero p { margin: 6px 0 0 0; color: #a7b4cc; font-size: .98rem; }
+
+/* metric cards */
+[data-testid="stMetric"] {
+  background: linear-gradient(160deg, #15213a 0%, #101a2d 100%);
+  border: 1px solid #24324d;
+  border-radius: 14px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+}
+[data-testid="stMetricLabel"] { color: #93a3bf !important; }
+[data-testid="stMetricValue"] { font-weight: 800; }
+
+/* buttons */
+.stButton > button, .stDownloadButton > button, [data-testid="stFormSubmitButton"] > button {
+  border-radius: 12px;
+  font-weight: 600;
+  transition: transform .08s ease, box-shadow .15s ease;
+}
+.stButton > button:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(34, 197, 94, .25); }
+.stButton > button[kind="primary"] {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border: none;
+}
+
+/* bordered containers (live cards, coupons) */
+[data-testid="stVerticalBlockBorderWrapper"] {
+  background: linear-gradient(160deg, rgba(21, 33, 58, .85), rgba(16, 26, 45, .85));
+  border-radius: 16px !important;
+}
+
+/* tables, expanders, tabs */
+[data-testid="stDataFrame"] { border-radius: 14px; overflow: hidden; }
+[data-testid="stExpander"] details { border-radius: 14px; }
+.stTabs [data-baseweb="tab"] { font-weight: 600; }
+
+/* sidebar brand */
+.sa-brand {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 14px;
+  background: linear-gradient(135deg, #14532d, #0f2a1c);
+  border: 1px solid #1f3d2b; margin-bottom: 8px;
+}
+.sa-brand b { font-size: 1.05rem; }
+.sa-brand span { color: #9fe3b5; font-size: .8rem; display: block; }
+
+/* small coloured pills used in captions */
+.sa-pill {
+  display: inline-block; padding: 2px 10px; border-radius: 999px;
+  font-size: .82rem; font-weight: 600; margin-right: 6px;
+  background: #1c2a44; border: 1px solid #2c3d5e;
+}
+.sa-pill.green { background: rgba(34, 197, 94, .15); border-color: rgba(34, 197, 94, .5); color: #86efac; }
+.sa-pill.red { background: rgba(239, 68, 68, .15); border-color: rgba(239, 68, 68, .5); color: #fca5a5; }
+.sa-pill.amber { background: rgba(245, 158, 11, .15); border-color: rgba(245, 158, 11, .5); color: #fcd34d; }
+
+/* mobile */
+@media (max-width: 640px) {
+  .sa-hero { padding: 16px 16px; }
+  .sa-hero h1 { font-size: 1.45rem; }
+}
+
+/* live match cards */
+.sa-live { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 4px 0 6px 0; }
+.sa-live .sa-team { font-weight: 700; font-size: 1rem; }
+.sa-live .sa-score {
+  font-weight: 800; font-size: 1.25rem; padding: 2px 12px; border-radius: 10px;
+  background: #0b1220; border: 1px solid #2c3d5e; color: #4ade80; letter-spacing: .05em;
+}
+.sa-live.goal .sa-score { background: rgba(34, 197, 94, .2); border-color: #22c55e;
+  animation: sa-pulse 1.2s ease-in-out infinite; }
+.sa-goal { width: 100%; font-weight: 800; color: #fde047; }
+@keyframes sa-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, .5); }
+                      50% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); } }

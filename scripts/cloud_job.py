@@ -25,6 +25,14 @@ if __name__ == "__main__":
             traceback.print_exc()
         from soccer.notify import send_daily_digest
         print(send_daily_digest(eng))
+        from soccer import analysis
+        from soccer.notify import send
+        age = (pd.Timestamp.now() - pd.Timestamp(analysis.REPORT.stat().st_mtime, unit="s")).days             if analysis.REPORT.exists() else 99
+        if pd.Timestamp.now().weekday() == 0 or age >= 7:
+            report = analysis.weekly_report()
+            print("weekly analysis written")
+            send("🧪 <b>Еженедельный автоанализ</b>\n" + report.replace("# ", "").replace("## ", "▪️ ")
+                 .replace("**", "")[:3800])
     except Exception:
         traceback.print_exc()
         sys.exit(1)

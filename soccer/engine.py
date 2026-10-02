@@ -213,6 +213,11 @@ class Engine:
             m = rescale_to_outcomes(m_dc, head)
             elo_h, elo_a = p["elo_h"][0], p["elo_a"][0]
             known = home in self.nat_elo.ratings and away in self.nat_elo.ratings
+        from .analysis import category, live_calibrator
+        cal = live_calibrator(category(competition))
+        if cal is not None:  # learnt from our own live mistakes (only when it proved better)
+            head = cal.transform(np.asarray(head)[None, :])[0]
+            m = rescale_to_outcomes(m, head)
         if odds is not None and np.all(np.isfinite(odds)) and np.all(np.asarray(odds) > 1):
             models["Букмекеры"] = implied_probs([odds[0]], [odds[1]], [odds[2]])[0]
         mk = markets(m)

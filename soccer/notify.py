@@ -41,15 +41,41 @@ def save_env_value(key: str, value: str):
     ENV_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def configured() -> bool:
+CHAT_FILE = ROOT / "data" / "state" / "telegram_chat_id.txt"
+
+
+def chat_id() -> str | None:
+    """Chat id from config, from the saved file, or discovered from the bot's messages
+    (the owner pressed Start) and then saved, so only the token has to be configured."""
     c = load_config()
-    return bool(c.get("TELEGRAM_BOT_TOKEN") and c.get("TELEGRAM_CHAT_ID"))
+    if c.get("TELEGRAM_CHAT_ID"):
+        return c["TELEGRAM_CHAT_ID"]
+    if CHAT_FILE.exists():
+        v = CHAT_FILE.read_text(encoding="utf-8").strip()
+        if v:
+            return v
+    token = c.get("TELEGRAM_BOT_TOKEN")
+    if not token:
+        return None
+    try:
+        upd = requests.get(f"https://api.telegram.org/bot{token}/getUpdates", timeout=30).json()
+    except requests.RequestException:
+        return None
+    chats = [u["message"]["chat"]["id"] for u in upd.get("result", []) if "message" in u]
+    if not chats:
+        return None
+    CHAT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    CHAT_FILE.write_text(str(chats[-1]), encoding="utf-8")
+    return str(chats[-1])
+
+
+def configured() -> bool:
+    return bool(load_config().get("TELEGRAM_BOT_TOKEN") and chat_id())
 
 
 def send(text: str) -> bool:
     """Send an HTML message (split into Telegram-sized chunks)."""
-    c = load_config()
-    token, chat = c.get("TELEGRAM_BOT_TOKEN"), c.get("TELEGRAM_CHAT_ID")
+    token, chat = load_config().get("TELEGRAM_BOT_TOKEN"), chat_id()
     if not token or not chat:
         return False
     chunks, cur = [], ""
@@ -164,5 +190,6 @@ def daily_digest(engine, coupons: bool = True) -> str:
 
 def send_daily_digest(engine) -> str:
     if not configured():
-        return "telegram: not configured (run scripts/telegram_setup.py)"
+        return ("telegram: no token" if not load_config().get("TELEGRAM_BOT_TOKEN") else
+                "telegram: token set, but nobody pressed Start in the bot yet")
     return "telegram: sent" if send(daily_digest(engine)) else "telegram: FAILED"

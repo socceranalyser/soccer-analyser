@@ -1,118 +1,4 @@
 home_raw,away_raw,kickoff,status,minute,ended,live,hg,ag,competition
-CD Aguila,CD Cacahuatique U20,2026-10-03 21:00:00+00:00,FT,,True,False,2.0,2.0,El Salvador · Primera Division: Apertura
-Belgium,Turkiye,2026-10-02 18:45:00+00:00,FT,,True,False,3.0,0.0,UEFA Nations League · League A: Group 1
-France,Italy,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League A: Group 1
-Hungary,Georgia,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,0.0,UEFA Nations League · League B: Group 2
-Ukraine,Northern Ireland,2026-10-02 18:45:00+00:00,FT,,True,False,0.0,3.0,UEFA Nations League · League B: Group 2
-Bosnia and Herzegovina,Sweden,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League B: Group 4
-Poland,Romania,2026-10-02 18:45:00+00:00,FT,,True,False,6.0,0.0,UEFA Nations League · League B: Group 4
-Cyprus,Armenia,2026-10-02 16:00:00+00:00,FT,,True,False,2.0,0.0,UEFA Nations League · League C: Group 2
-Latvia,Montenegro,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,2.0,UEFA Nations League · League C: Group 2
-Kazakhstan,Moldova,2026-10-02 14:00:00+00:00,FT,,True,False,1.0,2.0,UEFA Nations League · League C: Group 3
-Faroe Islands,Slovakia,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League C: Group 3
-Dominican Republic,Haiti,2026-10-02 00:00:00+00:00,FT,,True,False,1.0,4.0,CONCACAF Nations League · League A: Group 1
-Nicaragua,Costa Rica,2026-10-02 02:00:00+00:00,FT,,True,False,0.0,3.0,CONCACAF Nations League · League A: Group 1
-Cayman Islands,Puerto Rico,2026-10-02 00:00:00+00:00,FT,,True,False,0.0,3.0,CONCACAF Nations League · League B: Group 1
-South Korea,Venezuela,2026-10-02 11:00:00+00:00,FT,,True,False,0.0,0.0,International Friendlies · Friendlies
-China,Palestine,2026-10-02 11:35:00+00:00,FT,,True,False,0.0,5.0,International Friendlies · Friendlies
-DR Congo,Uganda,2026-10-02 13:00:00+00:00,FT,,True,False,0.0,2.0,International Friendlies · Friendlies
-Mauritius,Sri Lanka,2026-10-02 15:00:00+00:00,FT,,True,False,3.0,0.0,International Friendlies · Friendlies
-FC Admira Wacker Modling,Austria Wien,2026-10-02 09:00:00+00:00,FT,,True,False,1.0,6.0,Club Friendlies · Club Friendlies 2026
-Saint-Etienne,Sion,2026-10-02 09:00:00+00:00,FT,,True,False,5.0,1.0,Club Friendlies · Club Friendlies 2026
-Lugano,Hellas Verona,2026-10-02 09:30:00+00:00,FT,,True,False,1.0,3.0,Club Friendlies · Club Friendlies 2026
-AC Horsens,Vejle Boldklub,2026-10-02 10:00:00+00:00,FT,,True,False,2.0,1.0,Club Friendlies · Club Friendlies 2026
-AGF,Vendsyssel FF,2026-10-02 10:00:00+00:00,FT,,True,False,2.0,1.0,Club Friendlies · Club Friendlies 2026
-Dunkerque,Raal La Louviere,2026-10-02 10:00:00+00:00,FT,,True,False,0.0,4.0,Club Friendlies · Club Friendlies 2026
-Elfsborg,BK Haecken,2026-10-02 10:00:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026
-Le Havre,Boulogne,2026-10-02 10:00:00+00:00,FT,,True,False,6.0,1.0,Club Friendlies · Club Friendlies 2026
-Juventus,Cremonese,2026-10-02 10:30:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026
-Kolding IF,OB,2026-10-02 11:00:00+00:00,FT,,True,False,5.0,4.0,Club Friendlies · Club Friendlies 2026
-IK Start,Brann,2026-10-02 12:00:00+00:00,FT,,True,False,2.0,1.0,Club Friendlies · Club Friendlies 2026
-Eintracht Frankfurt,Eintracht Braunschweig,2026-10-02 14:00:00+00:00,FT,,True,False,4.0,0.0,Club Friendlies · Club Friendlies 2026
-Broendby IF,Sirius,2026-10-02 15:30:00+00:00,FT,,True,False,1.0,1.0,Club Friendlies · Club Friendlies 2026
-Deportivo A Coruna,FC Porto,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,3.0,Club Friendlies · Club Friendlies 2026
-Real Sociedad,Athletic Club,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026
-Sevilla,Aston Villa,2026-10-02 18:30:00+00:00,FT,,True,False,1.0,3.0,Club Friendlies · Club Friendlies 2026
-Seattle Sounders FC,Sporting Kansas City,2026-10-02 01:30:00+00:00,FT,,True,False,2.0,1.0,USA · MLS
-CD Eldense,Real Oviedo,2026-10-02 18:30:00+00:00,FT,,True,False,4.0,1.0,Spain · LaLiga 2
-Club Atletico Platense,Estudiantes de la Plata,2026-10-02 00:15:00+00:00,FT,,True,False,1.0,0.0,Argentina · Copa Argentina
-Dundalk,Bohemian FC,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,2.0,Ireland · League of Ireland Premier Division
-Andorra U21,Moldova U21,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,0.0,Euro U21 2027 · Qualification: Group D
-England U21,Slovakia U21,2026-10-02 18:45:00+00:00,FT,,True,False,0.0,0.0,Euro U21 2027 · Qualification: Group D
-Slovenia U21,Netherlands U21,2026-10-02 16:00:00+00:00,FT,,True,False,2.0,4.0,Euro U21 2027 · Qualification: Group G
-Ukraine U21,Croatia U21,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,0.0,Euro U21 2027 · Qualification: Group H
-Austria U21,Denmark U21,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,1.0,Euro U21 2027 · Qualification: Group I
-Bayer Leverkusen W,Werder Bremen W,2026-10-02 16:30:00+00:00,FT,,True,False,3.0,2.0,Germany · Frauen-Bundesliga
-Serbia U21,Russia U21,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,3.0,International Friendlies · Friendlies U21
-Novorizontino,Goias,2026-10-02 00:00:00+00:00,FT,,True,False,3.0,0.0,Brazil · Serie B
-Salitas,Real du Faso,2026-10-02 15:30:00+00:00,FT,,True,False,1.0,3.0,Burkina Faso · Ligue 1
-Cariari,Santa Ana,2026-10-02 01:00:00+00:00,FT,,True,False,1.0,2.0,Costa Rica · Liga de Ascenso: Apertura: Group B
-Dukla Praha,Jablonec,2026-10-02 16:00:00+00:00,FT,,True,False,0.0,1.0,Czech Republic · Cup
-Fremad Amager,B 93,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,3.0,Denmark · 2nd Division
-Naestved,Nykoebing FC,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Denmark · 2nd Division
-VSK Aarhus,Brabrand,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,2.0,Denmark · 2nd Division
-Inca Aruba,Municipal Limeno,2026-10-02 00:00:00+00:00,FT,,True,False,2.0,1.0,El Salvador · Primera Division: Apertura
-PK-35 Vantaa W,FC Honka W,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,1.0,Finland · Women's Kansallinen Liiga: Qualification Play-offs 2026
-Aviron Bayonnais FC,Les Herbiers,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,France · National 1: Group B
-Stade Briochin,Lorient B,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,3.0,France · National 1: Group B
-Chauray,Avranches,2026-10-02 18:00:00+00:00,FT,,True,False,0.0,2.0,France · National 1: Group B
-Istres,Chateauroux,2026-10-02 18:30:00+00:00,FT,,True,False,0.0,0.0,France · National 1: Group C
-TSV Buchbach,SC Eltersdorf,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,2.0,Germany · Regionalliga Bayern
-Unterhaching,FC Schweinfurt,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Regionalliga Bayern
-VfB Lubeck,Eimsbutteler TV,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,0.0,Germany · Regionalliga Nord
-Sandhausen,Kaiserslautern II,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Regionalliga Südwest
-Stuttgarter Kickers,Kickers Offenbach,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,0.0,Germany · Regionalliga Südwest
-Bonner SC,Westfalia Rhynern,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,1.0,Germany · Regionalliga West
-Borussia M'gladbach II,Bochum II,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,3.0,Germany · Regionalliga West
-1. FC Muehlhausen,1. CfR Pforzheim,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,2.0,Germany · Oberliga: Baden-Wurttemberg
-DJK Don Bosco Bamberg,Eintracht Bamberg,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Bayern North
-SpVgg Weiden,Viktoria Aschaffenburg,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Bayern North
-TSV Kornburg,TSV 1861 Noerdlingen,2026-10-02 17:30:00+00:00,FT,,True,False,5.0,0.0,Germany · Oberliga: Bayern North
-1860 Munich II,1860 Rosenheim,2026-10-02 17:00:00+00:00,FT,,True,False,4.0,0.0,Germany · Oberliga: Bayern South
-Sportfreunde Schwaig,TSV Kottern,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,0.0,Germany · Oberliga: Bayern South
-Niendorfer TSV,TSV Concordia,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,2.0,Germany · Oberliga: Hamburg
-Vorwarts-Wacker,TuS Dassendorf,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,4.0,Germany · Oberliga: Hamburg
-Harksheide,HEBC Hamburg,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,3.0,Germany · Oberliga: Hamburg
-Victoria Hamburg,TSV Sasel,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,2.0,Germany · Oberliga: Hamburg
-Eintracht Norderstedt II,Altonaer FC 93,2026-10-02 18:00:00+00:00,FT,,True,False,1.0,4.0,Germany · Oberliga: Hamburg
-Eintracht Stadtallendorf,Turk Gucu Friedberg,2026-10-02 18:30:00+00:00,FT,,True,False,2.0,1.0,Germany · Oberliga: Hessen
-1. FC Duren,Koenigsdorf,2026-10-02 18:00:00+00:00,FT,,True,False,0.0,0.0,Germany · Oberliga: Mittelrhein
-FC Monheim,SW Essen,2026-10-02 17:30:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Niederrhein
-KFC Uerdingen,Velbert,2026-10-02 17:30:00+00:00,FT,,True,False,1.0,2.0,Germany · Oberliga: Niederrhein
-Ratinger SV,Scherpenberg,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,0.0,Germany · Oberliga: Niederrhein
-Wuppertaler SV,Sportfreunde Baumberg,2026-10-02 17:30:00+00:00,FT,,True,False,4.0,0.0,Germany · Oberliga: Niederrhein
-Blau-Weiss Dingden,DJK Teutonia St. Toenis,2026-10-02 18:00:00+00:00,FT,,True,False,1.0,0.0,Germany · Oberliga: Niederrhein
-Viktoria Juechen-Garzweiler,SV Sonsbeck,2026-10-02 18:00:00+00:00,FT,,True,False,3.0,2.0,Germany · Oberliga: Niederrhein
-Hertha Wiesbach,FV Diefflen,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Rheinland-Pfalz/Saar
-Koblenz,Eisbachtaler Sportfreunde,2026-10-02 17:30:00+00:00,FT,,True,False,3.0,2.0,Germany · Oberliga: Rheinland-Pfalz/Saar
-Athlone Town,Cork City,2026-10-02 18:45:00+00:00,FT,,True,False,2.0,1.0,Ireland · 1st Division
-Bray Wanderers,Cobh Ramblers,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,4.0,Ireland · 1st Division
-Finn Harps,Kerry,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,2.0,Ireland · 1st Division
-Wexford FC,Longford Town,2026-10-02 18:45:00+00:00,FT,,True,False,3.0,3.0,Ireland · 1st Division
-MIO Biwako Shiga,Roasso Kumamoto,2026-10-02 10:00:00+00:00,FT,,True,False,0.0,0.0,Japan · J3 League
-FUS Rabat,US Amal Tiznit,2026-10-02 16:00:00+00:00,FT,,True,False,0.0,1.0,Morocco · Botola Pro
-Widad Temara,Union Touarga Sport,2026-10-02 18:00:00+00:00,FT,,True,False,0.0,1.0,Morocco · Botola Pro
-Strabane Athletic,Armagh,2026-10-02 18:45:00+00:00,FT,,True,False,0.0,0.0,Northern Ireland · Championship
-Ranheim,Egersund,2026-10-02 17:00:00+00:00,FT,,True,False,5.0,0.0,Norway · 1. Division
-Molde 2,Herd,2026-10-02 16:30:00+00:00,FT,,True,False,6.0,2.0,Norway · 3. Division: Group 2
-Rosenborg 2,Melhus,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,4.0,Norway · 3. Division: Group 2
-Hinna FK,Staal Joerpeland,2026-10-02 16:00:00+00:00,FT,,True,False,2.0,4.0,Norway · 3. Division: Group 4
-Daejeon Korail,Gangneung City,2026-10-02 10:00:00+00:00,FT,,True,False,2.0,1.0,Republic of Korea · K3 League
-Cumnock Juniors,Auchinleck Talbot,2026-10-02 18:30:00+00:00,FT,,True,False,2.0,0.0,Scotland · Scottish Cup: Round 1
-Real Aviles Industrial,Lugo,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,2.0,Spain · Primera Division RFEF: Group 1
-Karlbergs BK,Sollentuna FK,2026-10-02 17:00:00+00:00,FT,,True,False,3.0,2.0,Sweden · Division 1: North
-Kristianstad FC,Ariana FC,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 1: South
-Lunds BK,Laholms FK,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 1: South
-Kungsaengens IF,Sunnersta AIF,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,1.0,Sweden · Division 2: Norra Svealand
-Lilla Torg FF,Nosaby IF,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,3.0,Sweden · Division 2: Soedra Goetaland
-Staffanstorp United FC,Soelvesborgs GOIF,2026-10-02 17:00:00+00:00,FT,,True,False,4.0,0.0,Sweden · Division 2: Soedra Goetaland
-Smedby AIS,Nykoepings BIS,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Sweden · Division 2: Soedra Svealand
-FOC Farsta,Fittja IF,2026-10-02 18:00:00+00:00,FT,,True,False,2.0,1.0,Sweden · Division 2: Soedra Svealand
-Hestrafors IF,Onsala BK,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 2: Vaestra Goetaland
-Lindome GIF,Galtabaecks BK,2026-10-02 17:00:00+00:00,FT,,True,False,4.0,3.0,Sweden · Division 2: Vaestra Goetaland
-Torslanda IK,IK Kongahaella,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,0.0,Sweden · Division 2: Vaestra Goetaland
-Qviding FIF,Landvetter IS,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 2: Vaestra Goetaland
-Jitex BK W,Linkoepings FC W,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,1.0,Sweden · Women's Elitettan
 Germany,Serbia,2026-10-01 18:45:00+00:00,FT,,True,False,2.0,0.0,UEFA Nations League · League A: Group 2
 Greece,Netherlands,2026-10-01 18:45:00+00:00,FT,,True,False,2.0,2.0,UEFA Nations League · League A: Group 2
 Denmark,Portugal,2026-10-01 18:45:00+00:00,FT,,True,False,2.0,4.0,UEFA Nations League · League A: Group 4
@@ -427,3 +313,117 @@ Potters Bar Town,Stotfold,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,2.0,Engla
 Thame United,Beaconsfield Town,2026-09-29 18:45:00+00:00,FT,,True,False,3.0,0.0,England · Southern League: Central Divison
 Welwyn Garden City,Royston Town,2026-09-29 18:45:00+00:00,FT,,True,False,1.0,1.0,England · Southern League: Central Divison
 Winslow United,Barton Rovers,2026-09-29 18:45:00+00:00,FT,,True,False,2.0,1.0,England · Southern League: Central Divison
+Belgium,Turkiye,2026-10-02 18:45:00+00:00,FT,,True,False,3.0,0.0,UEFA Nations League · League A: Group 1
+France,Italy,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League A: Group 1
+Hungary,Georgia,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,0.0,UEFA Nations League · League B: Group 2
+Ukraine,Northern Ireland,2026-10-02 18:45:00+00:00,FT,,True,False,0.0,3.0,UEFA Nations League · League B: Group 2
+Bosnia and Herzegovina,Sweden,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League B: Group 4
+Poland,Romania,2026-10-02 18:45:00+00:00,FT,,True,False,6.0,0.0,UEFA Nations League · League B: Group 4
+Cyprus,Armenia,2026-10-02 16:00:00+00:00,FT,,True,False,2.0,0.0,UEFA Nations League · League C: Group 2
+Latvia,Montenegro,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,2.0,UEFA Nations League · League C: Group 2
+Kazakhstan,Moldova,2026-10-02 14:00:00+00:00,FT,,True,False,1.0,2.0,UEFA Nations League · League C: Group 3
+Faroe Islands,Slovakia,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,1.0,UEFA Nations League · League C: Group 3
+Dominican Republic,Haiti,2026-10-02 00:00:00+00:00,FT,,True,False,1.0,4.0,CONCACAF Nations League · League A: Group 1
+Nicaragua,Costa Rica,2026-10-02 02:00:00+00:00,FT,,True,False,0.0,3.0,CONCACAF Nations League · League A: Group 1
+Cayman Islands,Puerto Rico,2026-10-02 00:00:00+00:00,FT,,True,False,0.0,3.0,CONCACAF Nations League · League B: Group 1
+South Korea,Venezuela,2026-10-02 11:00:00+00:00,FT,,True,False,0.0,0.0,International Friendlies · Friendlies
+China,Palestine,2026-10-02 11:35:00+00:00,FT,,True,False,0.0,5.0,International Friendlies · Friendlies
+DR Congo,Uganda,2026-10-02 13:00:00+00:00,FT,,True,False,0.0,2.0,International Friendlies · Friendlies
+Mauritius,Sri Lanka,2026-10-02 15:00:00+00:00,FT,,True,False,3.0,0.0,International Friendlies · Friendlies
+FC Admira Wacker Modling,Austria Wien,2026-10-02 09:00:00+00:00,FT,,True,False,1.0,6.0,Club Friendlies · Club Friendlies 2026
+Saint-Etienne,Sion,2026-10-02 09:00:00+00:00,FT,,True,False,5.0,1.0,Club Friendlies · Club Friendlies 2026
+Lugano,Hellas Verona,2026-10-02 09:30:00+00:00,FT,,True,False,1.0,3.0,Club Friendlies · Club Friendlies 2026
+AC Horsens,Vejle Boldklub,2026-10-02 10:00:00+00:00,FT,,True,False,2.0,1.0,Club Friendlies · Club Friendlies 2026
+AGF,Vendsyssel FF,2026-10-02 10:00:00+00:00,FT,,True,False,2.0,1.0,Club Friendlies · Club Friendlies 2026
+Dunkerque,Raal La Louviere,2026-10-02 10:00:00+00:00,FT,,True,False,0.0,4.0,Club Friendlies · Club Friendlies 2026
+Elfsborg,BK Haecken,2026-10-02 10:00:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026
+Le Havre,Boulogne,2026-10-02 10:00:00+00:00,FT,,True,False,6.0,1.0,Club Friendlies · Club Friendlies 2026
+Juventus,Cremonese,2026-10-02 10:30:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026
+Kolding IF,OB,2026-10-02 11:00:00+00:00,FT,,True,False,5.0,4.0,Club Friendlies · Club Friendlies 2026
+IK Start,Brann,2026-10-02 12:00:00+00:00,FT,,True,False,2.0,1.0,Club Friendlies · Club Friendlies 2026
+Eintracht Frankfurt,Eintracht Braunschweig,2026-10-02 14:00:00+00:00,FT,,True,False,4.0,0.0,Club Friendlies · Club Friendlies 2026
+Broendby IF,Sirius,2026-10-02 15:30:00+00:00,FT,,True,False,1.0,1.0,Club Friendlies · Club Friendlies 2026
+Deportivo A Coruna,FC Porto,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,3.0,Club Friendlies · Club Friendlies 2026
+Real Sociedad,Athletic Club,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Club Friendlies · Club Friendlies 2026
+Sevilla,Aston Villa,2026-10-02 18:30:00+00:00,FT,,True,False,1.0,3.0,Club Friendlies · Club Friendlies 2026
+Seattle Sounders FC,Sporting Kansas City,2026-10-02 01:30:00+00:00,FT,,True,False,2.0,1.0,USA · MLS
+CD Eldense,Real Oviedo,2026-10-02 18:30:00+00:00,FT,,True,False,4.0,1.0,Spain · LaLiga 2
+Club Atletico Platense,Estudiantes de la Plata,2026-10-02 00:15:00+00:00,FT,,True,False,1.0,0.0,Argentina · Copa Argentina
+Dundalk,Bohemian FC,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,2.0,Ireland · League of Ireland Premier Division
+Andorra U21,Moldova U21,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,0.0,Euro U21 2027 · Qualification: Group D
+England U21,Slovakia U21,2026-10-02 18:45:00+00:00,FT,,True,False,0.0,0.0,Euro U21 2027 · Qualification: Group D
+Slovenia U21,Netherlands U21,2026-10-02 16:00:00+00:00,FT,,True,False,2.0,4.0,Euro U21 2027 · Qualification: Group G
+Ukraine U21,Croatia U21,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,0.0,Euro U21 2027 · Qualification: Group H
+Austria U21,Denmark U21,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,1.0,Euro U21 2027 · Qualification: Group I
+Bayer Leverkusen W,Werder Bremen W,2026-10-02 16:30:00+00:00,FT,,True,False,3.0,2.0,Germany · Frauen-Bundesliga
+Serbia U21,Russia U21,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,3.0,International Friendlies · Friendlies U21
+Novorizontino,Goias,2026-10-02 00:00:00+00:00,FT,,True,False,3.0,0.0,Brazil · Serie B
+Salitas,Real du Faso,2026-10-02 15:30:00+00:00,FT,,True,False,1.0,3.0,Burkina Faso · Ligue 1
+Cariari,Santa Ana,2026-10-02 01:00:00+00:00,FT,,True,False,1.0,2.0,Costa Rica · Liga de Ascenso: Apertura: Group B
+Dukla Praha,Jablonec,2026-10-02 16:00:00+00:00,FT,,True,False,0.0,1.0,Czech Republic · Cup
+Fremad Amager,B 93,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,3.0,Denmark · 2nd Division
+Naestved,Nykoebing FC,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Denmark · 2nd Division
+VSK Aarhus,Brabrand,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,2.0,Denmark · 2nd Division
+Inca Aruba,Municipal Limeno,2026-10-02 00:00:00+00:00,FT,,True,False,2.0,1.0,El Salvador · Primera Division: Apertura
+PK-35 Vantaa W,FC Honka W,2026-10-02 16:00:00+00:00,FT,,True,False,1.0,1.0,Finland · Women's Kansallinen Liiga: Qualification Play-offs 2026
+Aviron Bayonnais FC,Les Herbiers,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,France · National 1: Group B
+Stade Briochin,Lorient B,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,3.0,France · National 1: Group B
+Chauray,Avranches,2026-10-02 18:00:00+00:00,FT,,True,False,0.0,2.0,France · National 1: Group B
+Istres,Chateauroux,2026-10-02 18:30:00+00:00,FT,,True,False,0.0,0.0,France · National 1: Group C
+TSV Buchbach,SC Eltersdorf,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,2.0,Germany · Regionalliga Bayern
+Unterhaching,FC Schweinfurt,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Regionalliga Bayern
+VfB Lubeck,Eimsbutteler TV,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,0.0,Germany · Regionalliga Nord
+Sandhausen,Kaiserslautern II,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Regionalliga Südwest
+Stuttgarter Kickers,Kickers Offenbach,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,0.0,Germany · Regionalliga Südwest
+Bonner SC,Westfalia Rhynern,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,1.0,Germany · Regionalliga West
+Borussia M'gladbach II,Bochum II,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,3.0,Germany · Regionalliga West
+1. FC Muehlhausen,1. CfR Pforzheim,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,2.0,Germany · Oberliga: Baden-Wurttemberg
+DJK Don Bosco Bamberg,Eintracht Bamberg,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Bayern North
+SpVgg Weiden,Viktoria Aschaffenburg,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Bayern North
+TSV Kornburg,TSV 1861 Noerdlingen,2026-10-02 17:30:00+00:00,FT,,True,False,5.0,0.0,Germany · Oberliga: Bayern North
+1860 Munich II,1860 Rosenheim,2026-10-02 17:00:00+00:00,FT,,True,False,4.0,0.0,Germany · Oberliga: Bayern South
+Sportfreunde Schwaig,TSV Kottern,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,0.0,Germany · Oberliga: Bayern South
+Niendorfer TSV,TSV Concordia,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,2.0,Germany · Oberliga: Hamburg
+Vorwarts-Wacker,TuS Dassendorf,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,4.0,Germany · Oberliga: Hamburg
+Harksheide,HEBC Hamburg,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,3.0,Germany · Oberliga: Hamburg
+Victoria Hamburg,TSV Sasel,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,2.0,Germany · Oberliga: Hamburg
+Eintracht Norderstedt II,Altonaer FC 93,2026-10-02 18:00:00+00:00,FT,,True,False,1.0,4.0,Germany · Oberliga: Hamburg
+Eintracht Stadtallendorf,Turk Gucu Friedberg,2026-10-02 18:30:00+00:00,FT,,True,False,2.0,1.0,Germany · Oberliga: Hessen
+1. FC Duren,Koenigsdorf,2026-10-02 18:00:00+00:00,FT,,True,False,0.0,0.0,Germany · Oberliga: Mittelrhein
+FC Monheim,SW Essen,2026-10-02 17:30:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Niederrhein
+KFC Uerdingen,Velbert,2026-10-02 17:30:00+00:00,FT,,True,False,1.0,2.0,Germany · Oberliga: Niederrhein
+Ratinger SV,Scherpenberg,2026-10-02 17:30:00+00:00,FT,,True,False,2.0,0.0,Germany · Oberliga: Niederrhein
+Wuppertaler SV,Sportfreunde Baumberg,2026-10-02 17:30:00+00:00,FT,,True,False,4.0,0.0,Germany · Oberliga: Niederrhein
+Blau-Weiss Dingden,DJK Teutonia St. Toenis,2026-10-02 18:00:00+00:00,FT,,True,False,1.0,0.0,Germany · Oberliga: Niederrhein
+Viktoria Juechen-Garzweiler,SV Sonsbeck,2026-10-02 18:00:00+00:00,FT,,True,False,3.0,2.0,Germany · Oberliga: Niederrhein
+Hertha Wiesbach,FV Diefflen,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Germany · Oberliga: Rheinland-Pfalz/Saar
+Koblenz,Eisbachtaler Sportfreunde,2026-10-02 17:30:00+00:00,FT,,True,False,3.0,2.0,Germany · Oberliga: Rheinland-Pfalz/Saar
+Athlone Town,Cork City,2026-10-02 18:45:00+00:00,FT,,True,False,2.0,1.0,Ireland · 1st Division
+Bray Wanderers,Cobh Ramblers,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,4.0,Ireland · 1st Division
+Finn Harps,Kerry,2026-10-02 18:45:00+00:00,FT,,True,False,1.0,2.0,Ireland · 1st Division
+Wexford FC,Longford Town,2026-10-02 18:45:00+00:00,FT,,True,False,3.0,3.0,Ireland · 1st Division
+MIO Biwako Shiga,Roasso Kumamoto,2026-10-02 10:00:00+00:00,FT,,True,False,0.0,0.0,Japan · J3 League
+FUS Rabat,US Amal Tiznit,2026-10-02 16:00:00+00:00,FT,,True,False,0.0,1.0,Morocco · Botola Pro
+Widad Temara,Union Touarga Sport,2026-10-02 18:00:00+00:00,FT,,True,False,0.0,1.0,Morocco · Botola Pro
+Strabane Athletic,Armagh,2026-10-02 18:45:00+00:00,FT,,True,False,0.0,0.0,Northern Ireland · Championship
+Ranheim,Egersund,2026-10-02 17:00:00+00:00,FT,,True,False,5.0,0.0,Norway · 1. Division
+Molde 2,Herd,2026-10-02 16:30:00+00:00,FT,,True,False,6.0,2.0,Norway · 3. Division: Group 2
+Rosenborg 2,Melhus,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,4.0,Norway · 3. Division: Group 2
+Hinna FK,Staal Joerpeland,2026-10-02 16:00:00+00:00,FT,,True,False,2.0,4.0,Norway · 3. Division: Group 4
+Daejeon Korail,Gangneung City,2026-10-02 10:00:00+00:00,FT,,True,False,2.0,1.0,Republic of Korea · K3 League
+Cumnock Juniors,Auchinleck Talbot,2026-10-02 18:30:00+00:00,FT,,True,False,2.0,0.0,Scotland · Scottish Cup: Round 1
+Real Aviles Industrial,Lugo,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,2.0,Spain · Primera Division RFEF: Group 1
+Karlbergs BK,Sollentuna FK,2026-10-02 17:00:00+00:00,FT,,True,False,3.0,2.0,Sweden · Division 1: North
+Kristianstad FC,Ariana FC,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 1: South
+Lunds BK,Laholms FK,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 1: South
+Kungsaengens IF,Sunnersta AIF,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,1.0,Sweden · Division 2: Norra Svealand
+Lilla Torg FF,Nosaby IF,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,3.0,Sweden · Division 2: Soedra Goetaland
+Staffanstorp United FC,Soelvesborgs GOIF,2026-10-02 17:00:00+00:00,FT,,True,False,4.0,0.0,Sweden · Division 2: Soedra Goetaland
+Smedby AIS,Nykoepings BIS,2026-10-02 17:00:00+00:00,FT,,True,False,1.0,1.0,Sweden · Division 2: Soedra Svealand
+FOC Farsta,Fittja IF,2026-10-02 18:00:00+00:00,FT,,True,False,2.0,1.0,Sweden · Division 2: Soedra Svealand
+Hestrafors IF,Onsala BK,2026-10-02 17:00:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 2: Vaestra Goetaland
+Lindome GIF,Galtabaecks BK,2026-10-02 17:00:00+00:00,FT,,True,False,4.0,3.0,Sweden · Division 2: Vaestra Goetaland
+Torslanda IK,IK Kongahaella,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,0.0,Sweden · Division 2: Vaestra Goetaland
+Qviding FIF,Landvetter IS,2026-10-02 17:30:00+00:00,FT,,True,False,0.0,1.0,Sweden · Division 2: Vaestra Goetaland
+Jitex BK W,Linkoepings FC W,2026-10-02 17:00:00+00:00,FT,,True,False,2.0,1.0,Sweden · Women's Elitettan
+CD Aguila,CD Cacahuatique U20,2026-10-03 21:00:00+00:00,FT,,True,False,2.0,2.0,El Salvador · Primera Division: Apertura

@@ -188,8 +188,23 @@ def daily_digest(engine, coupons: bool = True) -> str:
     return "\n".join(lines)
 
 
+def diagnose() -> str:
+    """Human-readable Telegram status (never prints the token)."""
+    token = load_config().get("TELEGRAM_BOT_TOKEN")
+    if not token:
+        return "telegram: no token"
+    try:
+        me = requests.get(f"https://api.telegram.org/bot{token}/getMe", timeout=30).json()
+    except requests.RequestException as exc:
+        return f"telegram: network error {exc}"
+    if not me.get("ok"):
+        return f"telegram: token rejected by Telegram ({me.get('description')}) - check the secret"
+    name = me["result"].get("username")
+    return (f"telegram: bot @{name} OK, chat " + ("found" if chat_id() else
+            "NOT found - open t.me/" + str(name) + " and press Start (or send /start)"))
+
+
 def send_daily_digest(engine) -> str:
     if not configured():
-        return ("telegram: no token" if not load_config().get("TELEGRAM_BOT_TOKEN") else
-                "telegram: token set, but nobody pressed Start in the bot yet")
+        return diagnose()
     return "telegram: sent" if send(daily_digest(engine)) else "telegram: FAILED"

@@ -123,8 +123,11 @@ def fetch_events(force: bool = False) -> pd.DataFrame:
     """All pre-match football events with the four main markets."""
     if not force and _cache.get("t", 0) > time.time() - CACHE_SECONDS:
         return _cache["df"].copy()
-    comps = _competitions()
-    events = _get(f"{API}/event/0?sportType=SOCCER&betType=PRE_EVENT")["e"]
+    try:
+        comps = _competitions()
+        events = (_get(f"{API}/event/0?sportType=SOCCER&betType=PRE_EVENT") or {}).get("e") or []
+    except (requests.RequestException, TypeError, StopIteration, KeyError):
+        comps, events = {}, []  # misli.az occasionally answers with no data
     rows = []
     for e in events:
         if len(e.get("p", [])) != 2:
@@ -146,7 +149,8 @@ def fetch_events(force: bool = False) -> pd.DataFrame:
             elif m["t"] == 2 and m["s"] == 89:
                 row.update(o_btts_yes=o.get(1), o_btts_no=o.get(2))
         rows.append(row)
-    df = pd.DataFrame(rows)
+    df = pd.DataFrame(rows, columns=["event_id", "kickoff", "home_raw", "away_raw", "ct",
+                                     "country_az", "comp_az", "mbs"] if not rows else None)
     df["competition_az"] = (df["country_az"] + " · " + df["comp_az"]).str.strip(" ·")
     _cache.update(t=time.time(), df=df)
     return df.copy()

@@ -109,3 +109,24 @@ def test_coupon_suggestions():
         assert len(ids) == len(set(ids))            # one pick per match
         assert 0 not in ids                          # MBS 5 never fits a 3-4 match coupon
         assert cp["prob"] == pytest.approx(np.prod(cp["picks"]["p"]))
+
+
+def test_absences_lookup(monkeypatch):
+    from soccer import apifootball as af
+    from soccer.engine import Engine
+    monkeypatch.setattr(af, "available", lambda: True)
+    eng = Engine.__new__(Engine)  # no data loading: only the lookup is tested
+    day = pd.Timestamp("2030-01-05")
+    eng._injuries = {day: pd.DataFrame([
+        {"league_id": 39, "team": "Manchester United", "player_id": 1, "player": "A",
+         "type": "Missing Fixture", "reason": "Knee Injury"},
+        {"league_id": 39, "team": "Manchester United", "player_id": 2, "player": "B",
+         "type": "Questionable", "reason": "Illness"},
+        {"league_id": 39, "team": "Arsenal", "player_id": 3, "player": "C",
+         "type": "Missing Fixture", "reason": "Red Card"},
+        {"league_id": 140, "team": "Arsenal", "player_id": 9, "player": "X",  # other league
+         "type": "Missing Fixture", "reason": "Injury"}])}
+    a = eng.absences("E0", "Man United", "Arsenal", day)
+    assert a["home"] == ["A (Knee Injury)"] and a["home_doubt"] == ["B (Illness)"]
+    assert a["away"] == ["C (Red Card)"]
+    assert eng.absences("E3", "Man United", "Arsenal", day) is None  # league not covered

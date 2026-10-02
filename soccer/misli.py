@@ -394,8 +394,10 @@ def events_with_model(engine, force: bool = False) -> pd.DataFrame:
             probs.append({})
             continue
         try:
+            from .fixtures import local_tz
             f = engine.forecast(r.kind, r.competition, r.home, r.away, False,
-                                r.home_key, r.away_key)
+                                r.home_key, r.away_key, None,
+                                r.kickoff.tz_convert(local_tz()).tz_localize(None).normalize())
             probs.append({f"p_{k}": v for k, v in model_probs(f, r.ou_line).items()}
                          | {"p_top_score": f["markets"]["top_scores"][0][0]})
         except Exception:

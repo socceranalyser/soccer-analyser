@@ -31,6 +31,10 @@ from .probability import markets, rescale_to_outcomes, score_matrix
 from .tuned import ELO_PARAMS
 
 ENSEMBLE_DC_WEIGHT = 0.5
+# injuries/suspensions (scripts/test_injuries.py): +0.025 log-odds to the home win per extra
+# player missing for the away side (and vice versa); fitted 2023/24, holdout 2024/25 -0.0016
+INJURY_BETA = 0.025
+INJURY_LEAGUES = {"E0", "SP1", "I1", "D1", "F1", "E1", "N1", "T1"}
 NAT_LEAGUE_CODE = "INT"
 MODEL_KEYS = {"Dixon-Coles": "dixon_coles", "Elo": "elo", "Elo (межлиговый)": "elo",
               "Букмекеры": "market"}
@@ -102,6 +106,7 @@ class Engine:
         self.nat_cal = self._national_calibration()
         log("national models fitted")
         self._dc: dict[str, DixonColes] = {}
+        self._injuries: dict = {}
         self.built_at = pd.Timestamp.now()
 
     def _national_calibration(self, max_age_days: int = 7):
@@ -165,7 +170,7 @@ class Engine:
 
     # --------------------------------------------------------------- forecast
     def forecast(self, kind: str, competition: str, home: str, away: str, neutral=False,
-                 home_key=None, away_key=None, odds=None) -> dict:
+                 home_key=None, away_key=None, odds=None, date=None) -> dict:
         """Full forecast for one match. Returns probs (headline), per-model probs,
         the score matrix and derived markets."""
         models = {}
@@ -177,6 +182,12 @@ class Engine:
             models["Elo"] = self.elo.predict([home], [away], competition)["probs"][0]
             head = ENSEMBLE_DC_WEIGHT * models["Dixon-Coles"] + \
                 (1 - ENSEMBLE_DC_WEIGHT) * models["Elo"]
+            absent = self.absences(competition, home, away, date)
+            if absent is not None:  # backtest 2024/25: logloss 0.9860 -> 0.9844
+                d = len(absent["away"]) - len(absent["home"])
+                z = np.log(np.clip(head, 1e-9, 1)) + np.array([INJURY_BETA * d, 0.0,
+                                                              -INJURY_BETA * d])
+                head = np.exp(z - z.max()) / np.exp(z - z.max()).sum()
             m = rescale_to_outcomes(m_dc, head)
             elo_h, elo_a = self.elo.rating(home, competition), self.elo.rating(away, competition)
             known = home in dc._idx and away in dc._idx
@@ -215,7 +226,38 @@ class Engine:
             odds = np.array([r["odds_h"], r["odds_d"], r["odds_a"]], float)
         return self.forecast(r["kind"], r["competition"], r["home"], r["away"],
                              bool(r.get("neutral", False)), r.get("home_key"),
-                             r.get("away_key"), odds)
+                             r.get("away_key"), odds, r.get("date"))
+
+    # ------------------------------------------------------------- absences
+    def absences(self, league: str, home: str, away: str, date) -> dict | None:
+        """Players ruled out ('Missing Fixture') and doubtful for both teams (API-Football).
+        None when there is no data (league not covered, no key, no date)."""
+        from . import apifootball as af
+        from .names import best_match
+        if league not in INJURY_LEAGUES or date is None or pd.isna(date) or not af.available():
+            return None
+        day = pd.Timestamp(date).normalize()
+        if day not in self._injuries:
+            try:
+                self._injuries[day] = af.injuries_on(day)
+            except Exception:
+                self._injuries[day] = pd.DataFrame()
+        inj = self._injuries[day]
+        if inj.empty:
+            return None
+        inj = inj[inj["league_id"].map(af.LEAGUE_IDS) == league]
+        if inj.empty:
+            return None
+        names = list(inj["team"].unique())
+        out = {}
+        for side, team in (("home", home), ("away", away)):
+            hit, _ = best_match(team, names, None, 0.72)
+            rows = inj[inj["team"] == hit] if hit else inj.iloc[:0]
+            rows = rows.drop_duplicates("player_id")
+            fmt = lambda df: [f"{r.player} ({r.reason})" for r in df.itertuples()]
+            out[side] = fmt(rows[rows["type"] == "Missing Fixture"])
+            out[f"{side}_doubt"] = fmt(rows[rows["type"] == "Questionable"])
+        return out
 
     # --------------------------------------------------------------- storage
     def save_results(self) -> int:

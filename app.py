@@ -232,8 +232,10 @@ def explain(f: dict, home: str, away: str, kind: str) -> str:
 
 
 def match_card(eng: Engine, kind: str, competition: str, home: str, away: str,
-               neutral=False, home_key=None, away_key=None, odds=None, result=None):
-    f = eng.forecast(kind, competition, home, away, neutral, home_key, away_key, odds)
+               neutral=False, home_key=None, away_key=None, odds=None, result=None, date=None):
+    if date is None:
+        date = now_in_tz().tz_localize(None).normalize()
+    f = eng.forecast(kind, competition, home, away, neutral, home_key, away_key, odds, date)
     mk, p = f["markets"], f["probs"]
     st.markdown(f"### {home} — {away}")
     st.caption(f"{competition_name(competition)} · {KIND_RU[kind]}"
@@ -254,6 +256,16 @@ def match_card(eng: Engine, kind: str, competition: str, home: str, away: str,
                f"Самый вероятный точный счёт — {mk['top_scores'][0][0]} "
                f"(всего {pct(mk['top_scores'][0][1])}: точный счёт угадать трудно даже в лучшем случае).")
     st.markdown(explain(f, home, away, kind))
+    absent = eng.absences(competition, home, away, date) if kind == "league" else None
+    if absent is not None:
+        lines = []
+        for side, team in (("home", home), ("away", away)):
+            out, doubt = absent[side], absent[f"{side}_doubt"]
+            txt = ", ".join(out) if out else "все в строю"
+            lines.append(f"**{team}** — не сыграют ({len(out)}): {txt}"
+                         + (f"; под вопросом: {', '.join(doubt)}" if doubt else ""))
+        st.markdown("🚑 **Травмы и дисквалификации** (API-Football, учтены в прогнозе):  \n"
+                    + "  \n".join(lines))
 
     left, right = st.columns([3, 2])
     with left:
@@ -417,7 +429,7 @@ def page_today():
         res = f"{int(r['hg'])}:{int(r['ag'])}" if r["played"] else None
         match_card(eng, r["kind"], r["competition"], r["home"], r["away"],
                    bool(r.get("neutral", False)), r.get("home_key"), r.get("away_key"),
-                   odds, res)
+                   odds, res, r.get("sched_date", r.get("date")))
 
 
 # ====================================================================== live now
@@ -1108,7 +1120,8 @@ def page_coupon():
             with st.expander("Подробный разбор матча моделью"):
                 match_card(eng, r["kind"], r["competition"], r["home"], r["away"], False,
                            r.get("home_key"), r.get("away_key"),
-                           np.array([r["o1"], r["ox"], r["o2"]], float))
+                           np.array([r["o1"], r["ox"], r["o2"]], float), None,
+                           r["kickoff"].tz_convert(local_tz()).tz_localize(None).normalize())
     render_coupon_sidebar()
 
     st.caption("Сохранённые купоны и их результаты — на странице «🧾 Мои купоны».")

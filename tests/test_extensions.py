@@ -73,3 +73,14 @@ def test_cup_results_spill_to_whole_country():
     # T1 never played abroad, yet its rating rises with its compatriot's cup wins
     assert spill.ratings["X|T1"] > base.ratings["X|T1"]
     assert spill.ratings["ZZZ|Foreign"] < spill.cup_start
+
+
+def test_plain_language_calls():
+    from soccer.verdicts import btts_call, outcome_call, score_calls, total_call
+    lab, cov, p = outcome_call([0.71, 0.2, 0.09], "Germany", "Serbia")
+    assert lab == "Победа Germany" and cov == {0} and p == pytest.approx(0.71)
+    lab, cov, p = outcome_call([0.25, 0.29, 0.46], "Greece", "Netherlands")  # no clear favourite
+    assert lab == "Netherlands не проиграет" and cov == {1, 2} and p == pytest.approx(0.75)
+    assert total_call(0.62)[:2] == ("Больше 2.5", True) and btts_call(0.4)[:2] == ("Нет", False)
+    sc = score_calls([0.25, 0.29, 0.46], 0.6, 0.55, 2, 2)  # Greece 2:2 Netherlands
+    assert sc == {"outcome": True, "total": True, "btts": True}

@@ -60,35 +60,63 @@ def get_scores(date: pd.Timestamp) -> pd.DataFrame:
 
 
 def with_scores(day: pd.DataFrame, date: pd.Timestamp) -> pd.DataFrame:
-    """Overlay fresh scores on a day's fixtures and store finished results."""
+    """Overlay scores on a day's fixtures, show pre-match forecasts, store results."""
     from soccer.misli import attach_results
+    _store_upcoming(day)
     day = attach_results(day, get_scores(date))
-    # finished/started matches: show the forecast stored BEFORE kick-off (the model has
+    now = now_in_tz()
+    started = day["played"] | (day["kickoff"].notna() & (day["kickoff"] <= now))
+    # scores misli no longer serves (rolling window) -> our own results table
+    for idx in day.index[started & ~day["played"]]:
+        r = day.loc[idx]
+        res = storage.find_result(r["home"], r["away"], r["sched_date"])
+        if res is not None:
+            day.loc[idx, ["hg", "ag", "played"]] = [res[0], res[1], True]
+    # started/finished matches: show the forecast stored BEFORE kick-off (the model has
     # meanwhile learnt the result, so a fresh forecast would flatter it)
+    fields = ["p_home", "p_draw", "p_away", "p_over25", "p_btts", "xg_home", "xg_away"]
     try:
         pre = storage.prematch_forecasts([date - timedelta(days=1), date, date + timedelta(days=1)])
-        if len(pre) and "p_home" in day:
-            pre = pre.drop_duplicates(["league", "home", "away"], keep="last") \
-                .set_index(["league", "home", "away"])
-            now = now_in_tz()
-            for idx, r in day.iterrows():
-                started = r["played"] or (pd.notna(r.get("kickoff")) and r["kickoff"] <= now)
-                key = (r["competition"], r["home"], r["away"])
-                if started and key in pre.index:
-                    day.loc[idx, ["p_home", "p_draw", "p_away"]] = \
-                        pre.loc[key, ["p_home", "p_draw", "p_away"]].to_numpy(float)
     except Exception:
-        pass
+        pre = pd.DataFrame()
+    if len(pre) and "p_home" in day:
+        pre = pre.drop_duplicates(["league", "home", "away"], keep="last")
+        m = day[["competition", "home", "away"]].reset_index().merge(
+            pre.rename(columns={"league": "competition"}), on=["competition", "home", "away"],
+            how="inner").set_index("index")
+        m = m[started.reindex(m.index).fillna(False)]
+        for c in fields:
+            ok = m[c].notna()
+            day.loc[m.index[ok], c] = m.loc[ok, c].astype(float)
     fresh = day[day["played"] & day["hg"].notna()]
     if len(fresh):
         try:
             storage.save_results(fresh.assign(
-                league=fresh["competition"], season=fresh["season"].fillna(date.year).astype(int),
+                league=fresh["competition"], date=fresh["sched_date"],
+                season=fresh["season"].fillna(date.year).astype(int),
                 hg=fresh["hg"].astype(int), ag=fresh["ag"].astype(int),
                 result=np.select([fresh.hg > fresh.ag, fresh.hg == fresh.ag], ["H", "D"], "A")))
         except Exception:
             pass
     return day
+
+
+def _store_upcoming(day: pd.DataFrame):
+    """Save headline forecasts of matches that have not kicked off (latest pre-match wins)."""
+    if "p_home" not in day:
+        return
+    now = now_in_tz()
+    up = day[day["p_home"].notna() & ~day["played"]
+             & (day["kickoff"].isna() | (day["kickoff"] > now))]
+    if up.empty:
+        return
+    rows = up.assign(model="final", league=up["competition"], date=up["sched_date"],
+                     season=up["season"].fillna(up["sched_date"].dt.year).astype(int))
+    try:
+        storage.save_run("live", "live", rows, description="ежедневные прогнозы",
+                         replace_run=False)
+    except Exception:
+        pass
 
 
 def status_label(r, now) -> str:
@@ -197,13 +225,19 @@ def match_card(eng: Engine, kind: str, competition: str, home: str, away: str,
                + (" · нейтральное поле" if neutral else ""))
     if result is not None:
         st.info(f"Матч сыгран: **{result}**")
-    c = st.columns(5)
-    c[0].metric(f"П1 · {home}", pct(p[0]))
-    c[1].metric("Х · ничья", pct(p[1]))
-    c[2].metric(f"П2 · {away}", pct(p[2]))
-    c[3].metric("Вероятный счёт", mk["top_scores"][0][0],
-                help=f"вероятность {pct(mk['top_scores'][0][1])}")
-    c[4].metric("Тотал больше 2.5", pct(mk["totals"][2.5]))
+    from soccer.verdicts import btts_call, outcome_call, total_call
+    lab, _, pr = outcome_call(p, home, away)
+    tl, _, tp = total_call(mk["totals"][2.5])
+    bl, _, bp = btts_call(mk["btts"])
+    c = st.columns(4)
+    c[0].metric("Кто выиграет", lab, pct(pr), delta_color="off")
+    c[1].metric("Голов ожидается", f"{mk['xg_home'] + mk['xg_away']:.1f}",
+                f"{mk['xg_home']:.1f} : {mk['xg_away']:.1f}", delta_color="off")
+    c[2].metric("Тотал 2.5", tl, pct(tp), delta_color="off")
+    c[3].metric("Обе забьют", bl, pct(bp), delta_color="off")
+    st.caption(f"Вероятности исходов: П1 {pct(p[0])} · Х {pct(p[1])} · П2 {pct(p[2])}. "
+               f"Самый вероятный точный счёт — {mk['top_scores'][0][0]} "
+               f"(всего {pct(mk['top_scores'][0][1])}: точный счёт угадать трудно даже в лучшем случае).")
     st.markdown(explain(f, home, away, kind))
 
     left, right = st.columns([3, 2])
@@ -302,50 +336,47 @@ def page_today():
                     | view["away_src"].fillna("").str.lower().str.contains(q, regex=False)]
 
     has_p = view["p_home"].notna() if "p_home" in view else pd.Series(False, index=view.index)
-    played = view[view["played"] & has_p]
-    m = st.columns(4)
+    view = view.assign(**_calls_columns(view))
+    played = view[view["played"] & has_p & view["hg"].notna()]
+    m = st.columns(5)
     m[0].metric("Матчей", len(view))
-    m[1].metric("Турниров", view["comp_name"].nunique())
-    m[2].metric("Уже сыграно", int(view["played"].sum()))
-    if len(played):
-        probs = played[["p_home", "p_draw", "p_away"]].to_numpy()
-        actual = np.select([played.hg > played.ag, played.hg == played.ag], [0, 1], 2)
-        hits = (probs.argmax(1) == actual).mean()
-        m[3].metric("Угадан исход (сыгранные)", f"{hits:.0%}", help="доля матчей, где самый "
-                    "вероятный по модели исход совпал с результатом")
+    m[1].metric("Уже сыграно", int(view["played"].sum()))
+    for col, key, label in ((m[2], "ok_outcome", "Исход угадан"), (m[3], "ok_total", "Тотал угадан"),
+                            (m[4], "ok_btts", "«Обе забьют» угадано")):
+        s_ = played[key].dropna() if len(played) else pd.Series(dtype=float)
+        col.metric(label, f"{int(s_.sum())} из {len(s_)}" if len(s_) else "—")
     st.caption(f"Часовой пояс: {st.session_state.get('tz_label', 'Время компьютера')} "
-               f"(меняется в меню слева). Нажмите на строку, чтобы открыть подробный "
-               "разбор матча.")
+               "(меняется в меню слева). Нажмите на строку — откроется подробный разбор. "
+               "Для начавшихся и сыгранных матчей показан прогноз, сделанный до начала.")
 
     if view.empty:
         st.warning("Ничего не найдено.")
         return
     now = now_in_tz()
+    show_probs = st.toggle("Показать вероятности П1 / Х / П2", value=False)
     table = pd.DataFrame({
         "Время": view["kickoff"].dt.strftime("%H:%M").fillna(""),
         "Турнир": view["comp_name"],
-        "Хозяева": view["home"], "Гости": view["away"],
-        "П1": view.get("p_home"), "Х": view.get("p_draw"), "П2": view.get("p_away"),
-        "Прогноз": [pick_label(r) if pd.notna(r[0]) else "—"
-                    for r in view[["p_home", "p_draw", "p_away"]].to_numpy()]
-        if "p_home" in view else "—",
-        "Самый вероятный счёт": view.get("top_score"),
-        "ТБ 2.5": view.get("p_over25"),
+        "Матч": view["home"] + " — " + view["away"],
+        "Кто выиграет": view["call_outcome"],
+        "Голов ожидается": view["exp_goals"],
+        "Тотал 2.5": view["call_total"],
+        "Обе забьют": view["call_btts"],
         "Статус": [status_label(r, now) for _, r in view.iterrows()],
         "Счёт": [f"{int(h)}:{int(a)}" if pd.notna(h) else "" for h, a in
                  zip(view["hg"], view["ag"])],
-        "Угадан?": [("✅" if np.argmax([r["p_home"], r["p_draw"], r["p_away"]]) ==
-                     (0 if r["hg"] > r["ag"] else 1 if r["hg"] == r["ag"] else 2) else "❌")
-                    if r["played"] and pd.notna(r.get("p_home")) and pd.notna(r["hg"]) else ""
-                    for _, r in view.iterrows()],
+        "Сбылось (исход · тотал · обе)": view["checks"],
     })
-    pct_col = lambda label: st.column_config.ProgressColumn(label, format="percent",
-                                                            min_value=0, max_value=1)
-    event = st.dataframe(
-        table, hide_index=True, width="stretch", on_select="rerun", selection_mode="single-row",
-        height=min(38 * (len(table) + 1), 700),
-        column_config={"П1": pct_col("П1"), "Х": pct_col("Х"), "П2": pct_col("П2"),
-                       "ТБ 2.5": pct_col("ТБ 2.5")})
+    cfg = {"Голов ожидается": st.column_config.NumberColumn(format="%.1f")}
+    if show_probs:
+        pct_col = lambda label: st.column_config.ProgressColumn(label, format="percent",
+                                                                min_value=0, max_value=1)
+        for k, c in (("П1", "p_home"), ("Х", "p_draw"), ("П2", "p_away")):
+            table.insert(table.columns.get_loc("Кто выиграет"), k, view.get(c).to_numpy())
+            cfg[k] = pct_col(k)
+    event = st.dataframe(table, hide_index=True, width="stretch", on_select="rerun",
+                         selection_mode="single-row", height=min(38 * (len(table) + 1), 700),
+                         column_config=cfg)
     rows = event.selection.rows if event and event.selection else []
     if rows:
         r = view.iloc[rows[0]]
@@ -357,6 +388,39 @@ def page_today():
         match_card(eng, r["kind"], r["competition"], r["home"], r["away"],
                    bool(r.get("neutral", False)), r.get("home_key"), r.get("away_key"),
                    odds, res)
+
+
+def _calls_columns(view: pd.DataFrame) -> dict:
+    """Plain-language calls for each match plus ✅/❌ once it is finished."""
+    from soccer.verdicts import btts_call, outcome_call, score_calls, total_call
+    cols = {k: [] for k in ("call_outcome", "call_total", "call_btts", "exp_goals", "checks",
+                            "ok_outcome", "ok_total", "ok_btts")}
+    for _, r in view.iterrows():
+        if pd.isna(r.get("p_home")):
+            for k in cols:
+                cols[k].append("—" if k.startswith("call") or k == "checks" else None)
+            cols["checks"][-1] = ""
+            continue
+        p = [r["p_home"], r["p_draw"], r["p_away"]]
+        lab, _, pr = outcome_call(p, r["home"], r["away"])
+        cols["call_outcome"].append(f"{lab} · {pr:.0%}")
+        po, pb = r.get("p_over25"), r.get("p_btts")
+        cols["call_total"].append("—" if pd.isna(po) else "{} · {:.0%}".format(*total_call(po)[::2]))
+        cols["call_btts"].append("—" if pd.isna(pb) else "{} · {:.0%}".format(*btts_call(pb)[::2]))
+        xg = (r.get("xg_home") or np.nan) + (r.get("xg_away") or np.nan)
+        cols["exp_goals"].append(None if pd.isna(xg) else round(float(xg), 1))
+        if r["played"] and pd.notna(r["hg"]):
+            sc = score_calls(p, po, pb, int(r["hg"]), int(r["ag"]))
+            mark = lambda k: "✅" if sc.get(k) else ("❌" if k in sc else "·")
+            cols["checks"].append(f"{mark('outcome')} {mark('total')} {mark('btts')}")
+            cols["ok_outcome"].append(sc["outcome"])
+            cols["ok_total"].append(sc.get("total"))
+            cols["ok_btts"].append(sc.get("btts"))
+        else:
+            cols["checks"].append("")
+            for k in ("ok_outcome", "ok_total", "ok_btts"):
+                cols[k].append(None)
+    return cols
 
 
 def _upcoming_hint(eng: Engine, date):
@@ -572,6 +636,20 @@ def page_accuracy():
 
 
 def _accuracy_block(done: pd.DataFrame, run_id: str, key: str):
+    from soccer.verdicts import score_calls
+    head = done[done["model"] == ("final" if (done["model"] == "final").any()
+                                  else sorted(done["model"].unique())[0])]
+    if len(head):
+        checks = [score_calls([r.p_home, r.p_draw, r.p_away], r.p_over25,
+                              getattr(r, "p_btts", np.nan), int(r.hg), int(r.ag))
+                  for r in head.itertuples()]
+        c = st.columns(3)
+        for col, k, label in ((c[0], "outcome", "«Кто выиграет» сбылось"),
+                              (c[1], "total", "Тотал 2.5 сбылся"),
+                              (c[2], "btts", "«Обе забьют» сбылось")):
+            vals = [ch[k] for ch in checks if k in ch]
+            col.metric(label, f"{np.mean(vals):.1%}" if vals else "—",
+                       help=f"по {len(vals):,} матчам" if vals else "модель не давала этот прогноз")
     models = sorted(done["model"].unique())
     fair = common_matches(done, models) if len(models) > 1 else done
     if fair.empty:
@@ -610,7 +688,7 @@ def _accuracy_block(done: pd.DataFrame, run_id: str, key: str):
                             name=MODEL_LABELS.get(mdl, mdl))
         fig.update_layout(height=380, xaxis_title="Прогноз модели", yaxis_title="Как вышло",
                           margin=dict(l=0, r=0, t=10, b=0))
-        st.plotly_chart(fig, width="stretch")
+        st.plotly_chart(fig, width="stretch", key=f"acc_1_{key}")
     with rc:
         daily = fair.copy()
         daily["hit"] = daily[["p_home", "p_draw", "p_away"]].to_numpy().argmax(1) == \
@@ -627,7 +705,7 @@ def _accuracy_block(done: pd.DataFrame, run_id: str, key: str):
                       labels={"date": "", "hit": "Угадан исход", "model": ""})
         fig.update_yaxes(tickformat=".0%")
         fig.update_layout(height=380, margin=dict(l=0, r=0, t=10, b=0))
-        st.plotly_chart(fig, width="stretch")
+        st.plotly_chart(fig, width="stretch", key=f"acc_2_{key}")
     st.markdown("**Последние прогнозы и результаты**")
     head_model = "final" if "final" in models else models[0]
     last = done[done["model"] == head_model].sort_values("date", ascending=False).head(50)

@@ -160,6 +160,14 @@ def build_schedule(matches: pd.DataFrame, club_keys, nations, refresh: bool = Fa
     sched["played"] = sched["hg"].notna() & sched["ag"].notna()
     sched["neutral"] = False
     sched["comp_name"] = sched["competition"].map(competition_name)
+    # the same match can come from two sources with dates in different time zones:
+    # keep one row per pairing within 2 days (schedule-feed rows come first)
+    sched = sched.reset_index(drop=True)
+    key = sched["competition"] + "|" + sched["home"].astype(str) + "|" + sched["away"].astype(str)
+    order = sched.assign(_k=key).sort_values(["_k", "date"], kind="stable")
+    gap = order.groupby("_k")["date"].diff().dt.days
+    dup = order.index[gap.notna() & (gap <= 2)]
+    sched = sched.drop(index=dup)
     return sched.sort_values(["kickoff", "competition"], na_position="last").reset_index(drop=True)
 
 

@@ -134,10 +134,14 @@ class NationalElo:
 
 
 # Dixon-Coles settings for national teams (tuned: see CLAUDE.md)
-# tuned on 2019-2022 (monthly walk-forward): DC logloss 0.8667; Elo (defaults) 0.8601
-NAT_DC = {"xi": 0.0005, "ridge": 1.0, "window_days": 365 * 8, "promoted_prior": False}
-NAT_WEIGHTS = {"world_cup": 1.0, "continental": 1.0, "qualifier": 1.0, "other": 0.8,
-               "friendly": 0.7}
+# National DC is used only for the GOALS view (totals / BTTS / score shape); 1X2 is Elo.
+# Tuned for goals (scripts/tune_national_goals.py, 2026-10-02): goal_shrink 0.2 + full weight
+# for friendlies. Holdout 2023-26: OU2.5 logloss 0.6905 -> 0.6740, BTTS 0.6945 -> 0.6819,
+# and no more over-dispersed totals (xg>=3.5: predicted 4.11, actual 4.05; was 3.51).
+NAT_DC = {"xi": 0.0005, "ridge": 1.0, "window_days": 365 * 8, "promoted_prior": False,
+          "goal_shrink": 0.2}
+NAT_WEIGHTS = {"world_cup": 1.0, "continental": 1.0, "qualifier": 1.0, "other": 1.0,
+               "friendly": 1.0}
 
 
 def with_weights(df: pd.DataFrame, weights=None) -> pd.DataFrame:

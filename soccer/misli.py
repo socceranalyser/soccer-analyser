@@ -179,7 +179,45 @@ def fetch_results(dates) -> pd.DataFrame:
                          "status": status, "minute": m.get("minute"), "ended": ended,
                          "live": status in LIVE_STATUS, "hg": hg, "ag": ag})
     df = pd.DataFrame(rows)
-    return df.drop_duplicates(["home_raw", "away_raw", "kickoff"]) if len(df) else df
+    # misli only serves a rolling window of recent matches -> keep every finished score we
+    # have ever seen in a local archive and answer from archive + fresh data
+    archive = _archive_results(df[df["ended"]] if len(df) else df)
+    lo = pd.Timestamp(min(dates)).tz_localize("UTC") - pd.Timedelta(days=1)
+    hi = pd.Timestamp(max(dates)).tz_localize("UTC") + pd.Timedelta(days=2)
+    old = archive[(archive["kickoff"] >= lo) & (archive["kickoff"] < hi)]
+    df = pd.concat([df, old], ignore_index=True) if len(df) else old
+    if df.empty:
+        return df
+    df["kickoff"] = pd.to_datetime(df["kickoff"], utc=True)
+    df["ended"] = df["ended"].astype(bool)
+    df["live"] = df["live"].fillna(False).astype(bool)
+    # a fresh row wins over the archive for the same match (sort: live/ended fresh first)
+    return df.drop_duplicates(["home_raw", "away_raw", "kickoff"]).reset_index(drop=True)
+
+
+ARCHIVE = DATA_DIR / "misli_results.csv"
+
+
+def _archive_results(new: pd.DataFrame) -> pd.DataFrame:
+    cols = ["home_raw", "away_raw", "kickoff", "status", "minute", "ended", "live", "hg", "ag"]
+    try:
+        old = pd.read_csv(ARCHIVE, parse_dates=["kickoff"]) if ARCHIVE.exists() else             pd.DataFrame(columns=cols)
+    except Exception:
+        old = pd.DataFrame(columns=cols)
+    if len(old):
+        old["kickoff"] = pd.to_datetime(old["kickoff"], utc=True)
+    allr = pd.concat([old, new[cols]] if len(new) else [old], ignore_index=True)
+    allr = allr.dropna(subset=["hg", "ag"]).drop_duplicates(
+        ["home_raw", "away_raw", "kickoff"], keep="last")
+    if len(new):
+        try:
+            ARCHIVE.parent.mkdir(parents=True, exist_ok=True)
+            allr.to_csv(ARCHIVE, index=False)
+        except OSError:
+            pass
+    allr["ended"] = allr["ended"].astype(bool)
+    allr["live"] = False
+    return allr
 
 
 def attach_results(day: pd.DataFrame, res: pd.DataFrame) -> pd.DataFrame:

@@ -34,6 +34,8 @@ class DixonColes:
     promoted_prior: bool = True  # newcomers' prior mean = relegated teams' mean ...
     newcomer_shift: float = 0.0       # ... minus this (on both attack and defence)
     newcomer_ridge_mult: float = 1.0  # prior precision multiplier for newcomers
+    goal_shrink: float = 0.0     # shrink att/def towards 0 at prediction time (fixes
+                                 # over-dispersed totals, e.g. national teams)
     seed: int = 0
     name: str = "dixon_coles"
 
@@ -177,6 +179,8 @@ class DixonColes:
         """att/def arrays with an extra trailing 'proxy' slot for unknown teams."""
         n = self.n
         att, dfn = theta[..., :n], theta[..., n:2 * n]
+        if self.goal_shrink:
+            att, dfn = att * (1 - self.goal_shrink), dfn * (1 - self.goal_shrink)
         att = np.concatenate([att, att[..., self._proxy].mean(-1, keepdims=True)], -1)
         dfn = np.concatenate([dfn, dfn[..., self._proxy].mean(-1, keepdims=True)], -1)
         return att, dfn, theta[..., 2 * n], theta[..., 2 * n + 1]

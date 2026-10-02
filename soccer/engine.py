@@ -97,10 +97,10 @@ class Engine:
 
         self.nat_elo = NationalElo().fit(self.intl)
         self.nat_dc = fit_national_dc(self.intl, n_samples=200)
-        # calibration learnt from the model's own out-of-sample forecasts (2019 -> now);
-        # backtest: Elo test logloss 0.8643 -> 0.8632 (DC blends were rejected)
+        # calibration learnt from the model's own out-of-sample forecasts (2015 -> now);
+        # backtest: Elo test logloss 0.8643 -> 0.8630 (DC blends were rejected)
         try:
-            oos = national_walk_forward(self.intl, "2019-01-01", "2100-01-01", models=("elo",))
+            oos = national_walk_forward(self.intl, "2015-01-01", "2100-01-01", models=("elo",))
             y = oos["result"].map({"H": 0, "D": 1, "A": 2}).to_numpy()
             self.nat_cal = VectorScaling(l2=1.0).fit(oos[["p_home", "p_draw", "p_away"]]
                                                      .to_numpy(), y)
@@ -125,6 +125,12 @@ class Engine:
             return
         done = res[res["ended"]] if len(res) else res
         upd = attach_results(self.schedule[recent], done)
+        from . import storage  # scores misli no longer serves -> our results table
+        for idx in upd.index[~upd["played"]]:
+            r = upd.loc[idx]
+            found = storage.find_result(r["home"], r["away"], r["date"])
+            if found is not None:
+                upd.loc[idx, ["hg", "ag", "played"]] = [found[0], found[1], True]
         newly = upd["played"] & ~self.schedule.loc[recent, "played"]
         self.schedule.loc[upd.index, ["hg", "ag", "played"]] = upd[["hg", "ag", "played"]]
         log(f"misli scores added: {int(newly.sum())}")
@@ -228,7 +234,8 @@ class Engine:
                 mk = f["markets"]
                 rows.append({**base, "model": "final", "p_home": mk["p_home"],
                              "p_draw": mk["p_draw"], "p_away": mk["p_away"],
-                             "p_over25": mk["totals"][2.5], "xg_home": mk["xg_home"],
+                             "p_over25": mk["totals"][2.5], "p_btts": mk["btts"],
+                             "xg_home": mk["xg_home"],
                              "xg_away": mk["xg_away"]})
                 for name, p in f["models"].items():
                     rows.append({**base, "model": MODEL_KEYS.get(name, name), "p_home": p[0],
@@ -244,7 +251,7 @@ class Engine:
         """All fixtures on a date (in time zone tz; default: this computer's) with headline
         forecasts, one row per match."""
         date = pd.Timestamp(date).normalize()
-        s = self.schedule
+        s = self.schedule.assign(sched_date=self.schedule["date"])  # storage key date
         if tz is not None:
             kick = s["kickoff"].dt.tz_convert(tz)
             local_date = kick.dt.tz_localize(None).dt.normalize().fillna(s["date"])

@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS predictions (
     home TEXT NOT NULL,
     away TEXT NOT NULL,
     p_home REAL, p_draw REAL, p_away REAL,
-    p_over25 REAL, xg_home REAL, xg_away REAL,
+    p_over25 REAL, xg_home REAL, xg_away REAL, p_btts REAL,
     created_at TEXT NOT NULL,
     PRIMARY KEY (run_id, model, league, date, home, away)
 );
@@ -49,20 +49,23 @@ CREATE TABLE IF NOT EXISTS coupons (
 MAX_RESCHEDULE_DAYS = 60  # a forecast matches the result of the nearest same pairing
 
 PRED_FIELDS = ["model", "league", "season", "date", "home", "away", "p_home", "p_draw",
-               "p_away", "p_over25", "xg_home", "xg_away"]
+               "p_away", "p_over25", "xg_home", "xg_away", "p_btts"]
 
 
 def connect(path=DB_PATH) -> sqlite3.Connection:
     path.parent.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(path)
     con.executescript(SCHEMA)
+    cols = {r[1] for r in con.execute("PRAGMA table_info(predictions)")}
+    if "p_btts" not in cols:  # migration for databases created before BTTS was stored
+        con.execute("ALTER TABLE predictions ADD COLUMN p_btts REAL")
     return con
 
 
 def save_run(run_id: str, kind: str, preds: pd.DataFrame, description: str = "",
              params: dict | None = None, replace_run: bool = True, path=DB_PATH) -> int:
     now = datetime.now().isoformat(timespec="seconds")
-    df = preds[PRED_FIELDS].copy()
+    df = preds.reindex(columns=PRED_FIELDS).copy()
     df["date"] = pd.to_datetime(df["date"]).dt.strftime("%Y-%m-%d")
     df["run_id"] = run_id
     df["created_at"] = now
@@ -115,7 +118,8 @@ def prematch_forecasts(dates, path=DB_PATH) -> pd.DataFrame:
     days = sorted({pd.Timestamp(d).strftime("%Y-%m-%d") for d in dates})
     with closing(connect(path)) as con:
         df = pd.read_sql(
-            f"SELECT league, date, home, away, p_home, p_draw, p_away FROM predictions "
+            f"SELECT league, date, home, away, p_home, p_draw, p_away, p_over25, p_btts, "
+            f"xg_home, xg_away FROM predictions "
             f"WHERE run_id = 'live' AND model = 'final' AND date IN ({','.join('?' * len(days))})",
             con, params=days)
     return df

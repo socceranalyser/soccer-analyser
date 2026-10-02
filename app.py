@@ -66,8 +66,8 @@ def get_day(date: pd.Timestamp, built_at: pd.Timestamp, tz: str | None) -> pd.Da
 
 @st.cache_data(ttl=120, show_spinner=False)
 def get_scores(date: pd.Timestamp) -> pd.DataFrame:
-    """Finished and live scores from misli.az (refreshed every 2 minutes)."""
-    from soccer.misli import fetch_results
+    """Finished and live scores from livescore.com + misli.az (refreshed every 2 minutes)."""
+    from soccer.scores import fetch_results
     try:
         return fetch_results([date - timedelta(days=1), date, date + timedelta(days=1)])
     except Exception:
@@ -338,6 +338,13 @@ def page_today():
         date = today + timedelta(days={"Вчера": -1, "Сегодня": 0, "Завтра": 1}.get(choice, 0))
     query = c[1].text_input("🔎 Поиск команды", placeholder="например: Arsenal, Spain…")
     day = get_day(date, eng.built_at, user_tz())
+    if date == today:
+        # late matches from yesterday (kick-off after 21:00) still running or just finished
+        prev = get_day(date - timedelta(days=1), eng.built_at, user_tz())
+        if not prev.empty and prev["kickoff"].notna().any():
+            cut = pd.Timestamp(date).tz_localize(prev["kickoff"].dt.tz) - pd.Timedelta(hours=3)
+            late = prev[prev["kickoff"] >= cut].assign(from_yesterday=True)
+            day = pd.concat([late, day], ignore_index=True) if len(late) else day
     if not day.empty:
         day = with_scores(day, date)
     if day.empty:
@@ -376,7 +383,9 @@ def page_today():
     now = now_in_tz()
     show_probs = st.toggle("Показать вероятности П1 / Х / П2", value=False)
     table = pd.DataFrame({
-        "Время": view["kickoff"].dt.strftime("%H:%M").fillna(""),
+        "Время": [("вчера " if y is True else "") + (k.strftime("%H:%M") if pd.notna(k) else "")
+                  for k, y in zip(view["kickoff"], view.get("from_yesterday",
+                                                            pd.Series(False, index=view.index)))],
         "Турнир": view["comp_name"],
         "Матч": view["home"] + " — " + view["away"],
         "Кто выиграет": view["call_outcome"],
@@ -414,7 +423,7 @@ def page_today():
 # ====================================================================== live now
 @st.cache_data(ttl=25, show_spinner=False)
 def get_live() -> pd.DataFrame:
-    from soccer.misli import fetch_live
+    from soccer.scores import fetch_live
     try:
         return fetch_live()
     except Exception:
@@ -808,7 +817,20 @@ def _market_label(col: str, line) -> str:
 
 
 def _coupon() -> list[dict]:
-    return st.session_state.setdefault("coupon", [])
+    if "coupon" not in st.session_state:  # restore the coupon being built (survives reloads)
+        try:
+            st.session_state["coupon"] = storage.load_draft()
+        except Exception:
+            _set_coupon([])
+    return st.session_state["coupon"]
+
+
+def _set_coupon(picks: list[dict]):
+    _set_coupon(picks)
+    try:
+        storage.save_draft(picks)
+    except Exception:
+        pass
 
 
 def _market_p(r, col: str):
@@ -835,7 +857,7 @@ def _add_pick(r, col: str):
         "away": r["away"] if pd.notna(r.get("away")) else None,
         "line": None if pd.isna(r.get("ou_line")) else float(r["ou_line"]),
         "mbs": int(r["mbs"])})
-    st.session_state["coupon"] = picks
+    _set_coupon(picks)
 
 
 def render_coupon_sidebar():
@@ -859,7 +881,7 @@ def render_coupon_sidebar():
                           +(f"<small>Сыграет {_in_ten(main)} · {' · '.join(parts)}</small>"
                              if main is not None else ""), unsafe_allow_html=True)
             if c[1].button("✖", key=f"rm_{p['event_id']}", help="убрать"):
-                st.session_state["coupon"] = [q for q in picks if q is not p]
+                _set_coupon([q for q in picks if q is not p])
                 st.rerun()
         total = float(np.prod([p["odds"] for p in picks]))
         st.metric("Общий коэффициент", f"{total:.2f}")
@@ -893,7 +915,7 @@ def render_coupon_sidebar():
             storage.save_coupon(picks, stake, total, prob if prob is not None else float("nan"))
             st.toast("Купон сохранён — результат появится внизу страницы после матчей.")
         if c[1].button("🗑️ Очистить", width="stretch"):
-            st.session_state["coupon"] = []
+            _set_coupon([])
             st.rerun()
 
 
@@ -929,14 +951,14 @@ def render_suggestions(df: pd.DataFrame):
                        f"{(cp['ev'] + 1) * 100:.0f} ₼ (маржа букмекера).")
             if st.button("➕ Загрузить в мой купон", key=f"load_{cp['style']}",
                          width="stretch"):
-                st.session_state["coupon"] = [
+                _set_coupon([
                     {"event_id": int(pk["event_id"]), "kickoff": str(pk["kickoff"]),
                      "match": pk["match"], "comp": pk["comp"], "market": pk["market"],
                      "label": pk["label"], "odds": float(pk["odds"]),
                      "p_model": float(pk["p_model"]) if pd.notna(pk.get("p_model")) else None,
                      "p_market": float(pk["p"]),
                      "home": pk["home"], "away": pk["away"], "line": pk["line"],
-                     "mbs": int(pk["mbs"])} for _, pk in cp["picks"].iterrows()]
+                     "mbs": int(pk["mbs"])} for _, pk in cp["picks"].iterrows()])
                 st.rerun()
     st.caption("Шанс каждого исхода — по коэффициентам misli.az без маржи (на истории это "
                "точнее нашей модели; модель показана как второе мнение). Шанс купона — "
@@ -1060,35 +1082,87 @@ def page_coupon():
                            np.array([r["o1"], r["ox"], r["o2"]], float))
     render_coupon_sidebar()
 
-    saved = storage.load_coupons()
-    if saved:
+    st.caption("Сохранённые купоны и их результаты — на странице «🧾 Мои купоны».")
+
+# ================================================================ my coupons
+@st.cache_data(ttl=120, show_spinner="Проверяю результаты…")
+def _scores_for(dates: tuple) -> pd.DataFrame:
+    from soccer.scores import fetch_results
+    try:
+        return fetch_results(list(dates))
+    except Exception:
+        return pd.DataFrame()
+
+
+def _status_lines(picks: list[dict]) -> tuple[str, list[str]]:
+    from soccer.coupons import coupon_status
+    days = set()
+    for p in picks:
+        d = pd.Timestamp(p["kickoff"])
+        d = (d.tz_convert("UTC").tz_localize(None) if d.tzinfo else d).normalize()
+        days |= {d - timedelta(days=1), d, d + timedelta(days=1)}
+    stt = coupon_status(picks, _scores_for(tuple(sorted(days))))
+    lines = []
+    for r in stt["picks"]:
+        if r["result"] is None:
+            mark = "⏳ ещё не сыгран" if pd.Timestamp(r["kickoff"]) > pd.Timestamp.now(tz="UTC")                 else "⏳ ждём результат"
+        else:
+            mark = f"{'✅' if r['won'] else '❌'} {r['result'][0]}:{r['result'][1]}"
+        t = pd.Timestamp(r["kickoff"]).tz_convert(user_tz() or local_tz())             if pd.Timestamp(r["kickoff"]).tzinfo else pd.Timestamp(r["kickoff"])
+        lines.append(f"- {t:%d.%m %H:%M} · **{r['match']}** — {r['label']} @ {r['odds']:.2f} → {mark}")
+    return stt["state"], lines
+
+
+def page_my_coupons():
+    st.title("🧾 Мои купоны")
+    st.caption("Результаты подтягиваются сами (livescore.com + misli.az), обновление раз в 2 минуты.")
+    draft = _coupon()
+    if draft:
+        st.markdown("### Текущий купон (ещё не сохранён)")
+        state, lines = _status_lines(draft)
+        st.markdown("\n".join(lines))
+        total = float(np.prod([p["odds"] for p in draft]))
+        c = st.columns([2, 2, 3])
+        c[0].metric("Общий коэф.", f"{total:.2f}")
+        stake = c[1].number_input("Ставка, ₼", min_value=0.0, value=1.0, step=1.0, key="my_stake")
+        if c[2].button("💾 Сохранить этот купон", type="primary"):
+            known = all(p.get("p_market") is not None for p in draft)
+            prob = float(np.prod([p["p_market"] for p in draft])) if known else float("nan")
+            storage.save_coupon(draft, stake, total, prob)
+            _set_coupon([])
+            st.toast("Купон сохранён")
+            st.rerun()
         st.divider()
-        st.markdown("### 💾 Сохранённые купоны")
-        for cpn in saved[:20]:
-            status, lines = [], []
-            for p in cpn["picks"]:
-                res = storage.find_result(p["home"], p["away"], p["kickoff"][:10]) \
-                    if p.get("home") else None
-                if res is None:
-                    mark = "⏳"
-                    status.append(None)
-                else:
-                    won = outcome_won(p["market"], res[0], res[1], p.get("line"))
-                    status.append(won)
-                    mark = f"{'✅' if won else '❌'} {res[0]}:{res[1]}"
-                lines.append(f"- {p['match']}: {p['label']} @ {p['odds']:.2f} — {mark}")
-            if any(s is False for s in status):
-                head = "❌ проигран"
-            elif all(s is True for s in status):
-                head = f"✅ выигран: {cpn['stake'] * cpn['total_odds']:.2f} ₼"
-            else:
-                head = "⏳ ждём результатов"
-            with st.expander(f"#{cpn['id']} · {cpn['created_at'][:16].replace('T', ' ')} · "
-                             f"коэф. {cpn['total_odds']:.2f} · ставка {cpn['stake']:.2f} ₼ · {head}"):
-                st.markdown("\n".join(lines))
-                if st.button("Удалить", key=f"del_{cpn['id']}"):
-                    storage.delete_coupon(cpn["id"])
-                    st.rerun()
+    saved = storage.load_coupons()
+    if not saved:
+        st.info("Сохранённых купонов пока нет. Соберите купон на странице «Купон (misli.az)» "
+                "или загрузите готовый и нажмите «Сохранить».")
+        return
+    results = []
+    blocks = []
+    for cpn in saved:
+        state, lines = _status_lines(cpn["picks"])
+        results.append((state, cpn))
+        blocks.append((state, cpn, lines))
+    won = [c for s_, c in results if s_ == "won"]
+    lost = [c for s_, c in results if s_ == "lost"]
+    staked = sum(c["stake"] for c in won + lost)
+    returned = sum(c["stake"] * c["total_odds"] for c in won)
+    m = st.columns(4)
+    m[0].metric("Купонов", len(saved))
+    m[1].metric("Выиграно", len(won))
+    m[2].metric("Проиграно", len(lost))
+    m[3].metric("Баланс по сыгранным", f"{returned - staked:+.2f} ₼")
+    head = {"won": "✅ выигран", "lost": "❌ проигран", "pending": "⏳ в игре"}
+    for state, cpn, lines in blocks:
+        title = (f"#{cpn['id']} · {cpn['created_at'][:16].replace('T', ' ')} · коэф. "
+                 f"{cpn['total_odds']:.2f} · ставка {cpn['stake']:.2f} ₼ · {head[state]}"
+                 + (f" (+{cpn['stake'] * cpn['total_odds']:.2f} ₼)" if state == "won" else ""))
+        with st.expander(title, expanded=state == "pending"):
+            st.markdown("\n".join(lines))
+            if st.button("Удалить", key=f"del_{cpn['id']}"):
+                storage.delete_coupon(cpn["id"])
+                st.rerun()
 
 
 def page_about():
@@ -1159,6 +1233,7 @@ with st.sidebar:
 pages = st.navigation([
     st.Page(page_today, title="Матчи дня", icon="📅", default=True, url_path="today"),
     st.Page(page_coupon, title="Купон (misli.az)", icon="🎟️", url_path="coupon"),
+    st.Page(page_my_coupons, title="Мои купоны", icon="🧾", url_path="my-coupons"),
     st.Page(page_match, title="Прогноз любого матча", icon="🔮", url_path="match"),
     st.Page(page_leagues, title="Лиги и симуляция", icon="🏆", url_path="leagues"),
     st.Page(page_ratings, title="Рейтинги", icon="📊", url_path="ratings"),

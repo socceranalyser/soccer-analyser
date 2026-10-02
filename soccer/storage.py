@@ -221,3 +221,24 @@ def import_state(state_dir=STATE_DIR, path=DB_PATH) -> dict:
                 df[cols].astype(object).where(df[cols].notna(), None).itertuples(index=False))
             counts[name] = len(df)
     return counts
+
+
+# ------------------------------------------------------------ coupon draft
+SCHEMA_DRAFT = """CREATE TABLE IF NOT EXISTS coupon_draft (
+    id INTEGER PRIMARY KEY CHECK (id = 1), updated_at TEXT NOT NULL, picks TEXT NOT NULL)"""
+
+
+def save_draft(picks: list[dict], path=DB_PATH) -> None:
+    """The coupon being built, kept across page reloads and restarts."""
+    with closing(connect(path)) as con, con:
+        con.execute(SCHEMA_DRAFT)
+        con.execute("INSERT OR REPLACE INTO coupon_draft VALUES (1, ?, ?)",
+                    (datetime.now().isoformat(timespec="seconds"),
+                     json.dumps(picks, default=str)))
+
+
+def load_draft(path=DB_PATH) -> list[dict]:
+    with closing(connect(path)) as con:
+        con.execute(SCHEMA_DRAFT)
+        r = con.execute("SELECT picks FROM coupon_draft WHERE id = 1").fetchone()
+    return json.loads(r[0]) if r else []

@@ -106,3 +106,50 @@ def suggest(events: pd.DataFrame) -> list[dict]:
             out.append(cp)
             used |= set(cp["picks"]["event_id"])
     return out
+
+
+# ------------------------------------------------------------ results
+def pick_result(pick: dict, scores: pd.DataFrame | None = None):
+    """(hg, ag) of a coupon pick's match if it has finished, else None.
+
+    Looks in our results table first, then in livescore/misli scores by name and kick-off.
+    """
+    from . import storage
+    from .misli import attach_results
+    kick = pd.Timestamp(pick["kickoff"])
+    if pick.get("home") and pick.get("away"):
+        res = storage.find_result(pick["home"], pick["away"], kick.tz_localize(None)
+                                  if kick.tzinfo else kick)
+        if res is not None:
+            return res
+    if scores is None:
+        from .scores import fetch_results
+        d = kick.tz_convert("UTC").tz_localize(None).normalize() if kick.tzinfo else kick.normalize()
+        scores = fetch_results([d - pd.Timedelta(days=1), d, d + pd.Timedelta(days=1)])
+    if scores is None or scores.empty:
+        return None
+    home_raw, _, away_raw = pick["match"].partition(" — ")
+    row = pd.DataFrame([{"home": pick.get("home") or home_raw, "away": pick.get("away") or away_raw,
+                         "home_src": home_raw, "away_src": away_raw,
+                         "kickoff": kick if kick.tzinfo else kick.tz_localize("UTC"),
+                         "played": False, "hg": np.nan, "ag": np.nan}])
+    out = attach_results(row, scores[scores["ended"]])
+    r = out.iloc[0]
+    return (int(r["hg"]), int(r["ag"])) if r["played"] and pd.notna(r["hg"]) else None
+
+
+def coupon_status(picks: list[dict], scores: pd.DataFrame | None = None) -> dict:
+    """Per-pick results and overall state: 'won' / 'lost' / 'pending'."""
+    from .misli import outcome_won
+    rows = []
+    for p in picks:
+        res = pick_result(p, scores)
+        won = None if res is None else outcome_won(p["market"], res[0], res[1], p.get("line"))
+        rows.append({**p, "result": res, "won": won})
+    if any(r["won"] is False for r in rows):
+        state = "lost"
+    elif rows and all(r["won"] is True for r in rows):
+        state = "won"
+    else:
+        state = "pending"
+    return {"picks": rows, "state": state}

@@ -55,7 +55,10 @@ NATIONS_AZ = {
     "Uels": "Wales", "Danimarka": "Denmark", "Farer Adaları": "Faroe Islands",
     "Slovakiya": "Slovakia", "Malta": "Malta", "Cəbəllüttariq": "Gibraltar",
     "Azərbaycan": "Azerbaijan", "Lixtenşteyn": "Liechtenstein", "Litva": "Lithuania",
-    "Latviya": "Latvia", "Moldova": "Moldova", "Ermənistan": "Armenia", "Qazaxıstan": "Kazakhstan",
+    "Latviya": "Latvia", "Moldova": "Moldova", "Moldova Respublikası": "Moldova",
+    "Ermənistan": "Armenia", "Qazaxıstan": "Kazakhstan", "Qazaxstan": "Kazakhstan",
+    "Bosniya-Herseqovina": "Bosnia and Herzegovina", "Çexiya Respublikası": "Czech Republic",
+    "Şimali Makedoniya Respublikası": "North Macedonia", "Rusiya Federasiyası": "Russia",
     "Andorra": "Andorra", "Monteneqro": "Montenegro", "Kipr": "Cyprus", "Rusiya": "Russia",
     "Argentina": "Argentina", "Braziliya": "Brazil", "Uruqvay": "Uruguay", "Kolumbiya": "Colombia",
     "Çili": "Chile", "Peru": "Peru", "Ekvador": "Ecuador", "Paraqvay": "Paraguay",
@@ -238,17 +241,22 @@ def attach_results(day: pd.DataFrame, res: pd.DataFrame) -> pd.DataFrame:
             continue
         names_h = {_norm(str(x)) for x in (r.get("home"), r.get("home_src")) if pd.notna(x)}
         names_a = {_norm(str(x)) for x in (r.get("away"), r.get("away_src")) if pd.notna(x)}
-        score = cand.apply(lambda c: min(max(similarity(n, c["h_en"]) for n in names_h),
-                                         max(similarity(n, c["a_en"]) for n in names_a)), axis=1)
-        if score.max() < 0.75:
+        sh = cand["h_en"].map(lambda c: max(similarity(n, c) for n in names_h))
+        sa = cand["a_en"].map(lambda c: max(similarity(n, c) for n in names_a))
+        lo, hi = np.minimum(sh, sa), np.maximum(sh, sa)
+        same_minute = ((cand["kickoff"] - k).abs() <= pd.Timedelta(minutes=15)) if pd.notna(k)             else pd.Series(False, index=cand.index)
+        # both names close, or same kick-off with one name certain and the other plausible
+        # (spellings like "Qazaxstan" / "Kazakhstan" differ a lot)
+        ok = (lo >= 0.75) | (same_minute & (hi >= 0.85) & (lo >= 0.55))
+        if not ok.any():
             continue
-        m = cand.loc[score.idxmax()]
+        m = cand.loc[((lo + hi) / 2).where(ok).idxmax()]
         if m["hg"] is None or pd.isna(m["hg"]):
             continue
         if m["ended"]:
             out.loc[idx, ["hg", "ag", "played"]] = [int(m["hg"]), int(m["ag"]), True]
         elif m["live"]:
-            out.loc[idx, ["live_status", "live_minute"]] = [LIVE_STATUS[m["status"]], m["minute"]]
+            out.loc[idx, ["live_status", "live_minute"]] = [LIVE_STATUS.get(m["status"], m["status"]), m["minute"]]
             out.loc[idx, ["hg", "ag"]] = [int(m["hg"]), int(m["ag"])]
     return out
 

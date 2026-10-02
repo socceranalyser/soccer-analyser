@@ -131,7 +131,8 @@ class Engine:
     def _add_recent_scores(self, log, days: int = 4):
         """Fill in scores of the last few days from misli.az (published within minutes),
         so ratings learn from results before the main sources catch up."""
-        from .misli import attach_results, fetch_results
+        from .misli import attach_results
+        from .scores import fetch_results
         today = pd.Timestamp.now().normalize()
         recent = self.schedule["date"].between(today - pd.Timedelta(days=days), today) & \
             ~self.schedule["played"]

@@ -37,15 +37,6 @@ Csd Flandria Rezerv,CA Ituzaingo Reserves,2026-10-01 18:00:00+00:00,ENDED,90.0,T
 CA Los Andes Rezerv,Deportivo Moron Rezerv,2026-10-01 18:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
 AD Berazategui Reserve,Central Ballester Reserve,2026-10-01 17:00:00+00:00,ENDED,90.0,True,False,3.0,1.0
 Defensores de Cambaceres,Sacachispas FC Rezerves,2026-10-01 17:00:00+00:00,ENDED,90.0,True,False,3.0,1.0
-Uels,Norveç,2026-10-02 10:00:00+00:00,ENDED,,True,False,0.0,2.0
-İF Elfsborq,Haken Götenburq,2026-10-02 10:00:00+00:00,ENDED,,True,False,0.0,1.0
-Nürnberq,İnqolştadt,2026-10-02 10:00:00+00:00,ENDED,,True,False,3.0,1.0
-FK Luqano,Hellas Verona,2026-10-02 09:30:00+00:00,ENDED,,True,False,1.0,3.0
-Qornik Jabrje,Odra Opole,2026-10-02 09:00:00+00:00,ENDED,,True,False,0.0,2.0
-FC Fastav Jlin,1.SK Prosteyov,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,2.0
-Trenkvalder Admira,Avstriya Vyana,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,6.0
-MFK Ruzomberok,SFC Opava,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,1.0
-Vyetnam,Pakistan,2026-10-02 09:00:00+00:00,ENDED,90.0,True,False,4.0,2.0
 NK Aluminiy,NK Varajdin,2026-10-02 08:00:00+00:00,ENDED,,True,False,0.0,0.0
 Mfa Moscow U20,FC Chernomorets Novorossi,2026-10-02 08:00:00+00:00,ENDED,90.0,True,False,2.0,3.0
 Çin (Q),Cənubi Koreya  (Q),2026-10-02 06:00:00+00:00,ENDED,91.0,True,False,0.0,1.0
@@ -57,3 +48,127 @@ Qremio Novorizontino,Qoias Qp,2026-10-02 00:00:00+00:00,ENDED,,True,False,3.0,0.
 Kayman Adaları,Puerto Riko,2026-10-02 00:00:00+00:00,ENDED,,True,False,0.0,3.0
 CD Inca,Munisipal Limeno,2026-10-02 00:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
 Dominikan Respublikası,Haiti,2026-10-02 00:00:00+00:00,ENDED,,True,False,1.0,4.0
+Vidad Temara,Tuarqa Birliyi,2026-10-02 18:00:00+00:00,ENDED,,True,False,0.0,1.0
+Comercial Tiete FC U20,Brasilis FC SP U20,2026-10-02 18:00:00+00:00,ENDED,90.0,True,False,3.0,0.0
+7 De Abril RJ,Friburguense AC RJ,2026-10-02 18:00:00+00:00,ENDED,92.0,True,False,1.0,2.0
+FOC Farsta,Fittja IF,2026-10-02 18:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
+Borussiya Monxenqladbax II,VFL Boxum II,2026-10-02 17:30:00+00:00,ENDED,,True,False,2.0,3.0
+Andorra,Moldova Respublikası,2026-10-02 17:30:00+00:00,ENDED,,True,False,0.0,0.0
+Qviding FIF,Landvetter IS,2026-10-02 17:30:00+00:00,ENDED,90.0,True,False,0.0,1.0
+Ferro Carril Oeste (Q),Union de Santa Fe (Q),2026-10-02 17:30:00+00:00,ENDED,91.0,True,False,1.0,1.0
+Kremser SC,Viner Sport-Klub,2026-10-02 17:30:00+00:00,ENDED,90.0,True,False,4.0,3.0
+Rasinq Klub (Q),Belgrano de Cordoba (Q),2026-10-02 17:25:00+00:00,ENDED,90.0,True,False,3.0,1.0
+Favoritner AC,FK Marçfeld Donauen,2026-10-02 17:10:00+00:00,ENDED,91.0,True,False,1.0,1.0
+VK Aarhus,Brabrand İF,2026-10-02 17:00:00+00:00,ENDED,,True,False,0.0,2.0
+BK Frem Amager,B93 Kopanhagen,2026-10-02 17:00:00+00:00,ENDED,,True,False,0.0,3.0
+Ştuttqarter Kikers,FK Kikers 1901 Offenbaxer,2026-10-02 17:00:00+00:00,ENDED,,True,False,2.0,0.0
+BK Karlberqs,FK Sollentuna,2026-10-02 17:00:00+00:00,ENDED,,True,False,3.0,2.0
+FK Kristianstad,FK Ariana,2026-10-02 17:00:00+00:00,ENDED,,True,False,0.0,1.0
+Lunds BK,Laholms FK,2026-10-02 17:00:00+00:00,ENDED,,True,False,0.0,1.0
+TSV Buxbax,SC Eltersdorf,2026-10-02 17:00:00+00:00,ENDED,,True,False,0.0,2.0
+RK Deportivo La Koruna,FK Porto,2026-10-02 17:00:00+00:00,ENDED,,True,False,1.0,3.0
+MFK Stad Lavallo,Stad Renn,2026-10-02 17:00:00+00:00,ENDED,,True,False,1.0,0.0
+Real Sosyedad San Sebastian,Atletik Bilbao,2026-10-02 17:00:00+00:00,ENDED,,True,False,0.0,1.0
+Unterhaxinq,FK Şvaynfurt 05,2026-10-02 17:00:00+00:00,ENDED,,True,False,1.0,1.0
+Torslanda IK,IK Kongahalla,2026-10-02 17:00:00+00:00,ENDED,90.0,True,False,2.0,0.0
+KS Polonia Nysa,Miedz Legnica II,2026-10-02 17:00:00+00:00,ENDED,90.0,True,False,1.0,2.0
+Ranheim,Egersunds IK,2026-10-02 17:00:00+00:00,ENDED,,True,False,5.0,0.0
+FC Gleisdorf 09,SU Tillmitsch,2026-10-02 17:00:00+00:00,ENDED,90.0,True,False,0.0,0.0
+Smedby AIS,Nykopings BIS,2026-10-02 17:00:00+00:00,ENDED,90.0,True,False,1.0,1.0
+SV Seekirchen,Union Qurten,2026-10-02 17:00:00+00:00,ENDED,90.0,True,False,0.0,0.0
+Kungsangens IF,Sunnersta AIF,2026-10-02 17:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
+Lilla Torg FF,Nosaby IF,2026-10-02 17:00:00+00:00,ENDED,90.0,True,False,2.0,3.0
+Hps 2,MPS/Atletico Malmi,2026-10-02 17:00:00+00:00,ENDED,90.0,True,False,1.0,1.0
+BK Naestved,FK Nikoebinq,2026-10-02 17:00:00+00:00,ENDED,,True,False,1.0,1.0
+R. Aviles,Luqo,2026-10-02 17:00:00+00:00,ENDED,90.0,True,False,1.0,2.0
+Rusenborq BK 2,Melhus,2026-10-02 17:00:00+00:00,ENDED,90.0,True,False,1.0,4.0
+Atus Velden,Traybax,2026-10-02 17:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
+Bayer Leverkuzen 04,Verder Bremen,2026-10-02 16:30:00+00:00,ENDED,,True,False,3.0,2.0
+Molde FK 2,SK Herd,2026-10-02 16:30:00+00:00,ENDED,90.0,True,False,6.0,2.0
+MSK Senec,Spartak Myjava,2026-10-02 16:30:00+00:00,ENDED,90.0,True,False,0.0,1.0
+FK Qarliava,Dfk Dainava Alytus,2026-10-02 16:30:00+00:00,ENDED,91.0,True,False,2.0,1.0
+FK Spartakas,Kedainiai Nevezis,2026-10-02 16:30:00+00:00,ENDED,90.0,True,False,3.0,4.0
+Fus Fat Rabat İdman Birliyi,Union Sportif Amal Tiznit,2026-10-02 16:00:00+00:00,ENDED,,True,False,0.0,1.0
+Latviya,Çernoqoriya,2026-10-02 16:00:00+00:00,ENDED,,True,False,1.0,2.0
+FK Dukla Praqa,FK Yablonets,2026-10-02 16:00:00+00:00,ENDED,,True,False,0.0,1.0
+Sloveniya,Niderland,2026-10-02 16:00:00+00:00,ENDED,,True,False,2.0,4.0
+Ukrayna,Xorvatiya,2026-10-02 16:00:00+00:00,ENDED,,True,False,1.0,0.0
+Avstriya,Danimarka,2026-10-02 16:00:00+00:00,ENDED,,True,False,1.0,1.0
+İngiltərə,Amerika Birləşmiş Ştatları,2026-10-02 16:00:00+00:00,ENDED,,True,False,2.0,1.0
+Serbiya,Rusiya,2026-10-02 16:00:00+00:00,ENDED,,True,False,1.0,3.0
+Rapid Buxarest,Cenoa,2026-10-02 16:00:00+00:00,ENDED,,True,False,2.0,0.0
+Hay AL Amir Hassan,Al Hashemehya,2026-10-02 16:00:00+00:00,ENDED,92.0,True,False,0.0,0.0
+AL Sareeh,Maan Club,2026-10-02 16:00:00+00:00,ENDED,90.0,True,False,0.0,2.0
+FC Hlucin,FK Novy Jicin,2026-10-02 16:00:00+00:00,ENDED,90.0,True,False,1.0,1.0
+Gerasd. Stammersd.,FC 1980 Wien,2026-10-02 16:00:00+00:00,ENDED,90.0,True,False,2.0,2.0
+Hluboka,FK Krimice,2026-10-02 16:00:00+00:00,ENDED,90.0,True,False,1.0,1.0
+Hinna,Staal Joerpeland IL,2026-10-02 16:00:00+00:00,ENDED,90.0,True,False,2.0,4.0
+SC Red Star Penzing,TVL Elektra,2026-10-02 16:00:00+00:00,ENDED,90.0,True,False,3.0,0.0
+Klaipedos Fsm,FK Banga B,2026-10-02 16:00:00+00:00,ENDED,90.0,True,False,0.0,3.0
+SK Hranice,Sk Lisen B,2026-10-02 16:00:00+00:00,ENDED,90.0,True,False,1.0,1.0
+Norrby IF U21,IK Oddevold U21,2026-10-02 16:00:00+00:00,ENDED,90.0,True,False,3.0,2.0
+Baltika Kalningrad U20,Krılya Sovetov U20,2026-10-02 16:00:00+00:00,ENDED,91.0,True,False,0.0,1.0
+Şəbab Əl Əhli Dubay Klubu,CSC Əl-Nəsr Dubay,2026-10-02 15:45:00+00:00,ENDED,,True,False,1.0,1.0
+Xor Fakkan,Əl Cəzirə,2026-10-02 15:45:00+00:00,ENDED,,True,False,0.0,2.0
+Tampereen Ilves 2,Huima/Urho,2026-10-02 15:30:00+00:00,ENDED,90.0,True,False,3.0,1.0
+Visloka Debitsa,Pogon Sokol Lubaczow,2026-10-02 15:30:00+00:00,ENDED,90.0,True,False,2.0,1.0
+Salitas FC,Real Du Faso,2026-10-02 15:30:00+00:00,ENDED,90.0,True,False,1.0,3.0
+Accra Lions,Inter Allies FC,2026-10-02 15:00:00+00:00,ENDED,90.0,True,False,0.0,2.0
+AFC Inter Stars Sibiu,Cso Teleajenul Valeni de,2026-10-02 15:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
+7th Wave FC,Home Stars FC,2026-10-02 15:00:00+00:00,ENDED,91.0,True,False,0.0,0.0
+Nsuopun Fidelity FC,New Edubiase FC,2026-10-02 15:00:00+00:00,ENDED,90.0,True,False,1.0,0.0
+FK Aarau,BSC Yanq Boys,2026-10-02 14:30:00+00:00,ENDED,,True,False,1.0,2.0
+FC Volna Pinsk,FC Lida,2026-10-02 14:30:00+00:00,ENDED,90.0,True,False,0.0,2.0
+Qazaxstan,Moldova Respublikası,2026-10-02 14:00:00+00:00,ENDED,,True,False,1.0,2.0
+Gürcüstan,Latviya,2026-10-02 14:00:00+00:00,ENDED,,True,False,2.0,2.0
+FK Minija 2017,FK Kauno Zalgiris B,2026-10-02 14:00:00+00:00,ENDED,90.0,True,False,5.0,0.0
+FC Bate Borisov II,FC Ostrovets,2026-10-02 14:00:00+00:00,ENDED,90.0,True,False,1.0,1.0
+Belçika,Şimali İrlandiya,2026-10-02 13:30:00+00:00,ENDED,,True,False,2.0,1.0
+Albaniya,Litva,2026-10-02 13:30:00+00:00,ENDED,,True,False,2.0,1.0
+FK Əl Əin,Acman Klab,2026-10-02 13:15:00+00:00,ENDED,,True,False,2.0,3.0
+FK Əl-Vəsl,İttihad Kəlbə,2026-10-02 13:15:00+00:00,ENDED,,True,False,4.0,0.0
+Bangu AC RJ U20,Nova Iguacu FC RJ U20,2026-10-02 13:00:00+00:00,ENDED,92.0,True,False,1.0,1.0
+Boston City FC MG U20,Nacional AC Muriae MG U20,2026-10-02 13:00:00+00:00,ENDED,90.0,True,False,2.0,3.0
+Mwembe Makumbi City,Kipanga FC,2026-10-02 13:00:00+00:00,ENDED,90.0,True,False,4.0,1.0
+FK Brodarac,FK Torlak,2026-10-02 13:00:00+00:00,ENDED,90.0,True,False,1.0,2.0
+El Daklyeh,Maleyat Kafr El Zayat,2026-10-02 12:30:00+00:00,ENDED,90.0,True,False,2.0,1.0
+Dayrout,Ismaily SC,2026-10-02 12:30:00+00:00,ENDED,92.0,True,False,2.0,2.0
+Kahrabaa Ismailia,Mega Sport Belqas,2026-10-02 12:30:00+00:00,ENDED,91.0,True,False,2.0,0.0
+Tanta FC,Haras El Hodood,2026-10-02 12:30:00+00:00,ENDED,90.0,True,False,0.0,2.0
+Proxy SC,Telecom Egypt,2026-10-02 12:30:00+00:00,ENDED,92.0,True,False,0.0,3.0
+SK Siqma Olomouts,MŞK Jilina,2026-10-02 12:00:00+00:00,ENDED,,True,False,4.0,0.0
+SC FC Voluntari II,CSM Aleksandriya,2026-10-02 12:00:00+00:00,ENDED,90.0,True,False,0.0,2.0
+SC Dinamo 1948 SA 2,Oxigen Bucuresti,2026-10-02 12:00:00+00:00,ENDED,90.0,True,False,1.0,2.0
+Dejan FC,Persipura Jayapura,2026-10-02 12:00:00+00:00,ENDED,90.0,True,False,1.0,3.0
+ASC Otelul Galati II,AS Portul Constanta,2026-10-02 12:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
+Unirea Baskov,CSM Jiul Petrosani,2026-10-02 12:00:00+00:00,ENDED,90.0,True,False,1.0,1.0
+Fotbal Club FCSB 2,ACS Omega Buc,2026-10-02 12:00:00+00:00,ENDED,91.0,True,False,1.0,2.0
+CS Academica Recea,Csm Sighetu Marmatiei,2026-10-02 12:00:00+00:00,ENDED,90.0,True,False,1.0,0.0
+CS Drobeta Turnu Severin,Akso Filiasi,2026-10-02 12:00:00+00:00,ENDED,90.0,True,False,3.0,0.0
+CS Electrosid Titu,CS Blejoi,2026-10-02 12:00:00+00:00,ENDED,90.0,True,False,1.0,1.0
+ACS Kids Tampa Brasov,CSM Corona Brasov,2026-10-02 12:00:00+00:00,ENDED,90.0,True,False,0.0,2.0
+Acad Viitorul Cluj,ACS Academica Transilvani,2026-10-02 12:00:00+00:00,ENDED,90.0,True,False,4.0,2.0
+Çin,Fələstin,2026-10-02 11:35:00+00:00,ENDED,,True,False,0.0,5.0
+Koreya Respublikası,Venesuela,2026-10-02 11:00:00+00:00,ENDED,,True,False,0.0,0.0
+1. FK Haydenhaym,FC Kikers Vürtsburq,2026-10-02 11:00:00+00:00,ENDED,,True,False,3.0,1.0
+IFK Norrkoping FK U21,IF Brommapojkarna U21,2026-10-02 11:00:00+00:00,ENDED,90.0,True,False,1.0,1.0
+Sc Poltava,FC Chernigiv,2026-10-02 11:00:00+00:00,ENDED,72.0,True,False,3.0,2.0
+Tvente,Verder Bremen,2026-10-02 11:00:00+00:00,ENDED,90.0,True,False,7.0,0.0
+Şimali Koreya (Q),Yaponiya (Q),2026-10-02 10:30:00+00:00,ENDED,132.0,True,False,2.0,2.0
+Uels,Norveç,2026-10-02 10:00:00+00:00,ENDED,,True,False,0.0,2.0
+İF Elfsborq,Haken Götenburq,2026-10-02 10:00:00+00:00,ENDED,,True,False,0.0,1.0
+Nürnberq,İnqolştadt,2026-10-02 10:00:00+00:00,ENDED,,True,False,3.0,1.0
+AC Sparta Praqa,FK Visoçina Yihlava,2026-10-02 10:00:00+00:00,ENDED,,True,False,5.0,3.0
+Visla Plok,Unia Skirnivitse,2026-10-02 10:00:00+00:00,ENDED,,True,False,3.0,1.0
+Daeceon Korail,Qanqneunq Siti,2026-10-02 10:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
+Incheon Hyundai (Q),Hwacheon KSPO (Q),2026-10-02 10:00:00+00:00,ENDED,91.0,True,False,0.0,3.0
+Reilac Shiga,Roasso Kumamoto,2026-10-02 10:00:00+00:00,ENDED,90.0,True,False,0.0,0.0
+Zaglebie Lubin II,KS Qornik Polkovitse,2026-10-02 10:00:00+00:00,ENDED,90.0,True,False,1.0,1.0
+Sejong Sportstoto (Q),Suwon WFC(Q),2026-10-02 10:00:00+00:00,ENDED,0.0,True,False,0.0,1.0
+FK Luqano,Hellas Verona,2026-10-02 09:30:00+00:00,ENDED,,True,False,1.0,3.0
+Qornik Jabrje,Odra Opole,2026-10-02 09:00:00+00:00,ENDED,,True,False,0.0,2.0
+FC Fastav Jlin,1.SK Prosteyov,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,2.0
+Trenkvalder Admira,Avstriya Vyana,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,6.0
+MFK Ruzomberok,SFC Opava,2026-10-02 09:00:00+00:00,ENDED,,True,False,1.0,1.0
+Vyetnam,Pakistan,2026-10-02 09:00:00+00:00,ENDED,90.0,True,False,4.0,2.0
+Tayland,Filippin,2026-10-02 09:00:00+00:00,ENDED,90.0,True,False,1.0,2.0

@@ -168,3 +168,56 @@ def load_predictions(run_id: str | None = None, kind: str | None = None,
     m = m[m["_gap"] <= MAX_RESCHEDULE_DAYS].sort_values("_gap").drop_duplicates("_row")
     out = preds.merge(m[["_row", "hg", "ag", "result"]], on="_row", how="left")
     return out.drop(columns="_row")
+
+
+# --------------------------------------------------------- cloud state sync
+# In the cloud the SQLite file lives on a throw-away disk, so the small, valuable part of
+# it (live forecasts, coupons) is kept as text files in the repository (data/state/) and
+# the large, static part (backtests) as one compressed CSV.
+STATE_DIR = DB_PATH.parent / "state"
+
+
+def export_state(state_dir=STATE_DIR, path=DB_PATH, include_backtests: bool = False) -> list:
+    state_dir.mkdir(parents=True, exist_ok=True)
+    written = []
+    with closing(connect(path)) as con:
+        runs = pd.read_sql("SELECT * FROM runs", con)
+        live = pd.read_sql("SELECT * FROM predictions WHERE run_id = 'live'", con)
+        coupons = pd.read_sql("SELECT * FROM coupons", con)
+        runs.to_csv(state_dir / "runs.csv", index=False)
+        live.to_csv(state_dir / "live_predictions.csv", index=False)
+        coupons.to_csv(state_dir / "coupons.csv", index=False)
+        written += ["runs.csv", "live_predictions.csv", "coupons.csv"]
+        bt = state_dir / "backtests.csv.gz"
+        if include_backtests or not bt.exists():
+            pd.read_sql("SELECT * FROM predictions WHERE run_id != 'live'", con).to_csv(
+                bt, index=False, compression="gzip")
+            written.append(bt.name)
+    return written
+
+
+def import_state(state_dir=STATE_DIR, path=DB_PATH) -> dict:
+    """Load data/state/* into the SQLite file (missing rows only; safe to call often)."""
+    counts = {}
+    if not state_dir.exists():
+        return counts
+    with closing(connect(path)) as con, con:
+        have_bt = con.execute("SELECT COUNT(*) FROM predictions WHERE run_id != 'live'").fetchone()[0]
+        for name, table, cond in (("runs.csv", "runs", None),
+                                  ("live_predictions.csv", "predictions", None),
+                                  ("backtests.csv.gz", "predictions", "bt"),
+                                  ("coupons.csv", "coupons", None)):
+            f = state_dir / name
+            if not f.exists() or (cond == "bt" and have_bt):
+                continue
+            df = pd.read_csv(f)
+            if df.empty:
+                continue
+            cols = [c for c in df.columns
+                    if c in {r[1] for r in con.execute(f"PRAGMA table_info({table})")}]
+            con.executemany(
+                f"INSERT OR IGNORE INTO {table} ({','.join(cols)}) "
+                f"VALUES ({','.join('?' * len(cols))})",
+                df[cols].astype(object).where(df[cols].notna(), None).itertuples(index=False))
+            counts[name] = len(df)
+    return counts

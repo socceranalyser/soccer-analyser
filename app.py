@@ -28,7 +28,17 @@ KIND_RU = {"league": "Лига", "cup": "Еврокубок", "national": "Сб�
 
 
 # ============================================================================ data
+@st.cache_resource(show_spinner="Восстанавливаю сохранённые прогнозы…")
+def _restore_state() -> dict:
+    """Cloud: the database disk is temporary -> reload forecasts saved in data/state/."""
+    try:
+        return storage.import_state()
+    except Exception:
+        return {}
+
+
 def get_engine() -> Engine:
+    _restore_state()
     return _engine(st.session_state.get("refresh_token", 0))
 
 

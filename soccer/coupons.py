@@ -75,7 +75,8 @@ def candidates(events: pd.DataFrame) -> pd.DataFrame:
                          "mbs": int(r.get("mbs", 1)),
                          "home": r.get("home") if pd.notna(r.get("home")) else None,
                          "away": r.get("away") if pd.notna(r.get("away")) else None,
-                         "line": None if pd.isna(r.get("ou_line")) else float(r["ou_line"])})
+                         "line": None if pd.isna(r.get("ou_line")) else float(r["ou_line"]),
+                         "news": r.get("news_note") or "", "avoid": bool(r.get("news_avoid"))})
     return pd.DataFrame(rows)
 
 
@@ -83,7 +84,8 @@ def build(cands: pd.DataFrame, style: str, exclude=frozenset(), agree: bool = Fa
     st = STYLES[style]
     c = cands[(cands["odds"] >= st["min_odds"]) & (cands["p"] >= st["min_p"])
               & (cands["mbs"] <= st["size"]) & ~cands["event_id"].isin(exclude)
-              & cands["p_model"].notna()]  # only matches our model also covers
+              & cands["p_model"].notna()  # only matches our model also covers
+              & ~cands["avoid"].astype(bool)]  # news analysis: unpredictable today
     if agree:  # our own analysis must confirm the outcome, not just the bookmaker's price
         c = c[np.minimum(c["p_model"].astype(float), c["p_market"].astype(float))
               >= st["agree_min"]]
@@ -111,7 +113,8 @@ def _why(r) -> str:
         lead = "мой анализ оценивает выше рынка"
     else:
         lead = "рынок оценивает выше моего анализа"
-    return f"{lead} (модель {pm:.0%}, рынок {pq:.0%})"
+    news = getattr(r, "news", "")
+    return f"{lead} (модель {pm:.0%}, рынок {pq:.0%})" + (f" · 📰 {news}" if news else "")
 
 
 def blend_weights() -> dict:
@@ -148,6 +151,11 @@ def suggest(events: pd.DataFrame, source: str = "combined") -> list[dict]:
     source="combined" (default): model and bookmaker pooled with backtest-fitted weights;
     source="model": our model alone; source="market": bookmaker's margin-free odds alone.
     """
+    try:  # today's news analysis corrects the model and vetoes unpredictable matches
+        from .news import apply
+        events = apply(events)
+    except Exception:
+        pass
     cands = candidates(events)
     if cands.empty:
         return []

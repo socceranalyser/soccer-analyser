@@ -19,8 +19,14 @@ if __name__ == "__main__":
         today = pd.Timestamp.now().normalize()
         print("forecast rows:", eng.record_days([today + timedelta(days=i) for i in range(4)]))
         try:
-            from soccer.misli import save_market_snapshot
-            print("bookmaker odds stored:", save_market_snapshot(eng))
+            from soccer.misli import events_with_model, save_market_snapshot
+            ev = events_with_model(eng)
+            print("bookmaker odds stored:", save_market_snapshot(eng, ev))
+            from soccer import news
+            if news.available():  # Claude reads today's news; the maths weighs it
+                print("news analysed:", len(news.analyse(ev)), "W, G, n =", news.weights())
+            else:
+                print("news: ANTHROPIC_API_KEY not set - skipped")
         except Exception:
             traceback.print_exc()
         from soccer.notify import send_daily_digest

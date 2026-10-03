@@ -43,7 +43,7 @@ _inject_css()
 
 COLORS = {"П1": "#2E7D32", "Х": "#9E9E9E", "П2": "#1565C0"}
 MODEL_LABELS = {"final": "Итоговый прогноз", "dixon_coles": "Dixon-Coles", "elo": "Elo",
-                "market": "Букмекеры"}
+                "market": "Букмекеры", "news": "Модель + новости"}
 KIND_RU = {"league": "Лига", "cup": "Еврокубок", "national": "Сборные"}
 
 
@@ -778,10 +778,24 @@ def _accuracy_block(done: pd.DataFrame, run_id: str, key: str):
             vals = [ch[k] for ch in checks if k in ch]
             col.metric(label, f"{np.mean(vals):.1%}" if vals else "—",
                        help=f"по {len(vals):,} матчам" if vals else "модель не давала этот прогноз")
+    news_done = done
+    done = done[done["model"] != "news"]  # news covers ~12 matches/day: compared separately
     models = sorted(done["model"].unique())
     fair = common_matches(done, models) if len(models) > 1 else done
     if fair.empty:
         fair = done
+    if (news_done["model"] == "news").any():
+        nm = [m for m in ("final", "news", "market") if (news_done["model"] == m).any()]
+        nf = common_matches(news_done, nm)
+        if len(nf):
+            st.markdown("**📰 Помогают ли новости?** Те же матчи: модель без новостей, с новостями "
+                        "и букмекер (меньше log loss — лучше).")
+            st.dataframe(summary_table(nf).assign(model=lambda d: d["model"].map(
+                lambda m: MODEL_LABELS.get(m, m)))[["model", "n", "accuracy", "log_loss"]]
+                .rename(columns={"model": "Модель", "n": "Матчей", "accuracy": "Угадан исход",
+                                 "log_loss": "Log loss"}), hide_index=True, width="stretch",
+                column_config={"Угадан исход": st.column_config.NumberColumn(format="percent"),
+                               "Log loss": st.column_config.NumberColumn(format="%.4f")})
     tbl = summary_table(fair).assign(model=lambda d: d["model"].map(
         lambda m: MODEL_LABELS.get(m, m)))
     st.dataframe(tbl.rename(columns={
@@ -1005,6 +1019,37 @@ def render_coupon_sidebar():
             st.rerun()
 
 
+def render_news():
+    """What Claude found in today's news and how the maths weighed it."""
+    from soccer import news
+    items = sorted(news.notable(min_abs=0.0), key=lambda n: n["kickoff"])
+    if not items:
+        if not news.available():
+            st.caption("📰 Анализ новостей включится, когда будет добавлен ключ ANTHROPIC_API_KEY.")
+        return
+    W, G, n = news.weights()
+    with st.expander(f"📰 Новости дня — проанализировано {len(items)} матч(ей)", expanded=False):
+        st.caption(f"Claude ищет в интернете травмы, ротацию, мотивацию, смену тренера и т.п.; "
+                   f"формула переводит найденное в поправку (вес новостей W = {W:.3f}"
+                   + (f", подобран по {n} сыгранным матчам)" if n >= news.MIN_FIT
+                      else f", пока осторожный стартовый — подберётся после {news.MIN_FIT} матчей; "
+                           f"сейчас сыграно {n})"))
+        for it in items:
+            (ph, px, pa), _, _ = news.adjust((it["p_home"], it["p_draw"], it["p_away"]),
+                                             it["s"], w=(W, G, n))
+            arrow = "⬆️" if it["s"] > 0.3 else "⬇️" if it["s"] < -0.3 else "➖"
+            st.markdown(f"**{it['home']} — {it['away']}** {arrow} "
+                        f"П1 {pct(it['p_home'])}→**{pct(ph)}** · Х {pct(it['p_draw'])}→**{pct(px)}** · "
+                        f"П2 {pct(it['p_away'])}→**{pct(pa)}**"
+                        + (" · ⛔ **исключён из купонов**" if it["avoid"] else "")
+                        + f"  
+{it['summary']}")
+            for f in it.get("factors", []):
+                side = {"home": it["home"], "away": it["away"]}.get(f["team"], "обе")
+                st.caption(f"{'+' if f['impact'] > 0 else ''}{f['impact']} · {side} · "
+                           f"{f['description']} (уверенность {f['certainty']:.0%})")
+
+
 def render_suggestions(df: pd.DataFrame):
     """Three ready-made coupons (safe / balanced / bold) from upcoming matches."""
     from soccer.coupons import suggest
@@ -1120,6 +1165,7 @@ def page_coupon():
     if df.empty:
         render_coupon_sidebar()
         return
+    render_news()
     render_suggestions(df)
     view = pd.DataFrame({
         "Время": df["kick_local"].dt.strftime("%d.%m %H:%M"),

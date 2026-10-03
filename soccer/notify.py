@@ -29,7 +29,7 @@ def load_config() -> dict:
             if "=" in line and not line.strip().startswith("#"):
                 k, v = line.split("=", 1)
                 cfg[k.strip()] = v.strip().strip('"').strip("'")
-    for k in ("TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID"):
+    for k in ("TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID", "ANTHROPIC_API_KEY"):
         if os.environ.get(k):
             cfg[k] = os.environ[k]
     return cfg
@@ -177,6 +177,17 @@ def daily_digest(engine, coupons: bool = True) -> str:
     else:
         lines += ["", "📅 Сегодня матчей с прогнозом нет."]
 
+    try:
+        from .news import notable
+        nn = sorted(notable(), key=lambda n: n["kickoff"])[:10]
+        if nn:
+            lines += ["", "📰 <b>Новости дня — что я учёл</b>"]
+            for n in nn:
+                tag = " ⛔ <i>исключён из купонов</i>" if n["avoid"] else ""
+                lines.append(f"• <b>{_e(n['home'])} — {_e(n['away'])}</b>: {_e(n['summary'])}{tag}")
+    except Exception:
+        pass
+
     if coupons:
         try:
             from .coupons import suggest
@@ -192,6 +203,8 @@ def daily_digest(engine, coupons: bool = True) -> str:
                                  f"</b>, шанс {cp['prob']:.0%}")
                     for _, pk in cp["picks"].iterrows():
                         lines.append(f" • {_e(pk['match'])}: {_e(pk['label'])} @ {pk['odds']:.2f}")
+                        if pk.get("why"):
+                            lines.append(f"      ↳ <i>{_e(pk['why'])}</i>")
                 lines.append("\n<i>Шанс — по коэффициентам без маржи; это не гарантия.</i>")
         except Exception as exc:  # coupons are optional
             lines.append(f"\n(купоны недоступны: {_e(exc)})")

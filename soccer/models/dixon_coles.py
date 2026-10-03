@@ -149,6 +149,7 @@ class DixonColes:
         res = minimize(objective, theta0, jac=True, method="L-BFGS-B", bounds=bounds,
                        options={"maxiter": 2000, "gtol": 1e-6})
         self.theta = res.x
+        self._draws = None  # posterior draws belong to this fit
         self.n = n
         self.converged = bool(res.success)
         self.cov = self._laplace_cov(h, a, w)
@@ -210,7 +211,17 @@ class DixonColes:
         return float(self.theta[-1])
 
     def sample_theta(self, n_samples: int, rng=None) -> np.ndarray:
-        """Draws from the Laplace posterior (rho kept at its MAP value)."""
+        """Draws from the Laplace posterior (rho kept at its MAP value). With the default
+        (seeded) generator the draws are identical every call, so they are cached."""
+        cache = getattr(self, "_draws", None)
+        if rng is None and cache is not None and cache.shape[0] == n_samples:
+            return cache
+        out = self._sample(n_samples, rng)
+        if rng is None:
+            self._draws = out
+        return out
+
+    def _sample(self, n_samples: int, rng=None) -> np.ndarray:
         rng = rng or np.random.default_rng(self.seed)
         draws = rng.multivariate_normal(self.theta[:-1], self.cov, size=n_samples,
                                         method="cholesky" if self._pd() else "svd")

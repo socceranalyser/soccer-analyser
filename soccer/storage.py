@@ -241,3 +241,27 @@ def load_draft(path=DB_PATH) -> list[dict]:
         con.execute(SCHEMA_DRAFT)
         r = con.execute("SELECT picks FROM coupon_draft WHERE id = 1").fetchone()
     return json.loads(r[0]) if r else []
+
+
+# ------------------------------------------------------------ favourite matches (⭐)
+SCHEMA_FAV = """CREATE TABLE IF NOT EXISTS favorites (
+    league TEXT NOT NULL, date TEXT NOT NULL, home TEXT NOT NULL, away TEXT NOT NULL,
+    added_at TEXT NOT NULL, PRIMARY KEY (league, date, home, away))"""
+
+
+def load_favorites(path=DB_PATH) -> set[tuple]:
+    """{(league, 'YYYY-MM-DD', home, away)} of starred matches (personal, never exported)."""
+    with closing(connect(path)) as con:
+        con.execute(SCHEMA_FAV)
+        return {tuple(r) for r in con.execute("SELECT league, date, home, away FROM favorites")}
+
+
+def set_favorite(league: str, date, home: str, away: str, on: bool, path=DB_PATH) -> None:
+    key = (league, pd.Timestamp(date).strftime("%Y-%m-%d"), home, away)
+    with closing(connect(path)) as con, con:
+        con.execute(SCHEMA_FAV)
+        if on:
+            con.execute("INSERT OR IGNORE INTO favorites VALUES (?,?,?,?,?)",
+                        key + (datetime.now().isoformat(timespec="seconds"),))
+        else:
+            con.execute("DELETE FROM favorites WHERE league=? AND date=? AND home=? AND away=?", key)

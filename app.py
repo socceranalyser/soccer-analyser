@@ -361,6 +361,7 @@ def page_today():
             played=False, hg=np.nan, ag=np.nan)))
     with st.container(border=True):
         live_panel(today_day)
+    favorites_panel(today, eng.built_at)
     c = st.columns([2, 3, 3])
     choice = c[0].segmented_control("📅 День", ["Вчера", "Сегодня", "Завтра", "Дата…"],
                                     default="Сегодня")
@@ -436,10 +437,24 @@ def page_today():
         for k, c in (("П1", "p_home"), ("Х", "p_draw"), ("П2", "p_away")):
             table.insert(table.columns.get_loc("Кто выиграет (прогноз)"), k, view.get(c).to_numpy())
             cfg[k] = pct_col(k)
-    event = st.dataframe(table, hide_index=True, width="stretch", on_select="rerun",
-                         selection_mode="single-row", height=min(38 * (len(table) + 1), 700),
-                         column_config=cfg)
-    rows = event.selection.rows if event and event.selection else []
+    favs = storage.load_favorites()
+    keys = [(r["competition"], pd.Timestamp(r.get("sched_date", r.get("date"))).strftime("%Y-%m-%d"),
+             r["home"], r["away"]) for _, r in view.iterrows()]
+    table.insert(0, "⭐", [k in favs for k in keys])
+    cfg["⭐"] = st.column_config.CheckboxColumn("⭐", help="Отметьте — матч появится в «⭐ Мои матчи» "
+                                                "наверху страницы с live-счётом", width="small")
+    edited = st.data_editor(table, hide_index=True, width="stretch", key=f"tbl_{date:%Y%m%d}",
+                            disabled=[c for c in table.columns if c != "⭐"],
+                            height=min(38 * (len(table) + 1), 700), column_config=cfg)
+    changed = [i for i, (old, new_) in enumerate(zip(table["⭐"], edited["⭐"])) if old != new_]
+    for i in changed:
+        storage.set_favorite(*keys[i], on=bool(edited["⭐"].iloc[i]))
+    if changed:
+        st.rerun()
+    labels = ["— выберите матч —"] + [f"{t} · {m}" for t, m in zip(table["Время"], table["Матч"])]
+    pick = st.selectbox("🔍 Подробный разбор матча", range(len(labels)),
+                        format_func=lambda i: labels[i], key=f"card_{date:%Y%m%d}")
+    rows = [pick - 1] if pick else []
     if rows:
         r = view.iloc[rows[0]]
         st.divider()
@@ -450,6 +465,54 @@ def page_today():
         match_card(eng, r["kind"], r["competition"], r["home"], r["away"],
                    bool(r.get("neutral", False)), r.get("home_key"), r.get("away_key"),
                    odds, res, r.get("sched_date", r.get("date")))
+
+
+# ====================================================================== favourites
+@st.fragment(run_every=30)
+def favorites_panel(today: pd.Timestamp, built_at):
+    """Starred matches with score, minute and the pre-match calls; refreshes every 30 s."""
+    import html as _h
+    favs = storage.load_favorites()
+    if not favs:
+        return
+    rows = []
+    for d in (today - timedelta(days=1), today, today + timedelta(days=1)):
+        day = get_day(d, built_at, user_tz())
+        if day.empty:
+            continue
+        key = [(c, pd.Timestamp(sd).strftime("%Y-%m-%d"), h, a) for c, sd, h, a in
+               zip(day["competition"], day.get("sched_date", day["date"]), day["home"], day["away"])]
+        sub_ = day[[k in favs for k in key]]
+        if len(sub_):
+            sub_ = with_scores(sub_.copy(), d)
+            rows.append(sub_.assign(**_calls_columns(sub_)))
+    if not rows:
+        return
+    fav = pd.concat(rows, ignore_index=True).sort_values("kickoff")
+    now = now_in_tz()
+    live = get_live()
+    if not live.empty:
+        from soccer.misli import link_live
+        live = link_live(live, fav)
+        for _, lv in live[live["our_idx"].notna()].iterrows():
+            i = int(lv["our_idx"])
+            fav.loc[i, ["hg", "ag", "live_status", "live_minute"]] = [
+                lv["hg"], lv["ag"], lv["status"], lv["minute"]]
+    html = []
+    for _, r in fav.iterrows():
+        when = r["kickoff"].strftime("%d.%m %H:%M") if pd.notna(r["kickoff"]) else ""
+        st_ = status_label(r, now) or when
+        score = f"{int(r['hg'])}:{int(r['ag'])}" if pd.notna(r.get("hg")) else "–:–"
+        checks = f" {r['checks']}" if r.get("played") and r.get("checks") else ""
+        html.append(f"<div class='sa-lrow'><span class='sa-lmin'>{_h.escape(st_)}</span>"
+                    f"<span class='sa-lteams'>{_h.escape(r['home'])} <b>{score}</b> "
+                    f"{_h.escape(r['away'])}{checks}</span>"
+                    f"<span class='sa-ltip'>{_h.escape(str(r['call_outcome']))} · "
+                    f"{_h.escape(str(r['call_total']).split(' · ⚖️')[0])}</span></div>")
+    with st.container(border=True):
+        st.markdown(f"**⭐ Мои матчи: {len(fav)}** · обновляется каждые 30 с · "
+                    "убрать — снимите звёздочку в таблице")
+        st.markdown("".join(html), unsafe_allow_html=True)
 
 
 # ====================================================================== live now

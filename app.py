@@ -1042,8 +1042,7 @@ def render_news():
                         f"П1 {pct(it['p_home'])}→**{pct(ph)}** · Х {pct(it['p_draw'])}→**{pct(px)}** · "
                         f"П2 {pct(it['p_away'])}→**{pct(pa)}**"
                         + (" · ⛔ **исключён из купонов**" if it["avoid"] else "")
-                        + f"  
-{it['summary']}")
+                        + "  \n" + it["summary"])
             for f in it.get("factors", []):
                 side = {"home": it["home"], "away": it["away"]}.get(f["team"], "обе")
                 st.caption(f"{'+' if f['impact'] > 0 else ''}{f['impact']} · {side} · "

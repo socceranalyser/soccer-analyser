@@ -36,6 +36,7 @@ class DixonColes:
     newcomer_ridge_mult: float = 1.0  # prior precision multiplier for newcomers
     goal_shrink: float = 0.0     # shrink att/def towards 0 at prediction time (fixes
                                  # over-dispersed totals, e.g. national teams)
+    xg_weight: float = 0.0       # strength learnt from (1-w)*goals + w*xG where xG is known
     seed: int = 0
     name: str = "dixon_coles"
 
@@ -85,6 +86,12 @@ class DixonColes:
         a = train["away"].map(self._idx).to_numpy()
         x = train["hg"].to_numpy(float)
         y = train["ag"].to_numpy(float)
+        xp, yp = x, y  # Poisson targets; the low-score correction always uses real goals
+        if self.xg_weight and "xg_h" in train:
+            xh, xa = train["xg_h"].to_numpy(float), train["xg_a"].to_numpy(float)
+            ok = np.isfinite(xh) & np.isfinite(xa)
+            xp = np.where(ok, (1 - self.xg_weight) * x + self.xg_weight * xh, x)
+            yp = np.where(ok, (1 - self.xg_weight) * y + self.xg_weight * xa, y)
         w = np.exp(-self.xi * (as_of - train["date"]).dt.days.to_numpy(float))
         if "weight" in train:  # match importance (e.g. friendlies count less)
             w = w * train["weight"].to_numpy(float)
@@ -116,10 +123,10 @@ class DixonColes:
             tau[m10] = 1 + mu[m10] * rho
             tau[m11] = 1 - rho
             tau = np.maximum(tau, 1e-10)
-            ll = w * (np.log(tau) + x * eta1 - lam + y * eta2 - mu)
+            ll = w * (np.log(tau) + xp * eta1 - lam + yp * eta2 - mu)
 
-            g1 = w * (x - lam)
-            g2 = w * (y - mu)
+            g1 = w * (xp - lam)
+            g2 = w * (yp - mu)
             t00 = w[m00] * (-lam[m00] * mu[m00] * rho) / tau[m00]
             g1[m00] += t00
             g2[m00] += t00

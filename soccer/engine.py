@@ -184,8 +184,14 @@ class Engine:
     # ------------------------------------------------------------------ models
     def dc(self, league: str) -> DixonColes:
         if league not in self._dc:
-            self._dc[league] = DixonColes(**LIVE_DC).fit(
-                self.matches[self.matches["league"] == league],
+            from .tuned import XG_WEIGHT
+            from .xg import UNDERSTAT, attach_xg
+            lm = self.matches[self.matches["league"] == league]
+            kw = dict(LIVE_DC)
+            if league in UNDERSTAT:  # chance quality, not only goals (test: 0.9832 -> 0.9817)
+                lm, kw["xg_weight"] = attach_xg(lm), XG_WEIGHT
+            self._dc[league] = DixonColes(**kw).fit(
+                lm,
                 season=current_season(self.matches, league),
                 season_teams=current_teams(self.matches, league))
         return self._dc[league]

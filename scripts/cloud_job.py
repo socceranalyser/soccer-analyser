@@ -16,6 +16,8 @@ if __name__ == "__main__":
         from soccer.engine import Engine
         eng = Engine(refresh=True, verbose=True)
         print("results stored:", eng.save_results())
+        from soccer import analysis
+        print("daily learning:", analysis.daily_learning())  # before today's forecasts
         today = pd.Timestamp.now().normalize()
         print("forecast rows:", eng.record_days([today + timedelta(days=i) for i in range(4)]))
         try:

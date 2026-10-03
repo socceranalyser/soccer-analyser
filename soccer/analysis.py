@@ -245,6 +245,62 @@ def live_calibrator(cat: str):
     return cal
 
 
+# -------------------------------------------- daily self-correction of goals
+LIVE_GOALS = STATE / "live_goals.json"
+GOALS_SINCE = "2026-10-04"   # base goals calibration introduced; older forecasts are raw
+GOALS_PRIOR_N = 300          # an offset needs ~300 matches of evidence to move fully
+
+
+def _goals_state() -> dict:
+    try:
+        return json.loads(LIVE_GOALS.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {"history": []}
+
+
+def live_goals_offset(cat: str, at: str | None = None) -> float:
+    """Extra logit shift of over-2.5 learnt from live mistakes, in force at time `at` (ISO)."""
+    hist = [h for h in _goals_state().get("history", []) if at is None or h["at"] <= at]
+    return float(hist[-1]["offset"].get(cat, 0.0)) if hist else 0.0
+
+
+def fit_live_goals() -> dict:
+    """Daily: per category, the logit offset that best explains finished live totals
+    (MAP, Gaussian prior worth GOALS_PRIOR_N matches). Each forecast is first "un-shifted"
+    by the offset that was in force when it was made, so the loop never double-counts."""
+    from scipy.optimize import minimize_scalar
+    fin = scored_live()
+    st = _goals_state()
+    now = datetime.now().isoformat(timespec="seconds")
+    out = {}
+    if len(fin):
+        fin = fin[fin["p_over25"].notna() & (fin["created_at"].str[:10] >= GOALS_SINCE)]
+    for cat, g in fin.groupby("cat") if len(fin) else []:
+        p = g["p_over25"].astype(float).clip(1e-4, 1 - 1e-4).to_numpy()
+        used = np.array([live_goals_offset(cat, d) for d in g["created_at"]])
+        base = np.log(p / (1 - p)) - used
+        y = (g["goals"] > 2.5).to_numpy(float)
+        var = 1 / (GOALS_PRIOR_N * 0.25)
+
+        def obj(o):
+            q = 1 / (1 + np.exp(-(base + o)))
+            return -np.sum(y * np.log(q) + (1 - y) * np.log(1 - q)) + 0.5 * o * o / var
+        out[cat] = round(float(minimize_scalar(obj, bounds=(-1, 1), method="bounded").x), 4)
+    hist = [h for h in st.get("history", []) if "at" in h]
+    hist.append({"at": now, "offset": out,
+                 "n": {c: int((fin["cat"] == c).sum()) for c in out} if len(fin) else {}})
+    STATE.mkdir(parents=True, exist_ok=True)
+    LIVE_GOALS.write_text(json.dumps({"history": hist[-400:]}, ensure_ascii=False, indent=1),
+                          encoding="utf-8")
+    return out
+
+
+def daily_learning() -> dict:
+    """Everything that learns from yesterday's results, run every day before forecasting."""
+    return {"calibration": {k: v["status"] for k, v in fit_live_calibration().items()},
+            "goals_offset": fit_live_goals()}
+
+
 # ------------------------------------------------------------------ report
 def weekly_report() -> str:
     fin = scored_live()

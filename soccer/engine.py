@@ -241,6 +241,12 @@ class Engine:
         if cal is not None:  # learnt from our own live mistakes (only when it proved better)
             head = cal.transform(np.asarray(head)[None, :])[0]
             m = rescale_to_outcomes(m, head)
+        from .analysis import live_goals_offset
+        off = live_goals_offset(category(competition))
+        if abs(off) > 1e-3:  # learnt daily from our own live totals
+            from .probability import goal_tilt, outcome_probs, over_prob
+            po = float(np.clip(over_prob(m), 1e-6, 1 - 1e-6))
+            m = goal_tilt(m, 1 / (1 + np.exp(-(np.log(po / (1 - po)) + off))), outcome_probs(m))
         if odds is not None and np.all(np.isfinite(odds)) and np.all(np.asarray(odds) > 1):
             models["Букмекеры"] = implied_probs([odds[0]], [odds[1]], [odds[2]])[0]
         mk = markets(m)

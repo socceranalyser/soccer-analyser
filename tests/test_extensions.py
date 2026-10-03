@@ -155,3 +155,19 @@ def test_goal_tilt_hits_target_and_keeps_1x2():
     assert abs(over_prob(m2) - 0.55) < 2e-3
     assert np.allclose(outcome_probs(m2), p, atol=1e-6)
     assert btts_prob(m2) > btts_prob(m)  # more goals -> both teams score more often
+
+
+def test_live_goals_offset_learns_without_double_counting(tmp_path, monkeypatch):
+    from soccer import analysis
+    rng = np.random.default_rng(0)
+    n = 3000
+    fin = pd.DataFrame({"p_over25": 0.45, "created_at": "2026-06-01T10:00:00", "cat": "Лиги",
+                        "goals": np.where(rng.random(n) < 0.55, 3, 1)})
+    monkeypatch.setattr(analysis, "LIVE_GOALS", tmp_path / "g.json")
+    monkeypatch.setattr(analysis, "STATE", tmp_path)
+    monkeypatch.setattr(analysis, "scored_live", lambda: fin)
+    monkeypatch.setattr(analysis, "GOALS_SINCE", "2026-01-01")
+    first = analysis.fit_live_goals()["Лиги"]
+    assert 0.25 < first < 0.45                      # model said 45%, reality ~55%
+    second = analysis.fit_live_goals()["Лиги"]       # same evidence next day -> same answer
+    assert abs(second - first) < 1e-6

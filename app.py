@@ -485,37 +485,32 @@ def live_panel(day: pd.DataFrame):
             st.toast(f"⚽ ГОЛ! {scorer} — {r['home_raw']} {score[0]}:{score[1]} {r['away_raw']}",
                      icon="⚽")
         prev[key] = score
+    import html as _h
     head = st.columns([3, 2])
-    head[0].markdown(f"#### 🔴 Сейчас идут: {len(live)} матч(ей)"
-                     + (f" · из них наших с прогнозом: {len(ours)}" if len(ours) else ""))
-    show_all = head[1].toggle("Показать все live-матчи", value=len(ours) == 0, key="live_all")
+    head[0].markdown(f"**🔴 Сейчас идут: {len(live)}**"
+                     + (f" · с нашим прогнозом: {len(ours)}" if len(ours) else ""))
+    show_all = head[1].toggle("Все live-матчи", value=len(ours) == 0, key="live_all")
     show = live if show_all else ours
     show = show.sort_values(["top", "minute"], ascending=[False, False])
     if show.empty:
-        st.caption("Матчей из вашего расписания сейчас нет — включите «Показать все».")
+        st.caption("Матчей из вашего расписания сейчас нет — включите «Все live-матчи».")
         return
-    for start in range(0, len(show), 4):
-        cols = st.columns(4)
-        for col, (_, r) in zip(cols, show.iloc[start:start + 4].iterrows()):
-            with col.container(border=True):
-                d = day.loc[r["our_idx"]] if pd.notna(r["our_idx"]) else None
-                home = d["home"] if d is not None else r["home_raw"]
-                away = d["away"] if d is not None else r["away_raw"]
-                goal = now - flash.get(r["id"], 0) < 120
-                st.caption(r["competition"])
-                import html as _h
-                st.markdown(f"<div class='sa-live{' goal' if goal else ''}'>"
-                            + ("<div class='sa-goal'>⚽ ГОЛ!</div>" if goal else "")
-                            + f"<span class='sa-team'>{_h.escape(str(home))}</span>"
-                            f"<span class='sa-score'>{int(r['hg'])} : {int(r['ag'])}</span>"
-                            f"<span class='sa-team'>{_h.escape(str(away))}</span></div>",
-                            unsafe_allow_html=True)
-                minute = f"{int(r['minute'])}'" if pd.notna(r["minute"]) else ""
-                reds = " " + "🟥" * int(r["red_h"]) + "|" + "🟥" * int(r["red_a"])                     if (r["red_h"] or r["red_a"]) else ""
-                st.caption(f"🔴 {minute} · {r['status']}{reds}")
-                if d is not None and isinstance(d.get("call_outcome"), str):
-                    st.caption(f"Прогноз до матча: {d['call_outcome']} · тотал "
-                               f"{d['call_total']} · обе: {d['call_btts']}")
+    rows = []
+    for _, r in show.iterrows():
+        d = day.loc[r["our_idx"]] if pd.notna(r["our_idx"]) else None
+        home = d["home"] if d is not None else r["home_raw"]
+        away = d["away"] if d is not None else r["away_raw"]
+        goal = now - flash.get(r["id"], 0) < 120
+        minute = f"{int(r['minute'])}'" if pd.notna(r["minute"]) else _h.escape(str(r["status"]))
+        reds = (" " + "🟥" * int(r["red_h"]) + "|" + "🟥" * int(r["red_a"])
+                if (r["red_h"] or r["red_a"]) else "")
+        tip = (f"<span class='sa-ltip'>прогноз: {_h.escape(d['call_outcome'])}</span>"
+               if d is not None and isinstance(d.get("call_outcome"), str) else "")
+        rows.append(f"<div class='sa-lrow{' goal' if goal else ''}'><span class='sa-lmin'>{minute}</span>"
+                    f"<span class='sa-lteams'>{_h.escape(str(home))} <b>{int(r['hg'])}:{int(r['ag'])}</b> "
+                    f"{_h.escape(str(away))}{' ⚽' if goal else ''}{reds}</span>{tip}</div>")
+    with st.container(height=min(42 + 30 * len(rows), 200), border=True):
+        st.markdown("".join(rows), unsafe_allow_html=True)
 
 
 def _calls_columns(view: pd.DataFrame) -> dict:
@@ -1072,8 +1067,10 @@ def render_suggestions(df: pd.DataFrame):
         return
     stake = st.number_input("Пример ставки для расчёта, ₼", min_value=1.0, value=10.0,
                             step=1.0, key="sugg_stake")
-    cols = st.columns(len(coupons))
-    for col, cp in zip(cols, coupons):
+    singles = [cp for cp in coupons if cp["style"] == "single"]
+    others = [cp for cp in coupons if cp["style"] != "single"]
+    slots = ([st.container()] if singles else []) + (list(st.columns(len(others))) if others else [])
+    for col, cp in zip(slots, singles + others):
         with col.container(border=True):
             st.markdown(f"**{cp['title']}**")
             for _, pk in cp["picks"].iterrows():

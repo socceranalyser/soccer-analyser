@@ -44,6 +44,8 @@ def market_probs(r) -> dict:
 # History (23k matches, scripts check 2026-10-03): when both agree at 75-85% the call came
 # true 80.3%, at 85%+ 92%; when they disagree the hit rate drops to 63-66%.
 STYLES = {
+    "single": {"title": "💎 Ставка дня — одна самая надёжная игра", "size": 1, "min_odds": 1.25,
+               "min_p": 0.0, "agree_min": 0.75, "score": lambda p, o: p},
     "safe": {"title": "🛡️ Купон дня — максимально надёжный", "size": 3, "min_odds": 1.20,
              "min_p": 0.0, "agree_min": 0.70, "score": lambda p, o: p},
     "balanced": {"title": "⚖️ Сбалансированный", "size": 4, "min_odds": 1.40, "min_p": 0.55,
@@ -166,7 +168,7 @@ def suggest(events: pd.DataFrame, source: str = "combined") -> list[dict]:
         cands = _combine(cands[cands["p_model"].notna()])
     agree = source == "combined"
     out, used = [], set()
-    for style in ("safe", "balanced", "bold"):
+    for style in ("single", "safe", "balanced", "bold"):
         cp = build(cands, style, frozenset(used), agree) or build(cands, style, agree=agree)
         if cp:
             out.append(cp)

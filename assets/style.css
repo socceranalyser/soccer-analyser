@@ -104,3 +104,13 @@
 .sa-goal { width: 100%; font-weight: 800; color: #fde047; }
 @keyframes sa-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, .5); }
                       50% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); } }
+
+/* compact live list */
+.sa-lrow { display: flex; align-items: center; gap: 8px; padding: 3px 4px; font-size: .88rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .06); white-space: nowrap; overflow: hidden; }
+.sa-lrow:last-child { border-bottom: none; }
+.sa-lrow .sa-lmin { color: #f87171; font-weight: 700; min-width: 38px; }
+.sa-lrow .sa-lteams { overflow: hidden; text-overflow: ellipsis; }
+.sa-lrow .sa-lteams b { color: #4ade80; padding: 0 4px; }
+.sa-lrow .sa-ltip { margin-left: auto; color: #93a3bf; font-size: .8rem; }
+.sa-lrow.goal { background: rgba(34, 197, 94, .15); border-radius: 6px; }

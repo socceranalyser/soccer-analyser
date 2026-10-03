@@ -171,3 +171,14 @@ def test_live_goals_offset_learns_without_double_counting(tmp_path, monkeypatch)
     assert 0.25 < first < 0.45                      # model said 45%, reality ~55%
     second = analysis.fit_live_goals()["Лиги"]       # same evidence next day -> same answer
     assert abs(second - first) < 1e-6
+
+
+def test_openfootball_dates_follow_the_season_not_line_order():
+    from soccer.euro import parse_openfootball
+    text = "\n".join([
+        "▪ Group A", "Tue Sep 17", "  21.00  Ajax (NED) v Lille (FRA)  1-0",
+        "Wed Dec 11", "  21.00  Lille (FRA) v Ajax (NED)  0-0",
+        "▪ Group B", "Tue Sep 17", "  21.00  Chelsea (ENG) v Valencia (ESP)  0-1",
+        "▪ Final", "Sat May 30", "  21.00  Ajax (NED) v Chelsea (ENG)  2-1"])
+    df = parse_openfootball(text, 2019, "UCL")
+    assert list(df["date"].dt.year) == [2019, 2019, 2019, 2020]

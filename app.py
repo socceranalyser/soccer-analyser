@@ -1127,6 +1127,12 @@ def render_suggestions(df: pd.DataFrame):
         st.info("Для выбранного периода не хватает матчей с прогнозом модели, чтобы собрать "
                 "купоны. Попробуйте «Все» вместо «Сегодня».")
         return
+    from soccer.coupons import STYLES
+    missing = [STYLES[k]["title"] for k in STYLES if k not in {cp["style"] for cp in coupons}]
+    if missing:
+        st.info("Сейчас нет достаточно надёжных исходов для: " + ", ".join(missing)
+                + ". Честнее пропустить, чем ставить на сомнительное — проверьте позже, "
+                  "когда появятся новые коэффициенты и новости.")
     stake = st.number_input("Пример ставки для расчёта, ₼", min_value=1.0, value=10.0,
                             step=1.0, key="sugg_stake")
     singles = [cp for cp in coupons if cp["style"] == "single"]

@@ -1,255 +1,5 @@
 [
  {
-  "event_id": 2997958,
-  "kickoff": "2026-10-03T10:00:00+00:00",
-  "date": "2026-10-03",
-  "league": "JPN",
-  "home": "Kashiwa Reysol",
-  "away": "Gamba Osaka",
-  "home_raw": "Kaşiva Reysol",
-  "away_raw": "Qamba Osaka",
-  "p_home": 0.5406807426028755,
-  "p_draw": 0.22736345450049014,
-  "p_away": 0.23195580289663437,
-  "p_over": 0.5617994731257162,
-  "p_btts": 0.5492430521977456,
-  "s": 0.0,
-  "goals_shift": 0,
-  "avoid": false,
-  "avoid_reason": "",
-  "summary": "Существенных новостей о составах нет — полагаемся на модель.",
-  "factors": [],
-  "sources": [
-   "https://www.jleague.jp/en/match/leaguecup/2026/100308/"
-  ]
- },
- {
-  "event_id": 2996949,
-  "kickoff": "2026-10-03T11:30:00+00:00",
-  "date": "2026-10-03",
-  "league": "E3",
-  "home": "Chesterfield",
-  "away": "Tranmere",
-  "home_raw": "FK Çesterfild",
-  "away_raw": "Tranmere Rovers",
-  "p_home": 0.5901133859166195,
-  "p_draw": 0.22585956780422317,
-  "p_away": 0.18402704627915728,
-  "p_over": 0.5442655055777441,
-  "p_btts": 0.5210418794309166,
-  "s": -2.0,
-  "goals_shift": 0,
-  "avoid": false,
-  "avoid_reason": "",
-  "summary": "Честерфилд без основного вратаря и трёх атакующих (вызваны в сборные) — шансы хозяев ниже, чем по модели.",
-  "factors": [
-   {
-    "team": "home",
-    "kind": "other",
-    "description": "Вратарь Sissons и трое атакующих (Elliott, Anisjko, Koroma) уехали в сборные",
-    "impact": -2,
-    "certainty": 0.7
-   },
-   {
-    "team": "home",
-    "kind": "injury",
-    "description": "Sotiriou выбыл на 7–8 недель (икроножная)",
-    "impact": -1,
-    "certainty": 0.6
-   }
-  ],
-  "sources": [
-   "https://www.racingpost.com/sport/football-tips/efl/chesterfield-vs-tranmere-predictions-team-news-odds-betting-tips-bet-builder-aB30t0Q1nn4D/"
-  ]
- },
- {
-  "event_id": 2996846,
-  "kickoff": "2026-10-03T13:00:00+00:00",
-  "date": "2026-10-03",
-  "league": "UNL",
-  "home": "Finland",
-  "away": "Albania",
-  "home_raw": "Finlandiya",
-  "away_raw": "Albaniya",
-  "p_home": 0.35116237230971564,
-  "p_draw": 0.30999637899375104,
-  "p_away": 0.3388412486965332,
-  "p_over": 0.323252484410784,
-  "p_btts": 0.39594477521162225,
-  "s": 1.4,
-  "goals_shift": 0,
-  "avoid": false,
-  "avoid_reason": "",
-  "summary": "У Финляндии все здоровы, у Албании нет Лачи — небольшой плюс хозяевам.",
-  "factors": [
-   {
-    "team": "away",
-    "kind": "injury",
-    "description": "Албания без полузащитника Laçi (бедро)",
-    "impact": -1,
-    "certainty": 0.8
-   },
-   {
-    "team": "away",
-    "kind": "injury",
-    "description": "Klisman Cake травмирован",
-    "impact": -1,
-    "certainty": 0.6
-   }
-  ],
-  "sources": [
-   "https://www.sportsmole.co.uk/football/finland/uefa-nations-league/preview/finland-vs-albania-prediction-team-news-lineups_606070.html"
-  ]
- },
- {
-  "event_id": 2999032,
-  "kickoff": "2026-10-03T14:00:00+00:00",
-  "date": "2026-10-03",
-  "league": "SC3",
-  "home": "Dumbarton",
-  "away": "Forfar",
-  "home_raw": "Dumbarton FC",
-  "away_raw": "Forfar Atletik FC",
-  "p_home": 0.3884664467667408,
-  "p_draw": 0.2590397616636537,
-  "p_away": 0.3524937915696055,
-  "p_over": 0.4361582512981671,
-  "p_btts": 0.4752352720893222,
-  "s": 0.0,
-  "goals_shift": 0,
-  "avoid": false,
-  "avoid_reason": "",
-  "summary": "Новостей о составах нет — полагаемся на модель.",
-  "factors": [],
-  "sources": [
-   "https://dumbartonfootballclub.com/match-preview-dumbarton-vs-forfar-athletic-3/"
-  ]
- },
- {
-  "event_id": 2996861,
-  "kickoff": "2026-10-03T16:00:00+00:00",
-  "date": "2026-10-03",
-  "league": "UNL",
-  "home": "Croatia",
-  "away": "England",
-  "home_raw": "Xorvatiya",
-  "away_raw": "İngiltərə",
-  "p_home": 0.21023248721857185,
-  "p_draw": 0.27582407415326926,
-  "p_away": 0.5139434386281592,
-  "p_over": 0.5850397151199577,
-  "p_btts": 0.6082143618227391,
-  "s": -0.09999999999999998,
-  "goals_shift": 0,
-  "avoid": false,
-  "avoid_reason": "",
-  "summary": "Потери у обеих команд мелкие и примерно равные — прогноз почти не меняется.",
-  "factors": [
-   {
-    "team": "home",
-    "kind": "injury",
-    "description": "Хорватия без защитников Erlić и Juranović",
-    "impact": -1,
-    "certainty": 0.9
-   },
-   {
-    "team": "away",
-    "kind": "injury",
-    "description": "Англия без левого защитника O'Reilly",
-    "impact": -1,
-    "certainty": 0.8
-   }
-  ],
-  "sources": [
-   "https://www.sportsmole.co.uk/football/croatia/uefa-nations-league/preview/croatia-vs-england-prediction-team-news-lineups_606049.html"
-  ]
- },
- {
-  "event_id": 2996859,
-  "kickoff": "2026-10-03T16:00:00+00:00",
-  "date": "2026-10-03",
-  "league": "UNL",
-  "home": "Iceland",
-  "away": "Bulgaria",
-  "home_raw": "İslandiya",
-  "away_raw": "Bolqarıstan",
-  "p_home": 0.6553063075436959,
-  "p_draw": 0.22743172802992337,
-  "p_away": 0.1172619644263806,
-  "p_over": 0.523436299071062,
-  "p_btts": 0.5213474111962316,
-  "s": 3.0,
-  "goals_shift": 0,
-  "avoid": false,
-  "avoid_reason": "",
-  "summary": "Болгария без тренера (отставка на неделе) и без лучшего нападающего Деспотова — заметный плюс Исландии.",
-  "factors": [
-   {
-    "team": "away",
-    "kind": "coach",
-    "description": "Тренер Болгарии Димитров ушёл в отставку на этой неделе, команду ведёт временный тренер",
-    "impact": -2,
-    "certainty": 0.9
-   },
-   {
-    "team": "away",
-    "kind": "injury",
-    "description": "Лучший атакующий Болгарии Despodov травмирован",
-    "impact": -2,
-    "certainty": 0.85
-   },
-   {
-    "team": "home",
-    "kind": "injury",
-    "description": "Под вопросом Albert Gudmundsson (плечо) и Thordarson",
-    "impact": -1,
-    "certainty": 0.5
-   }
-  ],
-  "sources": [
-   "https://www.sportsmole.co.uk/football/iceland/uefa-nations-league/preview/iceland-vs-bulgaria-prediction-team-news-lineups_606097.html"
-  ]
- },
- {
-  "event_id": 2990556,
-  "kickoff": "2026-10-03T17:45:00+00:00",
-  "date": "2026-10-03",
-  "league": "ARG",
-  "home": "Defensa y Justicia",
-  "away": "San Lorenzo",
-  "home_raw": "Defensa və Xustisiya",
-  "away_raw": "San-Lorenso",
-  "p_home": 0.4025415612765505,
-  "p_draw": 0.3249276665548694,
-  "p_away": 0.27253077216858,
-  "p_over": 0.29851347075063217,
-  "p_btts": 0.3691408039447317,
-  "s": 1.1,
-  "goals_shift": 0,
-  "avoid": false,
-  "avoid_reason": "",
-  "summary": "Сан-Лоренсо без трёх игроков основы (дисквалификация и травмы) — небольшой плюс хозяевам.",
-  "factors": [
-   {
-    "team": "away",
-    "kind": "suspension",
-    "description": "Insaurralde дисквалифицирован, Cerutti и Gastón Hernández выбыли (разрыв связок)",
-    "impact": -2,
-    "certainty": 0.8
-   },
-   {
-    "team": "home",
-    "kind": "injury",
-    "description": "У Defensa под вопросом Molinas, Souto, травмирован Herrera (данные противоречивы)",
-    "impact": -1,
-    "certainty": 0.5
-   }
-  ],
-  "sources": [
-   "https://vamosciclon.com/san-lorenzo-convocados-defensa-y-justicia-insua/"
-  ]
- },
- {
   "event_id": 2997815,
   "kickoff": "2026-10-03T18:00:00+00:00",
   "date": "2026-10-03",
@@ -303,137 +53,6 @@
   ]
  },
  {
-  "event_id": 2996852,
-  "kickoff": "2026-10-03T18:45:00+00:00",
-  "date": "2026-10-03",
-  "league": "UNL",
-  "home": "Spain",
-  "away": "Czech Republic",
-  "home_raw": "İspaniya",
-  "away_raw": "Çexiya",
-  "p_home": 0.950214668492613,
-  "p_draw": 0.040239844113981627,
-  "p_away": 0.009545487393405275,
-  "p_over": 0.7656461846541582,
-  "p_btts": 0.5041569733516021,
-  "s": 1.45,
-  "goals_shift": 0,
-  "avoid": false,
-  "avoid_reason": "",
-  "summary": "У Испании глубокая скамейка, а Чехия без четырёх игроков основы и в кризисе — ещё плюс Испании.",
-  "factors": [
-   {
-    "team": "home",
-    "kind": "injury",
-    "description": "Испания без Ferran Torres, Grimaldo, Eric García, Porro, Nico Williams",
-    "impact": -1,
-    "certainty": 0.85
-   },
-   {
-    "team": "away",
-    "kind": "suspension",
-    "description": "Чехия: Šulc дисквалифицирован, Coufal и Provod травмированы, Karabec вряд ли сыграет",
-    "impact": -2,
-    "certainty": 0.85
-   },
-   {
-    "team": "away",
-    "kind": "motivation",
-    "description": "Чехия без побед 5 матчей подряд, кризис",
-    "impact": -1,
-    "certainty": 0.6
-   }
-  ],
-  "sources": [
-   "https://www.sportsmole.co.uk/football/spain/uefa-nations-league/preview/spain-vs-czech-republic-prediction-team-news-lineups_606066.html"
-  ]
- },
- {
-  "event_id": 2996850,
-  "kickoff": "2026-10-03T18:45:00+00:00",
-  "date": "2026-10-03",
-  "league": "UNL",
-  "home": "Switzerland",
-  "away": "Slovenia",
-  "home_raw": "İsveçrə",
-  "away_raw": "Sloveniya",
-  "p_home": 0.7934935625832827,
-  "p_draw": 0.14946036568580917,
-  "p_away": 0.0570460717309081,
-  "p_over": 0.4844616948779759,
-  "p_btts": 0.4204063705652929,
-  "s": -0.10000000000000009,
-  "goals_shift": -1,
-  "avoid": false,
-  "avoid_reason": "",
-  "summary": "Обе команды без ключевых игроков (у Швейцарии — Джака и Эмболо, у Словении — Шешко); сила почти не меняется, голов может быть меньше.",
-  "factors": [
-   {
-    "team": "home",
-    "kind": "turmoil",
-    "description": "По сообщениям, Xhaka и Embolo не вызваны (скандал); нужна проверка",
-    "impact": -2,
-    "certainty": 0.5
-   },
-   {
-    "team": "home",
-    "kind": "injury",
-    "description": "Widmer, Vargas, Jaquez, Muheim травмированы",
-    "impact": -1,
-    "certainty": 0.8
-   },
-   {
-    "team": "away",
-    "kind": "injury",
-    "description": "Словения без лучшего нападающего Šeško, а также Šporar, Verbič, Janža",
-    "impact": -2,
-    "certainty": 0.85
-   }
-  ],
-  "sources": [
-   "https://www.sportsmole.co.uk/football/switzerland/uefa-nations-league/preview/switzerland-vs-slovenia-prediction-team-news-lineups_606081.html"
-  ]
- },
- {
-  "event_id": 2995478,
-  "kickoff": "2026-10-03T18:45:00+00:00",
-  "date": "2026-10-03",
-  "league": "UNL",
-  "home": "North Macedonia",
-  "away": "Scotland",
-  "home_raw": "Şimali Makedoniya",
-  "away_raw": "Şotlandiya",
-  "p_home": 0.26202441544364435,
-  "p_draw": 0.2964727764217619,
-  "p_away": 0.4415028081345936,
-  "p_over": 0.41814095474065294,
-  "p_btts": 0.4864089913359029,
-  "s": 1.5500000000000003,
-  "goals_shift": 0,
-  "avoid": false,
-  "avoid_reason": "",
-  "summary": "Шотландия без звезды Мактоминея и ещё пяти игроков — серьёзные потери, шансы Македонии выше, чем по модели.",
-  "factors": [
-   {
-    "team": "away",
-    "kind": "injury",
-    "description": "Шотландия без McTominay, Tierney, McLean, Shankland, Adams; Hendry дисквалифицирован",
-    "impact": -3,
-    "certainty": 0.8
-   },
-   {
-    "team": "home",
-    "kind": "injury",
-    "description": "Македония без Alioski и Nikolov",
-    "impact": -1,
-    "certainty": 0.85
-   }
-  ],
-  "sources": [
-   "https://www.sportsmole.co.uk/football/macedonia/uefa-nations-league/preview/n-macedonia-vs-scotland-prediction-team-news-lineups_606086.html"
-  ]
- },
- {
   "event_id": 2998123,
   "kickoff": "2026-10-04T02:00:00+00:00",
   "date": "2026-10-04",
@@ -470,6 +89,441 @@
   ],
   "sources": [
    "https://www.nbcsports.com/soccer/news/usmnt-roster-for-big-friendlies-teenager-sullivan-in-pulisic-out-as-pochettino-names-youthful-squad"
+  ]
+ },
+ {
+  "event_id": 2997958,
+  "kickoff": "2026-10-03T10:00:00+00:00",
+  "date": "2026-10-03",
+  "league": "JPN",
+  "home": "Kashiwa Reysol",
+  "away": "Gamba Osaka",
+  "home_raw": "Kaşiva Reysol",
+  "away_raw": "Qamba Osaka",
+  "p_home": 0.5406807391682152,
+  "p_draw": 0.22736345367822147,
+  "p_away": 0.2319558071535633,
+  "p_over": 0.5617994731280243,
+  "p_btts": 0.5492430521403152,
+  "s": 0.0,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Кубок Лиги, матч стадии плей-офф (возможно, двухматчевое противостояние). Подтверждённых новостей о составах нет.",
+  "factors": [],
+  "sources": [
+   "https://www.gamba-osaka.net/english/news/index/no/20958/",
+   "https://www.jleague.jp/en/match/leaguecup/2026/100308/"
+  ]
+ },
+ {
+  "event_id": 2996949,
+  "kickoff": "2026-10-03T11:30:00+00:00",
+  "date": "2026-10-03",
+  "league": "E3",
+  "home": "Chesterfield",
+  "away": "Tranmere",
+  "home_raw": "FK Çesterfild",
+  "away_raw": "Tranmere Rovers",
+  "p_home": 0.5901133479439518,
+  "p_draw": 0.22585958200561465,
+  "p_away": 0.1840270700504335,
+  "p_over": 0.5442654980768123,
+  "p_btts": 0.5210418845867888,
+  "s": 0.0,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Новых травм нет ни у Честерфилда, ни у Транмира; обе команды, скорее всего, выйдут привычными составами.",
+  "factors": [],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/chesterfield/preview/chesterfield-vs-tranmere-prediction-team-news-lineups_606071.html"
+  ]
+ },
+ {
+  "event_id": 2996846,
+  "kickoff": "2026-10-03T13:00:00+00:00",
+  "date": "2026-10-03",
+  "league": "UNL",
+  "home": "Finland",
+  "away": "Albania",
+  "home_raw": "Finlandiya",
+  "away_raw": "Albaniya",
+  "p_home": 0.35116237230971564,
+  "p_draw": 0.30999637899375104,
+  "p_away": 0.3388412486965332,
+  "p_over": 0.323252484410784,
+  "p_btts": 0.39594477521162225,
+  "s": 0.7999999999999999,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У Албании много отсутствующих (в т.ч. Лачи и Уздуни), у Финляндии потери меньше — небольшой плюс хозяевам.",
+  "factors": [
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "У Албании нет нескольких игроков: Лачи (бедро), Чаке, Уздуни, Аеты, Шеху, вратарь Стракоша",
+    "impact": -2,
+    "certainty": 0.6
+   },
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "У Финляндии под вопросом вратарь Йоронен и Скюття",
+    "impact": -1,
+    "certainty": 0.4
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/finland/uefa-nations-league/preview/finland-vs-albania-prediction-team-news-lineups_606070.html",
+   "https://tips.gg/article/finland-vs-albania-predicted-lineups-team-news-2026/"
+  ]
+ },
+ {
+  "event_id": 2999032,
+  "kickoff": "2026-10-03T14:00:00+00:00",
+  "date": "2026-10-03",
+  "league": "SC3",
+  "home": "Dumbarton",
+  "away": "Forfar",
+  "home_raw": "Dumbarton FC",
+  "away_raw": "Forfar Atletik FC",
+  "p_home": 0.3884664299070066,
+  "p_draw": 0.2590397715607198,
+  "p_away": 0.3524937985322738,
+  "p_over": 0.43615824787383534,
+  "p_btts": 0.475235274392624,
+  "s": 0.0,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Свежих новостей о составах Думбартона и Форфара не найдено.",
+  "factors": [],
+  "sources": [
+   "https://forfarathletic.co.uk/item/6908-dumbarton-v-forfar-athletic-preview"
+  ]
+ },
+ {
+  "event_id": 3000902,
+  "kickoff": "2026-10-03T15:55:00+00:00",
+  "date": "2026-10-03",
+  "league": "INT",
+  "home": "Saudi Arabia",
+  "away": "Qatar",
+  "home_raw": "Səudiyyə Ərəbistanı",
+  "away_raw": "Qətər",
+  "p_home": 0.6697535069764443,
+  "p_draw": 0.22018647294021979,
+  "p_away": 0.11006002008333586,
+  "p_over": 0.44079075532738743,
+  "p_btts": 0.4433325703727784,
+  "s": -1.1,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Полуфинал Кубка Залива. У Саудовской Аравии кадровый кризис (4 травмированных, включая основного вратаря); у Катара под вопросом Афиф и Альмоэз Али.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "У Саудовской Аравии выбыли 4 игрока (вратарь Аль-Акиди, Аль-Хаджи, Кадеш, Хаусави), под вопросом защитник Тамбакти",
+    "impact": -2,
+    "certainty": 0.75
+   },
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "У Катара под вопросом лидеры атаки Афиф и Альмоэз Али",
+    "impact": -1,
+    "certainty": 0.4
+   }
+  ],
+  "sources": [
+   "https://africasoccer.com/saudi-arabia-lose-fourth-player-to-injury-before-crucial-qatar-semi-final/",
+   "https://www.goal.com/en/news/lopetegui-challenges-saudi-arabia-and-raises-questions-over-akram-afif-and-almoez-ali/blt0ac9246c341f36ab"
+  ]
+ },
+ {
+  "event_id": 2996861,
+  "kickoff": "2026-10-03T16:00:00+00:00",
+  "date": "2026-10-03",
+  "league": "UNL",
+  "home": "Croatia",
+  "away": "England",
+  "home_raw": "Xorvatiya",
+  "away_raw": "İngiltərə",
+  "p_home": 0.21023248721857185,
+  "p_draw": 0.27582407415326926,
+  "p_away": 0.5139434386281592,
+  "p_over": 0.5850397151199577,
+  "p_btts": 0.6082143618227391,
+  "s": 0.0,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У Англии много травмированных (Райс, Палмер, Мейну и др.), но Кейн и Беллингем играют; у Хорватии нет двух защитников.",
+  "factors": [
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "У Англии нет Палмера, Рэшфорда, Райса, Мейну, Ливраменто, О'Райли, Консы",
+    "impact": -2,
+    "certainty": 0.7
+   },
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "У Хорватии нет защитников Эрлича и Юрановича",
+    "impact": -1,
+    "certainty": 0.7
+   },
+   {
+    "team": "away",
+    "kind": "return",
+    "description": "Беллингем возвращается в старт, Кейн готов играть",
+    "impact": 1,
+    "certainty": 0.7
+   }
+  ],
+  "sources": [
+   "https://www.football365.com/match-preview/croatia-v-england-prediction-preview",
+   "https://www.squawka.com/en/news/england-vs-croatia-team-news-predicted-lineups/"
+  ]
+ },
+ {
+  "event_id": 2996859,
+  "kickoff": "2026-10-03T16:00:00+00:00",
+  "date": "2026-10-03",
+  "league": "UNL",
+  "home": "Iceland",
+  "away": "Bulgaria",
+  "home_raw": "İslandiya",
+  "away_raw": "Bolqarıstan",
+  "p_home": 0.6553063075436959,
+  "p_draw": 0.22743172802992337,
+  "p_away": 0.1172619644263806,
+  "p_over": 0.523436299071062,
+  "p_btts": 0.5213474111962316,
+  "s": 1.7000000000000002,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Болгария без главного тренера (отставка на неделе) и без нескольких основных игроков; у Исландии под вопросом звезда Гудмундссон.",
+  "factors": [
+   {
+    "team": "away",
+    "kind": "coach",
+    "description": "Тренер Болгарии Димитров ушёл в отставку на этой неделе, команду ведёт временный Рибарски",
+    "impact": -1,
+    "certainty": 0.8
+   },
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "У Болгарии нет Груева, Крыстева, Шопова",
+    "impact": -2,
+    "certainty": 0.7
+   },
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "У Исландии под вопросом Альберт Гудмундссон (плечо) и Тордарсон",
+    "impact": -1,
+    "certainty": 0.5
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/iceland/uefa-nations-league/preview/iceland-vs-bulgaria-prediction-team-news-lineups_606097.html"
+  ]
+ },
+ {
+  "event_id": 2990556,
+  "kickoff": "2026-10-03T17:45:00+00:00",
+  "date": "2026-10-03",
+  "league": "ARG",
+  "home": "Defensa y Justicia",
+  "away": "San Lorenzo",
+  "home_raw": "Defensa və Xustisiya",
+  "away_raw": "San-Lorenso",
+  "p_home": 0.40254155608514014,
+  "p_draw": 0.3249276623094288,
+  "p_away": 0.27253078160543104,
+  "p_over": 0.29851347188850474,
+  "p_btts": 0.36914080319061815,
+  "s": 0.7000000000000001,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У Сан-Лоренсо много травмированных и дисквалифицированный Инсаурральде; у Дефенсы потерь меньше.",
+  "factors": [
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "У Сан-Лоренсо длинный лазарет: Эрнандес, Черутти, Барриос, Эррера, Рио, Абрего, Бланко; Инсаурральде дисквалифицирован",
+    "impact": -2,
+    "certainty": 0.65
+   },
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "У Дефенсы нет Молинаса и Соуто",
+    "impact": -1,
+    "certainty": 0.6
+   }
+  ],
+  "sources": [
+   "https://bolavip.com/ar/futbolargentino/alineaciones-de-defensa-y-justicia-y-san-lorenzo-por-la-liga-profesional-formaciones-probables",
+   "https://www.vavel.com/ar/futbol-argentino/2026/10/02/san-lorenzo/1273749-san-lorenzo-visita-a-defensa-y-justicia-en-busca-de-una-victoria-clave-por-la-fecha-11-del-torneo-clausura.html"
+  ]
+ },
+ {
+  "event_id": 3000925,
+  "kickoff": "2026-10-03T18:30:00+00:00",
+  "date": "2026-10-03",
+  "league": "INT",
+  "home": "United Arab Emirates",
+  "away": "Oman",
+  "home_raw": "BƏƏ",
+  "away_raw": "Oman",
+  "p_home": 0.585296631138642,
+  "p_draw": 0.25909157643809166,
+  "p_away": 0.15561179242326642,
+  "p_over": 0.3681757728808637,
+  "p_btts": 0.4019869139084621,
+  "s": 0.0,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Полуфинал Кубка Залива на нейтральном поле в Джидде; заметных кадровых новостей нет.",
+  "factors": [],
+  "sources": [
+   "https://www.omanobserver.om/article/1197075/sports/oman-to-face-uae-in-gulf-cup-27-semi-final",
+   "https://thesportsencounter.com/2026/10/01/gulf-cup-27-semifinals-saudi-arabia-qatar-uae-oman-preview/"
+  ]
+ },
+ {
+  "event_id": 2996852,
+  "kickoff": "2026-10-03T18:45:00+00:00",
+  "date": "2026-10-03",
+  "league": "UNL",
+  "home": "Spain",
+  "away": "Czech Republic",
+  "home_raw": "İspaniya",
+  "away_raw": "Çexiya",
+  "p_home": 0.950214668492613,
+  "p_draw": 0.040239844113981627,
+  "p_away": 0.009545487393405275,
+  "p_over": 0.7656461846541582,
+  "p_btts": 0.5041569733516021,
+  "s": 1.2999999999999998,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Испания почти в полном составе; у Чехии дисквалифицирован Шульц.",
+  "factors": [
+   {
+    "team": "away",
+    "kind": "suspension",
+    "description": "Шульц (Чехия) дисквалифицирован за красную карточку",
+    "impact": -1,
+    "certainty": 0.7
+   },
+   {
+    "team": "home",
+    "kind": "return",
+    "description": "У Испании возвращаются Родри, Ольмо, Фермин Лопес, Хёйсен; без Гави",
+    "impact": 1,
+    "certainty": 0.6
+   }
+  ],
+  "sources": [
+   "https://www.goal.com/en/news/spain-czechia-uefa-nations-league-preview/blt1a30ce7ed5c64fff"
+  ]
+ },
+ {
+  "event_id": 2996850,
+  "kickoff": "2026-10-03T18:45:00+00:00",
+  "date": "2026-10-03",
+  "league": "UNL",
+  "home": "Switzerland",
+  "away": "Slovenia",
+  "home_raw": "İsveçrə",
+  "away_raw": "Sloveniya",
+  "p_home": 0.7934935625832827,
+  "p_draw": 0.14946036568580917,
+  "p_away": 0.0570460717309081,
+  "p_over": 0.4844616948779759,
+  "p_btts": 0.4204063705652929,
+  "s": 0.10000000000000009,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Обе команды без лидеров: у Швейцарии нет Джаки и Эмболо, у Словении — Шешко. Потери примерно уравновешивают друг друга.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "other",
+    "description": "Капитан Джака и нападающий Эмболо не вызваны в сборную Швейцарии",
+    "impact": -2,
+    "certainty": 0.7
+   },
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "Лучший игрок Словении Шешко пропускает сбор (голень)",
+    "impact": -2,
+    "certainty": 0.75
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/switzerland/uefa-nations-league/preview/switzerland-vs-slovenia-prediction-team-news-lineups_606081.html"
+  ]
+ },
+ {
+  "event_id": 2995478,
+  "kickoff": "2026-10-03T18:45:00+00:00",
+  "date": "2026-10-03",
+  "league": "UNL",
+  "home": "North Macedonia",
+  "away": "Scotland",
+  "home_raw": "Şimali Makedoniya",
+  "away_raw": "Şotlandiya",
+  "p_home": 0.26202441544364435,
+  "p_draw": 0.2964727764217619,
+  "p_away": 0.4415028081345936,
+  "p_over": 0.41814095474065294,
+  "p_btts": 0.4864089913359029,
+  "s": 2.1499999999999995,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Шотландия сильно ослаблена: нет Мактоминея и ещё нескольких основных, дисквалифицирован Хендри. У Македонии нет Алиоски.",
+  "factors": [
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "У Шотландии нет Мактоминея, Тирни, Маклина, Шенкленда, Адамса",
+    "impact": -3,
+    "certainty": 0.7
+   },
+   {
+    "team": "away",
+    "kind": "suspension",
+    "description": "Защитник Шотландии Хендри дисквалифицирован",
+    "impact": -1,
+    "certainty": 0.85
+   },
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "У Северной Македонии нет Алиоски и Николова",
+    "impact": -1,
+    "certainty": 0.8
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/macedonia/uefa-nations-league/preview/n-macedonia-vs-scotland-prediction-team-news-lineups_606086.html"
   ]
  }
 ]

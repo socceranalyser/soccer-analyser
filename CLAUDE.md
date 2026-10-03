@@ -56,6 +56,8 @@ soccer/
                  Claude Code в сессии: `python scripts/news_free.py todo` → WebSearch по каждому
                  матчу → data/news_answer.json (схема TOOL) → `python scripts/news_free.py submit`
                  → commit data/state/news*.  Делать в начале каждой сессии (до матчей дня).
+                 Автоматически: задача приложения Claude «soccer-daily-news» (01:02 по часам ПК =
+                 ~12:00 Баку; ПК включён и приложение открыто), с 2026-10-03.
   national.py    сборные (martj42): данные, важность турнира, NationalElo, DC для сборных
   models/
     dixon_coles.py  DC: затухание, гауссов приор (MAP), Лаплас, приор новичков, нейтр. поле, веса

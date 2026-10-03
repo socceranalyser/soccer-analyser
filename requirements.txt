@@ -2,7 +2,7 @@ numpy
 pandas
 scipy
 requests
-streamlit
+streamlit==1.65.0  # pinned: tested version (cloud must not jump to an untested release)
 plotly
 tzdata
 anthropic

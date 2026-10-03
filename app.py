@@ -340,7 +340,7 @@ def match_card(eng: Engine, kind: str, competition: str, home: str, away: str,
 
 def _league_of(eng: Engine, key, team) -> str | None:
     """Domestic league of a club given its 'country|team' key (for form tables)."""
-    if not key or key.startswith("?"):
+    if not isinstance(key, str) or not key or key.startswith("?"):  # national teams: NaN key
         return None
     country, name = key.split("|", 1)
     recent = eng.matches[eng.matches["season"] >= eng.matches["season"].max() - 1]
@@ -1108,17 +1108,16 @@ def render_news():
 
 
 def render_suggestions(df: pd.DataFrame):
-    """Three ready-made coupons (safe / balanced / bold) from upcoming matches."""
+    """Ready-made coupons (1, 2 and 3 matches) from upcoming matches."""
     from soccer.coupons import suggest
     upcoming = df[df["kickoff"] > pd.Timestamp.now(tz="UTC")]
     st.markdown("### 🎯 Готовые купоны")
     c0 = st.columns([3, 2])
     c0[0].radio("Как отбирать", ["Мой анализ (рекомендую)", "Только модель", "Только букмекер"],
                 horizontal=True, key="chance_source",
-                help="Мой анализ: взвешиваю модель (сила команд, форма, травмы, история) и рынок; "
-                     "в купон попадают только исходы, которые уверенно подтверждает модель И "
-                     "не оспаривает рынок. По истории при таком согласии на 75–85% прогноз "
-                     "сбывался в 80% случаев, при 85%+ — в 92%.")
+                help="Мой анализ: в купон попадают только исходы, которые уверенно подтверждают и "
+                     "моя модель (сила команд, xG, травмы, новости), и рынок. Шанс указан честный: "
+                     "на истории 2023–25 обещанные проценты совпали с реальностью.")
     c0[1].toggle("Показывать мнение букмекера для сравнения", value=True, key="show_book")
     source = {"Мой анализ (рекомендую)": "combined", "Только модель": "model",
               "Только букмекер": "market"}[st.session_state.get("chance_source",
@@ -1148,6 +1147,11 @@ def render_suggestions(df: pd.DataFrame):
             c[0].metric("Общий коэф.", f"{cp['total_odds']:.2f}")
             c[1].metric("Шанс купона", pct(cp["prob"]), _in_ten(cp["prob"]) + " раз",
                         delta_color="off")
+            from soccer.coupons import HISTORY
+            h = HISTORY.get(cp["style"])
+            if h:
+                st.caption(f"📜 Такие купоны в 2023–25: сбылись в {h['hit']:.0%} дней, самая длинная "
+                           f"серия проигрышей — {h['streak']} дн. подряд, итог {h['ret']:+.0%} на ставку.")
             st.caption(f"Ставка {stake:.0f} ₼ → если зайдёт, {stake * cp['total_odds']:.2f} ₼. "
                        f"Если ставить так 100 раз по 1 ₼, вернётся ≈ "
                        f"{(cp['ev'] + 1) * 100:.0f} ₼ (маржа букмекера).")

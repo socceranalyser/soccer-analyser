@@ -1,15 +1,12 @@
 """Ready-made accumulator suggestions from misli.az odds + model probabilities.
 
-Three styles, each with distinct matches where possible:
-  safe      - the most likely outcomes (odds >= 1.20 so the coupon is not all 1.03s)
-  balanced  - likely outcomes (p >= 55%) with the best probability x odds
-  bold      - bigger odds (>= 1.80) where the model sees the most value
-Coupon probability assumes the matches are independent (true for different matches).
+Styles (1, 2 and 3 matches), each with distinct matches where possible; only outcomes that
+both our model (with news) and the market rate highly. Coupon probability assumes the matches
+are independent (true for different matches).
 
-Probabilities: the bookmaker's (margin removed) sharpened by MARKET_POWER. A backtest on
-47k league matches (scripts/tune_market_blend.py) gave the model a weight of ~0 next to
-closing odds: market 1.0015 -> pooled 1.0011 log loss, model alone 1.0194. So the coupon
-chance comes from the market; the model is shown as a second opinion only.
+Chance = the bookmaker's margin-free probability (MARKET_POWER): next to the odds our model
+adds no accuracy (scripts/tune_market_blend.py), it acts as a filter instead. History of
+each style on 2023-25 with real odds: HISTORY (scripts/backtest_coupons.py).
 """
 from __future__ import annotations
 
@@ -21,7 +18,10 @@ from .misli import MARKET_LABELS
 ODDS_COLS = ["o1", "ox", "o2", "o1x", "o12", "ox2", "o_over", "o_under", "o_btts_yes",
              "o_btts_no"]
 
-MARKET_POWER = 1.10  # fitted b in p ∝ market^b (model weight ~0)
+# 1.10 fits ALL outcomes best, but for the favourites a coupon picks it overstated the chance
+# (scripts/backtest_coupons.py, 2023-25: promised 77.7% / came true 75.0%); with 1.0 the
+# promise matches reality (75.8% / 75.8%).
+MARKET_POWER = 1.0
 GROUPS = [("o1", "ox", "o2"), ("o_over", "o_under"), ("o_btts_yes", "o_btts_no")]
 
 
@@ -46,13 +46,17 @@ def market_probs(r) -> dict:
 STYLES = {
     "single": {"title": "💎 Ставка дня — одна самая надёжная игра", "size": 1, "min_odds": 1.25,
                "min_p": 0.0, "agree_min": 0.75, "score": lambda p, o: p},
-    "safe": {"title": "🛡️ Купон дня — максимально надёжный", "size": 3, "min_odds": 1.20,
+    "double": {"title": "✌️ Двойной — две надёжные игры", "size": 2, "min_odds": 1.25,
+               "min_p": 0.0, "agree_min": 0.72, "score": lambda p, o: p},
+    "safe": {"title": "🛡️ Тройной — три надёжные игры", "size": 3, "min_odds": 1.20,
              "min_p": 0.0, "agree_min": 0.70, "score": lambda p, o: p},
-    "balanced": {"title": "⚖️ Сбалансированный", "size": 4, "min_odds": 1.40, "min_p": 0.55,
-                 "agree_min": 0.55, "score": lambda p, o: p * o},
-    "bold": {"title": "🚀 Смелый — высокий коэффициент", "size": 3, "min_odds": 1.90,
-             "min_p": 0.35, "agree_min": 0.40, "score": lambda p, o: p * o},
 }
+# How such coupons did on 2023-25 league matches with real odds (scripts/backtest_coupons.py).
+# 4-match "balanced" and "bold" coupons were dropped: they came true 13.6% / 11.4% of days with
+# losing streaks of 33 / 39 days. No coupon beats the bookmaker's margin in the long run.
+HISTORY = {"single": {"hit": 0.758, "streak": 3, "ret": -0.053},
+           "double": {"hit": 0.554, "streak": 5, "ret": -0.110},
+           "safe": {"hit": 0.469, "streak": 5, "ret": -0.091}}
 
 
 def _label(col: str, line) -> str:
@@ -119,38 +123,10 @@ def _why(r) -> str:
     return f"{lead} (модель {pm:.0%}, рынок {pq:.0%})" + (f" · 📰 {news}" if news else "")
 
 
-def blend_weights() -> dict:
-    """Model/bookmaker pooling weights fitted by scripts/tune_open_blend.py (model weight is
-    clipped at 0: a negative weight would mean 'bet against our own model')."""
-    import json
-    from .config import DATA_DIR
-    try:
-        w = json.loads((DATA_DIR / "blend_weights.json").read_text())
-    except (OSError, ValueError):
-        w = {"x12": [0.0, 1.10], "ou": [0.0, 1.15]}
-    return {k: (max(float(v[0]), 0.0), float(v[1])) for k, v in w.items() if k in ("x12", "ou")}
-
-
-def _combine(c: pd.DataFrame) -> pd.DataFrame:
-    """Pooled chance p ∝ model^a · market^b, renormalised within each market group."""
-    w = blend_weights()
-    groups = {"o1": "x12", "ox": "x12", "o2": "x12", "o1x": "x12", "o12": "x12", "ox2": "x12",
-              "o_over": "ou", "o_under": "ou", "o_btts_yes": "ou", "o_btts_no": "ou"}
-    a = c["market"].map(lambda m: w[groups[m]][0])
-    b = c["market"].map(lambda m: w[groups[m]][1])
-    pm = c["p_model"].astype(float).clip(1e-6, 1 - 1e-6)
-    pq = c["p_market"].astype(float).clip(1e-6, 1 - 1e-6)
-    # binary pooling of "this outcome" vs "not this outcome" (works for 1X2, double chance,
-    # totals and BTTS alike)
-    lo = a * np.log(pm) + b * np.log(pq)
-    lu = a * np.log(1 - pm) + b * np.log(1 - pq)
-    return c.assign(p=1 / (1 + np.exp(lu - lo)))
-
-
 def suggest(events: pd.DataFrame, source: str = "combined") -> list[dict]:
-    """Safe, balanced and bold coupons, using different matches where possible.
+    """Single, double and treble coupons, using different matches where possible.
 
-    source="combined" (default): model and bookmaker pooled with backtest-fitted weights;
+    source="combined" (default): market chance, confirmed by our model (agree_min);
     source="model": our model alone; source="market": bookmaker's margin-free odds alone.
     """
     try:  # today's news analysis corrects the model and vetoes unpredictable matches
@@ -164,11 +140,11 @@ def suggest(events: pd.DataFrame, source: str = "combined") -> list[dict]:
     cands = cands.assign(p_market=cands["p"])
     if source == "model":
         cands = cands[cands["p_model"].notna()].assign(p=lambda d: d["p_model"].astype(float))
-    elif source == "combined":
-        cands = _combine(cands[cands["p_model"].notna()])
+    elif source == "combined":  # chance = honest market; our model (and news) must confirm it
+        cands = cands[cands["p_model"].notna()]
     agree = source == "combined"
     out, used = [], set()
-    for style in ("single", "safe", "balanced", "bold"):
+    for style in ("single", "double", "safe"):
         cp = build(cands, style, frozenset(used), agree) or build(cands, style, agree=agree)
         if cp:
             out.append(cp)

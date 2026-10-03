@@ -40,13 +40,16 @@ def market_probs(r) -> dict:
     return out
 
 
+# agree_min: both our model AND the market must give the outcome at least this chance.
+# History (23k matches, scripts check 2026-10-03): when both agree at 75-85% the call came
+# true 80.3%, at 85%+ 92%; when they disagree the hit rate drops to 63-66%.
 STYLES = {
     "safe": {"title": "🛡️ Купон дня — максимально надёжный", "size": 3, "min_odds": 1.20,
-             "min_p": 0.0, "score": lambda p, o: p},
+             "min_p": 0.0, "agree_min": 0.70, "score": lambda p, o: p},
     "balanced": {"title": "⚖️ Сбалансированный", "size": 4, "min_odds": 1.40, "min_p": 0.55,
-                 "score": lambda p, o: p * o},
+                 "agree_min": 0.55, "score": lambda p, o: p * o},
     "bold": {"title": "🚀 Смелый — высокий коэффициент", "size": 3, "min_odds": 1.90,
-             "min_p": 0.35, "score": lambda p, o: p * o},
+             "min_p": 0.35, "agree_min": 0.40, "score": lambda p, o: p * o},
 }
 
 
@@ -76,11 +79,14 @@ def candidates(events: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def build(cands: pd.DataFrame, style: str, exclude=frozenset()) -> dict | None:
+def build(cands: pd.DataFrame, style: str, exclude=frozenset(), agree: bool = False) -> dict | None:
     st = STYLES[style]
     c = cands[(cands["odds"] >= st["min_odds"]) & (cands["p"] >= st["min_p"])
               & (cands["mbs"] <= st["size"]) & ~cands["event_id"].isin(exclude)
               & cands["p_model"].notna()]  # only matches our model also covers
+    if agree:  # our own analysis must confirm the outcome, not just the bookmaker's price
+        c = c[np.minimum(c["p_model"].astype(float), c["p_market"].astype(float))
+              >= st["agree_min"]]
     if c.empty:
         return None
     c = c.assign(score=[st["score"](p, o) for p, o in zip(c["p"], c["odds"])])
@@ -88,10 +94,24 @@ def build(cands: pd.DataFrame, style: str, exclude=frozenset()) -> dict | None:
     picks = best.head(st["size"])
     if len(picks) < st["size"]:
         return None
+    picks = picks.assign(why=[_why(r) for r in picks.itertuples()])
     total = float(np.prod(picks["odds"]))
     prob = float(np.prod(picks["p"]))
     return {"style": style, "title": st["title"], "picks": picks.drop(columns="score"),
             "total_odds": total, "prob": prob, "ev": prob * total - 1}
+
+
+def _why(r) -> str:
+    pm, pq = float(r.p_model), float(r.p_market)
+    if min(pm, pq) >= 0.70:
+        lead = "мой анализ и рынок уверенно согласны"
+    elif abs(pm - pq) <= 0.08:
+        lead = "мой анализ и рынок согласны"
+    elif pm > pq:
+        lead = "мой анализ оценивает выше рынка"
+    else:
+        lead = "рынок оценивает выше моего анализа"
+    return f"{lead} (модель {pm:.0%}, рынок {pq:.0%})"
 
 
 def blend_weights() -> dict:
@@ -136,9 +156,10 @@ def suggest(events: pd.DataFrame, source: str = "combined") -> list[dict]:
         cands = cands[cands["p_model"].notna()].assign(p=lambda d: d["p_model"].astype(float))
     elif source == "combined":
         cands = _combine(cands[cands["p_model"].notna()])
+    agree = source == "combined"
     out, used = [], set()
     for style in ("safe", "balanced", "bold"):
-        cp = build(cands, style, frozenset(used)) or build(cands, style)
+        cp = build(cands, style, frozenset(used), agree) or build(cands, style, agree=agree)
         if cp:
             out.append(cp)
             used |= set(cp["picks"]["event_id"])

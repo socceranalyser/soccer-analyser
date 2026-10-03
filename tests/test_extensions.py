@@ -102,8 +102,10 @@ def test_coupon_suggestions():
     mp = market_probs(df.iloc[1])
     assert mp["o1"] + mp["ox"] + mp["o2"] == pytest.approx(1.0)
     assert mp["o_over"] + mp["o_under"] == pytest.approx(1.0)
-    coupons = suggest(df)
+    coupons = suggest(df, "market")
     assert coupons and coupons[0]["style"] == "safe"
+    # "my analysis": a model at 50% never confirms the outcome -> no confident coupon
+    assert all(cp["style"] != "safe" for cp in suggest(df, "combined"))
     for cp in coupons:
         ids = list(cp["picks"]["event_id"])
         assert len(ids) == len(set(ids))            # one pick per match

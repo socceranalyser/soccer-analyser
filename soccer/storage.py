@@ -90,14 +90,23 @@ def save_results(matches: pd.DataFrame, path=DB_PATH) -> int:
     return len(df)
 
 
+def _backup(on: bool):
+    if on:
+        from .backup import push
+        push()
+
+
 def save_coupon(picks: list[dict], stake: float, total_odds: float, model_prob: float,
-                path=DB_PATH) -> int:
+                path=DB_PATH, created_at: str | None = None, coupon_id: int | None = None,
+                backup: bool = True) -> int:
     with closing(connect(path)) as con, con:
         cur = con.execute(
-            "INSERT INTO coupons (created_at, stake, total_odds, model_prob, picks) "
-            "VALUES (?,?,?,?,?)", (datetime.now().isoformat(timespec="seconds"), stake,
-                                   total_odds, model_prob, json.dumps(picks, default=str)))
-        return int(cur.lastrowid)
+            "INSERT OR REPLACE INTO coupons (id, created_at, stake, total_odds, model_prob, picks) "
+            "VALUES (?,?,?,?,?,?)", (coupon_id, created_at or datetime.now().isoformat(timespec="seconds"),
+                                     stake, total_odds, model_prob, json.dumps(picks, default=str)))
+        new_id = int(cur.lastrowid)
+    _backup(backup)
+    return new_id
 
 
 def load_coupons(path=DB_PATH) -> list[dict]:
@@ -111,6 +120,7 @@ def load_coupons(path=DB_PATH) -> list[dict]:
 def delete_coupon(coupon_id: int, path=DB_PATH) -> None:
     with closing(connect(path)) as con, con:
         con.execute("DELETE FROM coupons WHERE id = ?", (coupon_id,))
+    _backup(True)
 
 
 def prematch_forecasts(dates, path=DB_PATH) -> pd.DataFrame:
@@ -219,6 +229,11 @@ def import_state(state_dir=STATE_DIR, path=DB_PATH) -> dict:
                 f"VALUES ({','.join('?' * len(cols))})",
                 df[cols].astype(object).where(df[cols].notna(), None).itertuples(index=False))
             counts[name] = len(df)
+    try:  # cloud: personal data comes back from the private Telegram backup
+        from .backup import restore
+        counts["backup"] = restore()
+    except Exception:
+        pass
     return counts
 
 
@@ -227,13 +242,14 @@ SCHEMA_DRAFT = """CREATE TABLE IF NOT EXISTS coupon_draft (
     id INTEGER PRIMARY KEY CHECK (id = 1), updated_at TEXT NOT NULL, picks TEXT NOT NULL)"""
 
 
-def save_draft(picks: list[dict], path=DB_PATH) -> None:
+def save_draft(picks: list[dict], path=DB_PATH, backup: bool = True) -> None:
     """The coupon being built, kept across page reloads and restarts."""
     with closing(connect(path)) as con, con:
         con.execute(SCHEMA_DRAFT)
         con.execute("INSERT OR REPLACE INTO coupon_draft VALUES (1, ?, ?)",
                     (datetime.now().isoformat(timespec="seconds"),
                      json.dumps(picks, default=str)))
+    _backup(backup)
 
 
 def load_draft(path=DB_PATH) -> list[dict]:
@@ -256,7 +272,8 @@ def load_favorites(path=DB_PATH) -> set[tuple]:
         return {tuple(r) for r in con.execute("SELECT league, date, home, away FROM favorites")}
 
 
-def set_favorite(league: str, date, home: str, away: str, on: bool, path=DB_PATH) -> None:
+def set_favorite(league: str, date, home: str, away: str, on: bool, path=DB_PATH,
+                 backup: bool = True) -> None:
     key = (league, pd.Timestamp(date).strftime("%Y-%m-%d"), home, away)
     with closing(connect(path)) as con, con:
         con.execute(SCHEMA_FAV)
@@ -265,3 +282,4 @@ def set_favorite(league: str, date, home: str, away: str, on: bool, path=DB_PATH
                         key + (datetime.now().isoformat(timespec="seconds"),))
         else:
             con.execute("DELETE FROM favorites WHERE league=? AND date=? AND home=? AND away=?", key)
+    _backup(backup)

@@ -32,7 +32,16 @@ from .pipeline import LIVE_DC, current_season, current_teams
 from .probability import markets, rescale_to_outcomes, score_matrix
 from .tuned import ELO_PARAMS
 
-ENSEMBLE_DC_WEIGHT = 0.5
+ENSEMBLE_DC_WEIGHT = 0.5      # top-5 leagues (Dixon-Coles learns from xG there)
+ENSEMBLE_DC_WEIGHT_OTHER = 0.5  # other leagues: 0.2/0.35/0.5 tie on bt_all 2023-25 (a seeming
+                                # gain for 0.2 came from national-team rows mixed into the check)
+
+
+def dc_weight(league: str) -> float:
+    from .xg import UNDERSTAT
+    return ENSEMBLE_DC_WEIGHT if league in UNDERSTAT else ENSEMBLE_DC_WEIGHT_OTHER
+
+
 # injuries/suspensions (scripts/test_injuries.py): +0.025 log-odds to the home win per extra
 # player missing for the away side (and vice versa); fitted 2023/24, holdout 2024/25 -0.0016
 INJURY_BETA = 0.025
@@ -208,8 +217,8 @@ class Engine:
             p_dc = markets(m_dc)
             models["Dixon-Coles"] = np.array([p_dc["p_home"], p_dc["p_draw"], p_dc["p_away"]])
             models["Elo"] = self.elo.predict([home], [away], competition)["probs"][0]
-            head = ENSEMBLE_DC_WEIGHT * models["Dixon-Coles"] + \
-                (1 - ENSEMBLE_DC_WEIGHT) * models["Elo"]
+            wdc = dc_weight(competition)
+            head = wdc * models["Dixon-Coles"] + (1 - wdc) * models["Elo"]
             absent = self.absences(competition, home, away, date)
             if absent is not None:  # backtest 2024/25: logloss 0.9860 -> 0.9844
                 d = len(absent["away"]) - len(absent["home"])

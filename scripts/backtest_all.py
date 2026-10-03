@@ -15,11 +15,12 @@ import pandas as pd
 from soccer import storage
 from soccer.backtest import common_matches, euro_walk_forward, walk_forward
 from soccer.data import load_matches
-from soccer.engine import ENSEMBLE_DC_WEIGHT
+from soccer.engine import dc_weight
 from soccer.euro import load_euro
 from soccer.metrics import summary_table
 from soccer.national import load_international, national_walk_forward
-from soccer.tuned import DC_PARAMS, ELO_PARAMS
+from soccer.tuned import DC_PARAMS, ELO_PARAMS, XG_WEIGHT
+from soccer.xg import attach_xg
 
 SEASONS = [2023, 2024, 2025]
 EURO_CODE = {"ЛЧ": "UCL", "ЛЕ": "UEL", "ЛК": "UECL"}
@@ -31,18 +32,19 @@ def ensemble(preds: pd.DataFrame) -> pd.DataFrame:
     el = preds[preds["model"] == "elo"].set_index(KEY)
     both = dc.index.intersection(el.index)
     fin = dc.loc[both].copy()
+    w = both.get_level_values("league").map(dc_weight).to_numpy(float)
     for c in ("p_home", "p_draw", "p_away"):
-        fin[c] = ENSEMBLE_DC_WEIGHT * dc.loc[both, c] + (1 - ENSEMBLE_DC_WEIGHT) * el.loc[both, c]
+        fin[c] = w * dc.loc[both, c].to_numpy() + (1 - w) * el.loc[both, c].to_numpy()
     return fin.reset_index().assign(model="final")
 
 
 def main():
     t0 = time.time()
-    matches = load_matches()
+    matches = attach_xg(load_matches())  # xG only where understat has it (top-5), as in production
     euro = load_euro(matches)
     intl = load_international(since="1960-01-01")
 
-    dom = walk_forward(matches, SEASONS, dc_kwargs=DC_PARAMS, elo_kwargs=ELO_PARAMS,
+    dom = walk_forward(matches, SEASONS, dc_kwargs={**DC_PARAMS, "xg_weight": XG_WEIGHT}, elo_kwargs=ELO_PARAMS,
                        cups=euro, verbose=False)
     dom = pd.concat([dom, ensemble(dom)], ignore_index=True)
     print(f"leagues done [{time.time() - t0:.0f}s]")

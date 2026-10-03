@@ -52,6 +52,10 @@ soccer/
                  data/state/news_log.csv, перефит от 100 матчей. avoid → матч исключён из купонов.
                  Модель 'news' в run live → сравнение «модель / +новости / букмекер» на «Точности».
                  Ключ ANTHROPIC_API_KEY (секрет GitHub / .env); без ключа шаг пропускается.
+                 БЕСПЛАТНЫЙ РЕЖИМ (пользователь пока не платит за API, с 2026-10-03): новости ищет
+                 Claude Code в сессии: `python scripts/news_free.py todo` → WebSearch по каждому
+                 матчу → data/news_answer.json (схема TOOL) → `python scripts/news_free.py submit`
+                 → commit data/state/news*.  Делать в начале каждой сессии (до матчей дня).
   national.py    сборные (martj42): данные, важность турнира, NationalElo, DC для сборных
   models/
     dixon_coles.py  DC: затухание, гауссов приор (MAP), Лаплас, приор новичков, нейтр. поле, веса

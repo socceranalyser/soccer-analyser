@@ -349,3 +349,45 @@ def notable(min_abs: float = 1.0) -> list[dict]:
     now = pd.Timestamp.now(tz="UTC") - pd.Timedelta(hours=2)
     return [n for n in load() if pd.Timestamp(n["kickoff"]) > now
             and (abs(n["s"]) >= min_abs or n["goals_shift"] or n["avoid"])]
+
+
+# ------------------------------------------------------------ free mode (no API key)
+# Claude Code (the user's subscription) does the research instead of the API:
+#   python scripts/news_free.py todo            -> data/news_todo.json (matches + model numbers)
+#   ... Claude Code searches the web and writes data/news_answer.json (TOOL schema: {"matches": [...]})
+#   python scripts/news_free.py submit          -> same maths, news.json, model 'news', Telegram
+TODO_FILE = DATA_DIR / "news_todo.json"
+ANSWER_FILE = DATA_DIR / "news_answer.json"
+TODO_COLS = ["event_id", "kickoff", "competition", "competition_az", "home", "away", "home_raw",
+             "away_raw", "p_o1", "p_ox", "p_o2", "ou_line", "p_o_over", "p_o_btts_yes",
+             "o1", "ox", "o2"]
+
+
+def write_todo(events: pd.DataFrame) -> list[dict]:
+    sel = pick_matches(events)
+    todo = []
+    for i, (_, r) in enumerate(sel.iterrows()):
+        d = {c: (None if pd.isna(r.get(c)) else r.get(c)) for c in TODO_COLS}
+        d["kickoff"] = r["kickoff"].isoformat()
+        d["event_id"] = int(d["event_id"])
+        todo.append({"match_id": f"M{i}", "text": _describe(i, r), "row": d})
+    TODO_FILE.write_text(json.dumps(todo, ensure_ascii=False, indent=1, default=float),
+                         encoding="utf-8")
+    return todo
+
+
+def submit_answer(answer: dict | None = None) -> list[dict]:
+    """Apply the maths to a research answer for the matches in news_todo.json."""
+    todo = {t["match_id"]: t["row"] for t in json.loads(TODO_FILE.read_text(encoding="utf-8"))}
+    answer = answer or json.loads(ANSWER_FILE.read_text(encoding="utf-8"))
+    recs = []
+    for m in answer.get("matches", []):
+        row = todo.get(m.get("match_id"))
+        if row is None:
+            continue
+        r = pd.Series(row)
+        r["kickoff"] = pd.Timestamp(row["kickoff"])
+        recs.append(_record(r, m))
+    if recs:
+        _save(recs)
+    return recs

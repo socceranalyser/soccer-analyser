@@ -9,14 +9,16 @@ headline 1X2 so all numbers shown for a match are consistent.
 """
 from __future__ import annotations
 
+import json
 import time
+from functools import lru_cache
 from dataclasses import dataclass, field
 
 import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
 
-from .config import LEAGUES
+from .config import DATA_DIR, LEAGUES
 from .data import implied_probs, load_matches
 from .euro import EURO_LEAGUE, load_euro
 from .fixtures import (build_schedule, current_cup_matches, fresh_league_results,
@@ -56,6 +58,26 @@ class EloGoals:
     def rates(self, d):
         a0, a1, b0, b1 = self.params
         return np.exp(a0 + a1 * np.asarray(d)), np.exp(b0 - b1 * np.asarray(d))
+
+
+@lru_cache(maxsize=1)
+def _goals_cal() -> dict | None:
+    try:
+        return json.loads((DATA_DIR / "goals_calibration.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def calibrate_goals(m: np.ndarray, league: str) -> np.ndarray:
+    """Platt-calibrated over-2.5 (scripts/tune_goals_calibration.py) applied as a goal tilt of
+    the score matrix; 1X2 unchanged. The raw model was too sure of low-scoring games."""
+    cal = _goals_cal()
+    if cal is None:
+        return m
+    from .probability import goal_tilt, outcome_probs, over_prob
+    p = float(np.clip(over_prob(m), 1e-6, 1 - 1e-6))
+    z = cal["a"] + cal["b"] * np.log(p / (1 - p)) + cal["league"].get(league, 0.0)
+    return goal_tilt(m, 1 / (1 + np.exp(-z)), outcome_probs(m))
 
 
 class Engine:
@@ -189,6 +211,7 @@ class Engine:
                                                               -INJURY_BETA * d])
                 head = np.exp(z - z.max()) / np.exp(z - z.max()).sum()
             m = rescale_to_outcomes(m_dc, head)
+            m = calibrate_goals(m, competition)  # test 2025-26: O/U 0.6832 -> 0.6810
             elo_h, elo_a = self.elo.rating(home, competition), self.elo.rating(away, competition)
             known = home in dc._idx and away in dc._idx
         elif kind == "cup":

@@ -10,6 +10,11 @@ import numpy as np
 import pandas as pd
 
 CLEAR_FAVOURITE = 0.50  # below this a single outcome is a coin-flip -> double chance
+TOSS_UP = 0.58          # totals / BTTS below this are flagged "почти 50/50" (weak lean only)
+
+
+def _toss(p: float) -> str:
+    return " · ⚖️ почти 50/50" if p < TOSS_UP else ""
 
 
 def outcome_call(p, home: str, away: str) -> tuple[str, frozenset, float]:
@@ -67,12 +72,12 @@ def calls_columns(view: pd.DataFrame) -> dict:
             cols["call_total"].append("—")
         else:
             tl, over, tp = total_call(po)
-            cols["call_total"].append(f"{'⬆️' if over else '⬇️'} {tl} · {tp:.0%}")
+            cols["call_total"].append(f"{'⬆️' if over else '⬇️'} {tl} · {tp:.0%}{_toss(tp)}")
         if pd.isna(pb):
             cols["call_btts"].append("—")
         else:
             bl, yes, bp = btts_call(pb)
-            cols["call_btts"].append(f"{'⚽' if yes else '🚫'} {bl} · {bp:.0%}")
+            cols["call_btts"].append(f"{'⚽' if yes else '🚫'} {bl} · {bp:.0%}{_toss(bp)}")
         xg = (r.get("xg_home") or np.nan) + (r.get("xg_away") or np.nan)
         cols["exp_goals"].append(None if pd.isna(xg) else round(float(xg), 1))
         if r["played"] and pd.notna(r["hg"]):

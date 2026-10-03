@@ -145,3 +145,13 @@ def test_miss_reasons():
                                          "q_away": 0.4}), reds=1)
     assert any("Ошиблась только модель" in r for r in only_model)
     assert any("Красная карточка" in r for r in only_model)
+
+
+def test_goal_tilt_hits_target_and_keeps_1x2():
+    from soccer.probability import goal_tilt, outcome_probs, over_prob, btts_prob, score_matrix
+    m = score_matrix(1.1, 0.9, -0.05)
+    p = outcome_probs(m)
+    m2 = goal_tilt(m, 0.55, p)
+    assert abs(over_prob(m2) - 0.55) < 2e-3
+    assert np.allclose(outcome_probs(m2), p, atol=1e-6)
+    assert btts_prob(m2) > btts_prob(m)  # more goals -> both teams score more often

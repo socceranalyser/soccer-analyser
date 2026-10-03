@@ -95,3 +95,30 @@ def markets(m: np.ndarray) -> dict:
         "away_clean_sheet": float(m[0, :].sum()),
         "top_scores": top_scores(m, 10),
     }
+
+
+def goal_tilt(m: np.ndarray, target_over: np.ndarray, target_1x2: np.ndarray,
+              line: float = 2.5, iters: int = 3) -> np.ndarray:
+    """Tilt score matrices towards more/fewer goals, m' ∝ m·exp(t·(i+j)), so that
+    P(total > line) equals `target_over`, keeping the 1X2 probabilities at `target_1x2`.
+    The exponential tilt is the smallest change (in KL divergence) that hits the target;
+    BTTS and exact scores move consistently with it. Works on one matrix or a batch."""
+    m = np.asarray(m, float)
+    single = m.ndim == 2
+    if single:
+        m, target_over, target_1x2 = m[None], np.atleast_1d(target_over), np.atleast_2d(target_1x2)
+    n = m.shape[-1]
+    i, j = np.indices((n, n))
+    tot = (i + j).astype(float)
+    target = np.clip(np.asarray(target_over, float), 1e-4, 1 - 1e-4)
+    out = m
+    for _ in range(iters):
+        lo, hi = np.full(len(m), -2.0), np.full(len(m), 2.0)
+        for _ in range(40):  # bisection: P(over) increases with t
+            t = (lo + hi) / 2
+            w = out * np.exp(t[:, None, None] * tot)
+            w /= w.sum(axis=(-2, -1), keepdims=True)
+            up = over_prob(w, line) < target
+            lo, hi = np.where(up, t, lo), np.where(up, hi, t)
+        out = rescale_to_outcomes(w, np.asarray(target_1x2, float))
+    return out[0] if single else out

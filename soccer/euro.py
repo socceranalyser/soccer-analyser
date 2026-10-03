@@ -116,8 +116,16 @@ def parse_openfootball(text: str, season: int, competition: str) -> pd.DataFrame
             mon = MONTHS[dm.group(1)]
             if dm.group(3):
                 year = int(dm.group(3))
-            elif mon < last_month:
-                year += 1
+            else:
+                # the year comes from the season, not from the order of lines: files list
+                # group A Sep-Dec, then group B from Sep again (a "month went back -> next
+                # year" rule pushed old matches up to 7 years into the future)
+                year = season + 1 if mon <= 6 else season
+                early = re.search(r"qualif|prelim", stage, re.IGNORECASE)
+                if mon == 6 and early:
+                    year = season                      # June qualifiers open the season
+                elif mon in (7, 8) and season == 2019 and not early:
+                    year = season + 1                  # Covid: 2019/20 finished in August 2020
             last_month = mon
             date = pd.Timestamp(year=year, month=mon, day=int(dm.group(2)))
             continue

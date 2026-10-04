@@ -234,7 +234,13 @@ tests/           test_core.py (в т.ч. проверка отсутствия �
 | 2026-10-04 | Уровень голов сезона 2026/27 выше (июль–окт 2.89 гола, ТБ 56% vs ~51%); живые ТБ 64% vs прогноз 52% (69 матчей). Сдвиг ТБ по невязке текущего сезона (пул лиг n0 + лига n1), scripts/test_season_goals*.py | 2023–25: без эффекта (0.0000–0.0003 хуже); 2026 (3 776 матчей): 0.6739 → **0.6729** при n0=n1=1000 | принято 2026-10-05: Engine.season_goal_offsets (in-sample DC → консервативно; средний сдвиг +0.055 логита, макс E1 +0.096) |
 
 ## ОТКРЫТЫЕ ЗАДАЧИ
-4. Live-статистика: livescore отдаёт statistics/soccer/{Eid} (Shon/Shof/Pss/Cos/Att/Rcs), incidents, lineups
+4. [~] (2026-10-05) СБОР ИДЁТ: .github/workflows/live_collect.yml каждые 15 мин → scripts/collect_live.py →
+   ветка 'livedata' (live/live_snapshots_YYYY-MM.csv: misli live odds + минута/счёт/красные/угловые,
+   livescore statistics h_/a_ Shon/Shof/Pss/Cos/Att…). Live-коэф. misli: sportsbook/events/ALL/1/0,
+   рынки группы 4 (4=1X2, 129=ДШ, 14=тотал 1 alt/2 üst, 131=обе) по sportsbook/config → misli.fetch_live_odds,
+   сравнение с inplay.live_suggestion («выгодно» при p≥55% и p·кф−1≥5%). ДАЛЬШЕ: через 200+ завершённых
+   матчей проверить, улучшают ли удары/владение live-модель и откалибрована ли она против live-рынка.
+   Исходно: livescore отдаёт statistics/soccer/{Eid} (Shon/Shof/Pss/Cos/Att/Rcs), incidents, lineups
    (покрытие зависит от турнира). Начать сохранять снимки (минута, счёт, удары в створ, владение) + итог,
    через 200+ матчей проверить, улучшают ли удары/владение live-прогноз; показать статистику в live-блоке.
    Live-коэффициенты misli — найти эндпоинт, сравнивать с «честным кф».

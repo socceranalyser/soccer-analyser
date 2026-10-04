@@ -1,0 +1,42 @@
+name: live-collect
+
+# Every 15 minutes: snapshot of all football matches in play (minute, score, cards, misli.az
+# live odds, livescore statistics) -> branch 'livedata' (keeps the dashboard from redeploying).
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-collect
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: code
+      - uses: actions/checkout@v4
+        with:
+          ref: livedata
+          path: store
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy pandas scipy requests tzdata
+      - run: python code/scripts/collect_live.py --out store/live
+        env:
+          PYTHONPATH: ${{ github.workspace }}/code
+      - name: Save snapshot
+        run: |
+          cd store
+          git config user.name "soccer-analyser-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add live
+          git diff --cached --quiet || (git commit -q -m "live snapshot $(date -u +%FT%H:%M)" && git push -q)

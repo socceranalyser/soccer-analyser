@@ -1504,6 +1504,13 @@ def _status_lines(picks: list[dict]) -> tuple[str, list[str]]:
 def page_my_coupons():
     page_header("🧾 Мои купоны", "Ваши купоны и их результаты — обновляются сами")
     st.caption("Результаты подтягиваются сами (livescore.com + misli.az), обновление раз в 2 минуты.")
+    try:
+        from soccer.backup import status
+        bs = status()
+        if bs:
+            st.caption(f"💾 Резервная копия купонов в вашем Telegram: {bs}.")
+    except Exception:
+        pass
     draft = _coupon()
     if draft:
         st.markdown("### Текущий купон (ещё не сохранён)")

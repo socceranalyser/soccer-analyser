@@ -114,3 +114,18 @@ def restore() -> int:
     for key in data.get("favorites", []):
         storage.set_favorite(*key, on=True, backup=False)
     return len(data.get("coupons", []))
+
+
+def status() -> str | None:
+    """'обновлена 05.10 21:14 (Баку), купонов: 3' for the page, None when the backup is off."""
+    if not enabled():
+        return None
+    import pandas as pd
+    token, chat = _cfg()
+    if not token:
+        return "⚠️ резервная копия выключена: нет настроек Telegram"
+    msg = _pinned(token, chat)
+    if not msg:
+        return "резервной копии пока нет — появится после первого сохранения купона"
+    t = pd.Timestamp(msg.get("edit_date") or msg.get("date"), unit="s", tz="UTC").tz_convert("Asia/Baku")
+    return f"обновлена {t:%d.%m %H:%M} (Баку)"

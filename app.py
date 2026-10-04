@@ -9,7 +9,29 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
-from soccer import storage
+
+def _fresh_soccer_modules():
+    """Streamlit re-runs app.py after an update but keeps the already imported `soccer`
+    package in memory, so new page code could call functions the old modules do not have
+    (ImportError on the cloud after a deploy). When any soccer/*.py changed, drop the old
+    modules and the caches built with them, so everything is imported fresh."""
+    import sys
+    from pathlib import Path
+    root = Path(__file__).resolve().parent / "soccer"
+    stamp = max(p.stat().st_mtime for p in root.rglob("*.py"))
+    old = sys.modules.get("soccer")
+    if old is not None and getattr(old, "_src_stamp", None) != stamp:  # no stamp = loaded by old code
+        for name in [n for n in sys.modules if n == "soccer" or n.startswith("soccer.")]:
+            del sys.modules[name]
+        st.cache_resource.clear()
+        st.cache_data.clear()
+    import soccer
+    soccer._src_stamp = stamp
+
+
+_fresh_soccer_modules()
+
+from soccer import storage  # noqa: E402
 from soccer.backtest import common_matches
 from soccer.config import LEAGUES, season_label
 from soccer.engine import Engine
@@ -697,10 +719,10 @@ def live_panel(day: pd.DataFrame):
 
 @st.cache_data(ttl=20, show_spinner=False)
 def get_live_odds() -> pd.DataFrame:
-    from soccer.misli import fetch_live_odds
     try:
+        from soccer.misli import fetch_live_odds
         return fetch_live_odds()
-    except Exception:
+    except Exception:  # live odds are optional: never break the page
         return pd.DataFrame()
 
 

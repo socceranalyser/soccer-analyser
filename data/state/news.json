@@ -525,5 +525,448 @@
   "sources": [
    "https://www.sportsmole.co.uk/football/macedonia/uefa-nations-league/preview/n-macedonia-vs-scotland-prediction-team-news-lineups_606086.html"
   ]
+ },
+ {
+  "event_id": 2990890,
+  "kickoff": "2026-10-04T17:45:00+00:00",
+  "date": "2026-10-04",
+  "league": "ARG",
+  "home": "Huracan",
+  "away": "Aldosivi",
+  "home_raw": "Hurakan",
+  "away_raw": "Aldosivi",
+  "p_home": 0.575617748530018,
+  "p_draw": 0.2702776272807465,
+  "p_away": 0.15410462418923557,
+  "p_over": 0.33068611018033134,
+  "p_btts": 0.33797787068956386,
+  "s": -0.30000000000000004,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У «Уракана» могут отсутствовать лучший бомбардир и основной вратарь (вызов в сборные), у «Альдосиви» трое травмированных.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "other",
+    "description": "Лучший бомбардир Джорди Кайседо (9 голов) и вратарь Галиндес, по сообщениям, вызваны в сборные",
+    "impact": -2,
+    "certainty": 0.55
+   },
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "Не сыграют защитник Брайтенбрух, Элиас Лопес и Томас Фернандес",
+    "impact": -1,
+    "certainty": 0.8
+   }
+  ],
+  "sources": [
+   "https://www.planetagrandt.com.ar/2026/10/no-juegan-la-fecha-11-del-torneo-clausura-2026.html",
+   "http://www.0223.com.ar/nota/2026-10-3-19-10-0-malas-noticias-para-sanguinetti-la-figura-de-aldosivi-que-se-perdera-el-duelo-con-huracan",
+   "https://www.minutouno.com/deportes/huracan-vs-aldosivi-el-torneo-clausura-2026-horario-formaciones-y-tv-n6329560"
+  ]
+ },
+ {
+  "event_id": 2995967,
+  "kickoff": "2026-10-04T18:45:00+00:00",
+  "date": "2026-10-04",
+  "league": "UNL",
+  "home": "Greece",
+  "away": "Germany",
+  "home_raw": "Yunanıstan",
+  "away_raw": "Almaniya",
+  "p_home": 0.3359445351274052,
+  "p_draw": 0.309297432879372,
+  "p_away": 0.35475803199322303,
+  "p_over": 0.4955507235363249,
+  "p_btts": 0.5612709356529403,
+  "s": 0.10000000000000009,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У обеих команд потери в атаке: у Греции нет Тзолиса и Константелиаса, у Германии — Мусиалы и Хаверца.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "Не сыграют Тзолис (травма в матче с Нидерландами) и Константелиас (разрыв крестообразной связки)",
+    "impact": -2,
+    "certainty": 0.85
+   },
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "Выбыли Мусиала и Хаверц",
+    "impact": -2,
+    "certainty": 0.9
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/germany/uefa-nations-league/preview/greece-vs-germany-prediction-team-news-lineups_606115.html",
+   "https://www.goal.com/en/news/greece-germany-uefa-nations-league-preview/blt15d554dfcf9b4c5c"
+  ]
+ },
+ {
+  "event_id": 2995479,
+  "kickoff": "2026-10-04T18:45:00+00:00",
+  "date": "2026-10-04",
+  "league": "UNL",
+  "home": "Republic of Ireland",
+  "away": "Israel",
+  "home_raw": "İrlandiya",
+  "away_raw": "İsrail",
+  "p_home": 0.6379328699065605,
+  "p_draw": 0.23580779745269279,
+  "p_away": 0.12625933264074674,
+  "p_over": 0.502654801870722,
+  "p_btts": 0.50653265189031,
+  "s": -1.7000000000000002,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Матч пройдёт на нейтральном поле в Сербии, так что у Ирландии нет домашнего преимущества; у обеих по одному дисквалифицированному.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "travel",
+    "description": "Матч «домашний» для Ирландии формально, но играется на нейтральном поле в Сербии (Бачка-Топола) — без преимущества своего поля",
+    "impact": -2,
+    "certainty": 0.85
+   },
+   {
+    "team": "home",
+    "kind": "suspension",
+    "description": "Дисквалифицирован защитник Абанква",
+    "impact": -1,
+    "certainty": 0.9
+   },
+   {
+    "team": "away",
+    "kind": "suspension",
+    "description": "Дисквалифицирован нападающий Абу Фархи",
+    "impact": -1,
+    "certainty": 0.9
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/republic-of-ireland/uefa-nations-league/preview/rep-ireland-vs-israel-prediction-team-news-lineups_606113.html"
+  ]
+ },
+ {
+  "event_id": 2995477,
+  "kickoff": "2026-10-04T18:45:00+00:00",
+  "date": "2026-10-04",
+  "league": "UNL",
+  "home": "Wales",
+  "away": "Denmark",
+  "home_raw": "Uels",
+  "away_raw": "Danimarka",
+  "p_home": 0.2946080138190747,
+  "p_draw": 0.30422915320225125,
+  "p_away": 0.40116283297867394,
+  "p_over": 0.41990721221023464,
+  "p_btts": 0.4827708309734234,
+  "s": -1.6999999999999997,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У Уэльса много травмированных основных игроков, включая Уилсона и Родона; у Дании нет Дамсгора и Доргу.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "Травмированы Гарри Уилсон, Бродхед, Родон, Дарлоу, Лоулор, Колвилл, Айзак Дэвис",
+    "impact": -3,
+    "certainty": 0.85
+   },
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "Не сыграют Дамсгор и Доргу",
+    "impact": -1,
+    "certainty": 0.85
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/wales/uefa-nations-league/preview/wales-vs-denmark-prediction-team-news-lineups_606121.html",
+   "https://www.tribalfootball.com/article/soccer-uefa-nations-league-denmark-dealt-injury-blow-as-damsgaard-set-to-miss-wales-clash-24ac9f61-77bf-4087-adee-acfb84750185"
+  ]
+ },
+ {
+  "event_id": 2998457,
+  "kickoff": "2026-10-05T00:00:00+00:00",
+  "date": "2026-10-05",
+  "league": "INT",
+  "home": "Costa Rica",
+  "away": "Haiti",
+  "home_raw": "Kosta-Rika",
+  "away_raw": "Haiti",
+  "p_home": 0.5694872589743386,
+  "p_draw": 0.2653538253107031,
+  "p_away": 0.16515891571495853,
+  "p_over": 0.5679514851701908,
+  "p_btts": 0.5845978263970251,
+  "s": 0.0,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Существенных новостей о составах нет; Гаити неделю назад обыграла Коста-Рику 2:0.",
+  "factors": [],
+  "sources": [
+   "https://www.clarosports.com/futbol/concacaf-nations-league/costa-rica-vs-haiti-fecha-horario-y-donde-ver-en-vivo-el-partido-de-la-concacaf-nations-league-2026/"
+  ]
+ },
+ {
+  "event_id": 2996862,
+  "kickoff": "2026-10-05T18:45:00+00:00",
+  "date": "2026-10-05",
+  "league": "UNL",
+  "home": "Romania",
+  "away": "Sweden",
+  "home_raw": "Rumıniya",
+  "away_raw": "İsveç",
+  "p_home": 0.24190884089877313,
+  "p_draw": 0.2896943148560773,
+  "p_away": 0.4683968442451497,
+  "p_over": 0.560719854717388,
+  "p_btts": 0.6055431831197869,
+  "s": -0.09999999999999987,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У Румынии дисквалифицированы оба основных центральных защитника, у Швеции нет звёздного нападающего Исака и двух защитников.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "suspension",
+    "description": "Дисквалифицированы центральные защитники Драгуш (красная) и Гица",
+    "impact": -2,
+    "certainty": 0.95
+   },
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "Покинули сборную Исак и Эмиль Хольм, вероятно не сыграет Старфельт",
+    "impact": -2,
+    "certainty": 0.9
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/romania/uefa-nations-league/preview/romania-vs-sweden-prediction-team-news-lineups_606184.html"
+  ]
+ },
+ {
+  "event_id": 2996851,
+  "kickoff": "2026-10-05T18:45:00+00:00",
+  "date": "2026-10-05",
+  "league": "UNL",
+  "home": "Bosnia and Herzegovina",
+  "away": "Poland",
+  "home_raw": "Bosniya və Herseqovina",
+  "away_raw": "Polşa",
+  "p_home": 0.4196833826015316,
+  "p_draw": 0.30585954374735796,
+  "p_away": 0.2744570736511104,
+  "p_over": 0.46257617075689006,
+  "p_btts": 0.5319913340660019,
+  "s": 0.04999999999999993,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У Боснии нет Дедича и уже нет Джеко, у Польши травмированы два вратаря; Левандовский в строю.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "Выбыл защитник Амар Дедич; Джеко завершил карьеру в сборной",
+    "impact": -1,
+    "certainty": 0.8
+   },
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "Травмированы вратари Грабара и Дронговский, а также Бенедычак и Рузга",
+    "impact": -1,
+    "certainty": 0.85
+   }
+  ],
+  "sources": [
+   "https://ratingbet.com/predictions/bosnia-and-herzegovina-vs-poland-prediction-team-news-lineups-expert-analysis/",
+   "https://heavy.com/sports/soccer/poland-vs-bosnia-team-news-probable-lineups-how-to-watch/"
+  ]
+ },
+ {
+  "event_id": 2996854,
+  "kickoff": "2026-10-04T13:00:00+00:00",
+  "date": "2026-10-04",
+  "league": "UNL",
+  "home": "Azerbaijan",
+  "away": "Lithuania",
+  "home_raw": "Azərbaycan",
+  "away_raw": "Litva",
+  "p_home": 0.5138027831536529,
+  "p_draw": 0.28470942393276744,
+  "p_away": 0.20148779291357988,
+  "p_over": 0.35684603362218403,
+  "p_btts": 0.40373140790754947,
+  "s": 0.0,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Важных новостей о составах нет; первая встреча неделю назад закончилась 1:1.",
+  "factors": [],
+  "sources": [
+   "https://azertag.az/xeber/milletler_liqasi_litva_ve_azerbaycan_yigmalarinin_start_heyetleri_achiqlanib-4434429"
+  ]
+ },
+ {
+  "event_id": 2996855,
+  "kickoff": "2026-10-04T16:00:00+00:00",
+  "date": "2026-10-04",
+  "league": "UNL",
+  "home": "Malta",
+  "away": "Andorra",
+  "home_raw": "Malta",
+  "away_raw": "Andorra",
+  "p_home": 0.7237471607726327,
+  "p_draw": 0.191135192733246,
+  "p_away": 0.08511764649412115,
+  "p_over": 0.32091011327658936,
+  "p_btts": 0.2864310096933759,
+  "s": 0.7,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Существенных потерь нет; у Мальты вернулся после травмы Каменцули.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "return",
+    "description": "Вернулся после травмы Райан Каменцули",
+    "impact": 1,
+    "certainty": 0.7
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/malta/uefa-nations-league/preview/malta-vs-andorra-prediction-team-news-lineups_606150.html"
+  ]
+ },
+ {
+  "event_id": 2996845,
+  "kickoff": "2026-10-04T16:00:00+00:00",
+  "date": "2026-10-04",
+  "league": "UNL",
+  "home": "Kosovo",
+  "away": "Austria",
+  "home_raw": "Kosovo",
+  "away_raw": "Avstriya",
+  "p_home": 0.29939903936111334,
+  "p_draw": 0.30508038395007303,
+  "p_away": 0.39552057668881346,
+  "p_over": 0.4824341209152103,
+  "p_btts": 0.5442729303756714,
+  "s": -0.5,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У Косово под вопросом лидер атаки Мурики, у Австрии нет Флоруца и, вероятно, Грегорича.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "Главная звезда Ведат Мурики под вопросом (мышечная травма), Рруджани не сыграет",
+    "impact": -2,
+    "certainty": 0.6
+   },
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "Флоруц дисквалифицирован, Грегорич под вопросом (голеностоп)",
+    "impact": -1,
+    "certainty": 0.7
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/kosovo/uefa-nations-league/preview/kosovo-vs-austria-prediction-team-news-lineups_606110.html"
+  ]
+ },
+ {
+  "event_id": 2996858,
+  "kickoff": "2026-10-04T18:45:00+00:00",
+  "date": "2026-10-04",
+  "league": "UNL",
+  "home": "Portugal",
+  "away": "Norway",
+  "home_raw": "Portuqaliya",
+  "away_raw": "Norveç",
+  "p_home": 0.6373969092736862,
+  "p_draw": 0.23606146079688634,
+  "p_away": 0.12654162992942752,
+  "p_over": 0.6227154778084599,
+  "p_btts": 0.5943704038088228,
+  "s": -0.04999999999999993,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У Португалии нет Роналду (покинул сборную), у Норвегии дисквалифицирован защитник Хеггем; Холанд и Эдегор играют.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "turmoil",
+    "description": "Роналду покинул расположение сборной и не сыграет; Франсишку Консейсау под вопросом",
+    "impact": -1,
+    "certainty": 0.85
+   },
+   {
+    "team": "away",
+    "kind": "suspension",
+    "description": "Хеггем дисквалифицирован, Рейерсон под вопросом",
+    "impact": -1,
+    "certainty": 0.8
+   }
+  ],
+  "sources": [
+   "https://www.goal.com/en/news/portugal-norway-uefa-nations-league-preview/blt0c914ab5e3ec1438"
+  ]
+ },
+ {
+  "event_id": 2996853,
+  "kickoff": "2026-10-04T18:45:00+00:00",
+  "date": "2026-10-04",
+  "league": "UNL",
+  "home": "Netherlands",
+  "away": "Serbia",
+  "home_raw": "Niderland",
+  "away_raw": "Serbiya",
+  "p_home": 0.7908166722902732,
+  "p_draw": 0.1511282901902079,
+  "p_away": 0.05805503751951895,
+  "p_over": 0.636007327291082,
+  "p_btts": 0.5262691100959002,
+  "s": 0.9500000000000001,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У Нидерландов нет Гакпо и Бробби, у Сербии — лучшего нападающего Влаховича; сербы проиграли 5 матчей подряд.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "Не сыграют Гакпо и Бробби",
+    "impact": -1,
+    "certainty": 0.85
+   },
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "Выбыл главный нападающий Влахович",
+    "impact": -2,
+    "certainty": 0.9
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/netherlands/uefa-nations-league/preview/netherlands-vs-serbia-prediction-team-news-lineups_606118.html"
+  ]
  }
 ]

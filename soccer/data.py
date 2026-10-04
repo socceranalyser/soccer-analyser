@@ -47,7 +47,9 @@ STAT_COLS = {
     "HxG": "hxg", "AxG": "axg", "HS": "hs", "AS": "as_", "HST": "hst", "AST": "ast",
     "HC": "hc", "AC": "ac", "HF": "hf", "AF": "af", "HY": "hy", "AY": "ay",
     "HR": "hr", "AR": "ar", "Referee": "referee", "Time": "time",
+    "HTHG": "hthg", "HTAG": "htag",  # half-time score (checks the in-play model)
 }
+CACHE_VERSION = 2  # bump when the parsed columns change -> data/matches.pkl is rebuilt
 
 CURRENT_SEASON_MAX_AGE_H = 6  # re-download the live season after this many hours
 
@@ -216,7 +218,7 @@ def _load_all(refresh: bool) -> pd.DataFrame:
     leagues = list(LEAGUES)
     seasons = all_seasons()
     files = _fetch_all(leagues, seasons, refresh)
-    stamp = sorted((str(p), p.stat().st_mtime) for _, _, p in files)
+    stamp = [("version", CACHE_VERSION)] + sorted((str(p), p.stat().st_mtime) for _, _, p in files)
     if CACHE_PATH.exists():
         try:
             cached = pd.read_pickle(CACHE_PATH)

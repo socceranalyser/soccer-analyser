@@ -183,3 +183,14 @@ def test_openfootball_dates_follow_the_season_not_line_order():
         "▪ Final", "Sat May 30", "  21.00  Ajax (NED) v Chelsea (ENG)  2-1"])
     df = parse_openfootball(text, 2019, "UCL")
     assert list(df["date"].dt.year) == [2019, 2019, 2019, 2020]
+
+
+def test_inplay_model_limits():
+    from soccer.inplay import live_markets, score_matrix_live
+    from soccer.probability import over_prob, score_matrix
+    late = live_markets(score_matrix_live(1.5, 1.1, 89, 1, 0))
+    assert late["o1"] > 0.9 and late["o_under"] > 0.9
+    start = live_markets(score_matrix_live(1.5, 1.1, 0, 0, 0, game_state=0.0))
+    assert abs(start["o_over"] - over_prob(score_matrix(1.5, 1.1))) < 0.01
+    red = live_markets(score_matrix_live(1.5, 1.1, 30, 0, 0, red_h=1))
+    assert red["o1"] < live_markets(score_matrix_live(1.5, 1.1, 30, 0, 0))["o1"]

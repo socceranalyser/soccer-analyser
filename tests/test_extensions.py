@@ -194,3 +194,13 @@ def test_inplay_model_limits():
     assert abs(start["o_over"] - over_prob(score_matrix(1.5, 1.1))) < 0.01
     red = live_markets(score_matrix_live(1.5, 1.1, 30, 0, 0, red_h=1))
     assert red["o1"] < live_markets(score_matrix_live(1.5, 1.1, 30, 0, 0))["o1"]
+
+
+def test_live_suggestion_finds_value_and_respects_closed_odds():
+    from soccer.inplay import live_suggestion
+    # 60', 1:0, strong home side: "1X" ~90%; a generous 1.30 is clear value
+    tip = live_suggestion(1.8, 0.8, 60, 1, 0, odds={"o1x": 1.30, "o2": 1.00})
+    assert "1X @ 1.30" in tip and "выгодно" in tip
+    # bookmaker price below fair -> no value line, falls back to fair odds
+    tip2 = live_suggestion(1.8, 0.8, 60, 1, 0, odds={"o1x": 1.01})
+    assert "выгодно" not in tip2 and "честный кф" in tip2

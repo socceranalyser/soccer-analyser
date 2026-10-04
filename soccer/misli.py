@@ -366,6 +366,58 @@ def fetch_live() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+_live_odds_cache: dict = {}
+
+
+def fetch_live_odds(max_age_s: int = 20) -> pd.DataFrame:
+    """Football matches in play with misli.az LIVE odds (what its live page shows):
+    minute, score, red cards, corners, 1X2, double chance, totals on every offered line
+    (column o_over_<line> / o_under_<line>) and both-teams-to-score."""
+    if _live_odds_cache.get("t", 0) > time.time() - max_age_s:
+        return _live_odds_cache["df"].copy()
+    try:
+        data = _get(f"{API}/events/ALL/1/0") or {}
+    except (requests.RequestException, ValueError, KeyError):
+        data = {}
+    sc = data.get("sc") or {}
+    rows = []
+    for e in data.get("e") or []:
+        if e.get("st") != "SOCCER" or not e.get("l"):
+            continue
+        st = sc.get(str(e["i"])) or {}
+        if st.get("s") not in LIVE_STATUS:
+            continue
+        ht, at = st.get("ht") or {}, st.get("at") or {}
+        row = {"event_id": e["i"], "home_raw": (e.get("ph") or "").strip(),
+               "away_raw": (e.get("pa") or "").strip(),
+               "kickoff": pd.Timestamp(e["d"], unit="ms", tz="UTC"),
+               "status": LIVE_STATUS.get(st.get("s"), ""), "minute": st.get("min"),
+               "hg": ht.get("r"), "ag": at.get("r"), "red_h": ht.get("rc", 0) or 0,
+               "red_a": at.get("rc", 0) or 0, "corners_h": ht.get("c"), "corners_a": at.get("c")}
+        for m in e.get("m") or []:
+            if m.get("s") != 1:  # suspended market
+                continue
+            o = {x["on"]: x.get("od") for x in m.get("o", [])}
+            # live market ids from misli's sportsbook/config (group 4 = in-play):
+            # 4 = 1X2, 129 = double chance, 14 = total goals (1 under, 2 over), 131 = BTTS
+            t, sub = m.get("t"), m.get("st")
+            if t != 4:
+                continue
+            if sub == 4:
+                row.update(o1=o.get(1), ox=o.get(2), o2=o.get(3))
+            elif sub == 129:
+                row.update(o1x=o.get(1), o12=o.get(2), ox2=o.get(3))
+            elif sub == 14 and m.get("ov") is not None:
+                line = float(str(m["ov"]).replace(",", "."))
+                row[f"o_under_{line:g}"], row[f"o_over_{line:g}"] = o.get(1), o.get(2)
+            elif sub == 131:
+                row.update(o_btts_yes=o.get(1), o_btts_no=o.get(2))
+        rows.append(row)
+    df = pd.DataFrame(rows)
+    _live_odds_cache.update(t=time.time(), df=df)
+    return df.copy()
+
+
 def link_live(live: pd.DataFrame, day: pd.DataFrame) -> pd.DataFrame:
     """Attach our fixture (names + pre-match call) to live matches when they are ours."""
     from .euro import _norm

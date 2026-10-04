@@ -667,6 +667,11 @@ def live_panel(day: pd.DataFrame):
     if show.empty:
         st.caption("Матчей из вашего расписания сейчас нет — включите «Все live-матчи».")
         return
+    odds_by_idx = {}
+    lo = get_live_odds()
+    if not lo.empty:
+        lo = link_live(lo, day)
+        odds_by_idx = {o["our_idx"]: o for _, o in lo[lo["our_idx"].notna()].iterrows()}
     rows = []
     for _, r in show.iterrows():
         d = day.loc[r["our_idx"]] if pd.notna(r["our_idx"]) else None
@@ -681,38 +686,33 @@ def live_panel(day: pd.DataFrame):
         rows.append(f"<div class='sa-lrow{' goal' if goal else ''}'><span class='sa-lmin'>{minute}</span>"
                     f"<span class='sa-lteams'>{_h.escape(str(home))} <b>{int(r['hg'])}:{int(r['ag'])}</b> "
                     f"{_h.escape(str(away))}{' ⚽' if goal else ''}{reds}</span>{tip}</div>")
-        lt = live_tip(d, r) if d is not None else ""
+        lt = live_tip(d, r, odds_by_idx.get(r["our_idx"])) if d is not None else ""
         if lt:
             rows.append(f"<div class='sa-lrow sa-live-tip'>{_h.escape(lt)}</div>")
     with st.container(height=min(42 + 30 * len(rows), 260), border=True):
         st.markdown("".join(rows), unsafe_allow_html=True)
 
 
-LIVE_TIP_MIN = 0.72   # show a live bet only when the in-play model gives it at least this
+@st.cache_data(ttl=20, show_spinner=False)
+def get_live_odds() -> pd.DataFrame:
+    from soccer.misli import fetch_live_odds
+    try:
+        return fetch_live_odds()
+    except Exception:
+        return pd.DataFrame()
 
 
-def live_tip(d, r) -> str:
-    """'⚡ live: 1X 86% (честный кф 1.16) · ТМ 2.5 74% (1.35)' from the in-play model
-    (pre-match expected goals + minute + score + red cards; scripts/test_inplay.py)."""
-    from soccer.inplay import live_markets, score_matrix_live
-    from soccer.misli import MARKET_LABELS
+def live_tip(d, r, odds=None) -> str:
+    """In-play suggestion for one of our matches (soccer.inplay.live_suggestion)."""
+    from soccer.inplay import live_suggestion
+    src = odds if odds is not None else r
     lam, mu = d.get("xg_home"), d.get("xg_away")
-    if pd.isna(lam) or pd.isna(mu) or pd.isna(r.get("minute")) or pd.isna(r.get("hg")):
+    vals = (lam, mu, src.get("minute"), src.get("hg"), src.get("ag"))
+    if any(pd.isna(v) for v in vals):
         return ""
-    mk = live_markets(score_matrix_live(float(lam), float(mu), float(r["minute"]), int(r["hg"]),
-                                        int(r["ag"]), int(r.get("red_h") or 0), int(r.get("red_a") or 0)))
-    picks = [(k, p) for k, p in mk.items() if LIVE_TIP_MIN <= p < 0.97]
-    if not picks:
-        return ""
-    # one per market family, the most likely first
-    fam = {"o1": "x", "ox": "x", "o2": "x", "o1x": "x", "o12": "x", "ox2": "x",
-           "o_over": "t", "o_under": "t", "o_btts_yes": "b", "o_btts_no": "b"}
-    best = {}
-    for k, p in sorted(picks, key=lambda kp: kp[1]):
-        best[fam[k]] = (k, p)
-    parts = [f"{MARKET_LABELS[k].format(line='2.5')} {p:.0%} (честный кф {1 / p:.2f})"
-             for k, p in sorted(best.values(), key=lambda kp: -kp[1])[:2]]
-    return "⚡ live сейчас: " + " · ".join(parts)
+    return live_suggestion(float(lam), float(mu), float(vals[2]), int(vals[3]), int(vals[4]),
+                           int(src.get("red_h") or 0), int(src.get("red_a") or 0),
+                           None if odds is None else odds.to_dict())
 
 
 def _calls_columns(view: pd.DataFrame) -> dict:

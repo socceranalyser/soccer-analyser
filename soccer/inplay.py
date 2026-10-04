@@ -56,3 +56,45 @@ def live_markets(m: np.ndarray, line: float = 2.5) -> dict:
             "o1x": float(m[i >= j].sum()), "o12": float(m[i != j].sum()), "ox2": float(m[i <= j].sum()),
             "o_over": float(m[i + j > line].sum()), "o_under": float(m[i + j < line].sum()),
             "o_btts_yes": float(m[1:, 1:].sum()), "o_btts_no": float(1 - m[1:, 1:].sum())}
+
+
+LIVE_TIP_MIN = 0.72    # without odds: show the outcomes the model gives at least this
+LIVE_VALUE_MIN = 0.05  # with misli live odds: "выгодно" when p * odds - 1 >= 5%
+LABELS = {"o1": "П1", "ox": "Х", "o2": "П2", "o1x": "1X", "o12": "12", "ox2": "X2",
+          "o_over": "ТБ 2.5", "o_under": "ТМ 2.5", "o_btts_yes": "Обе забьют — да",
+          "o_btts_no": "Обе забьют — нет"}
+
+
+def live_suggestion(lam, mu, minute, hg, ag, red_h=0, red_a=0, odds: dict | None = None) -> str:
+    """One line for the live panel. With live odds: the best bet whose chance is >= 55% and
+    worth at least 5% more than its fair price; otherwise the most likely outcomes with their
+    fair odds (1/p), so they can be compared with the bookmaker by eye."""
+    m = score_matrix_live(lam, mu, minute, hg, ag, red_h, red_a)
+    mk = live_markets(m)
+    if odds:
+        i, j = np.indices(m.shape)
+        cands = [(LABELS[k], mk[k], float(odds[k])) for k in
+                 ("o1", "ox", "o2", "o1x", "o12", "ox2", "o_btts_yes", "o_btts_no")
+                 if odds.get(k) is not None and np.isfinite(odds[k]) and odds[k] > 1.01]
+        for col in [c for c in odds if str(c).startswith("o_over_")]:
+            line = float(col.split("_")[-1])
+            over = float(m[i + j > line].sum())
+            for name, p, o in ((f"ТБ {line:g}", over, odds.get(col)),
+                               (f"ТМ {line:g}", 1 - over, odds.get(f"o_under_{line:g}"))):
+                if o is not None and np.isfinite(o) and o > 1.01:
+                    cands.append((name, p, float(o)))
+        good = [c for c in cands if 0.55 <= c[1] < 0.98 and c[1] * c[2] - 1 >= LIVE_VALUE_MIN]
+        if good:
+            name, p, o = max(good, key=lambda c: c[1] * c[2])
+            return f"⚡ live: {name} @ {o:.2f} — мой шанс {p:.0%}, выгодно (+{p * o - 1:.0%})"
+    picks = [(k, p) for k, p in mk.items() if LIVE_TIP_MIN <= p < 0.97]
+    if not picks:
+        return "⚡ live: сейчас выгодных ставок не вижу" if odds else ""
+    fam = {"o1": "x", "ox": "x", "o2": "x", "o1x": "x", "o12": "x", "ox2": "x",
+           "o_over": "t", "o_under": "t", "o_btts_yes": "b", "o_btts_no": "b"}
+    best = {}
+    for k, p in sorted(picks, key=lambda kp: kp[1]):
+        best[fam[k]] = (k, p)
+    parts = [f"{LABELS[k]} {p:.0%} (честный кф {1 / p:.2f})"
+             for k, p in sorted(best.values(), key=lambda kp: -kp[1])[:2]]
+    return ("⚡ live (выгодных по misli нет): " if odds else "⚡ live сейчас: ") + " · ".join(parts)

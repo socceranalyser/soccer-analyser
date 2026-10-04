@@ -94,3 +94,21 @@ def fetch_results(dates) -> pd.DataFrame:
 def fetch_live() -> pd.DataFrame:
     rows = [r for r in _events(_get("live/soccer/0?MD=1")) if r["live"]]
     return pd.DataFrame(rows)
+
+
+def match_stats(event_id: str) -> dict | None:
+    """In-match statistics for both teams: {'h': {...}, 'a': {...}} with shots on/off target
+    (Shon/Shof/Shbl), possession (Pss), corners (Cos), attacks (Att), dangerous attacks (Dat).
+    None when livescore has no statistics for this match (common in smaller leagues)."""
+    eid = str(event_id).removeprefix("ls")
+    try:
+        st = (_get(f"statistics/soccer/{eid}") or {}).get("Stat") or []
+    except (requests.RequestException, ValueError):
+        return None
+    st = sorted(st, key=lambda x: x.get("Tnb", 0))[:2]
+    if len(st) < 2:
+        return None
+    out = {side: {k: (int(v) if str(v).lstrip("-").isdigit() else None) for k, v in s.items()}
+           for side, s in zip(("h", "a"), st)}
+    shots = sum((out[s].get(k) or 0) for s in ("h", "a") for k in ("Shon", "Shof", "Shbl"))
+    return out if shots > 0 or (out["h"].get("Pss") or 0) > 0 else None

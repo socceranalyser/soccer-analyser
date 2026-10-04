@@ -98,3 +98,63 @@ def live_suggestion(lam, mu, minute, hg, ag, red_h=0, red_a=0, odds: dict | None
     parts = [f"{LABELS[k]} {p:.0%} (честный кф {1 / p:.2f})"
              for k, p in sorted(best.values(), key=lambda kp: -kp[1])[:2]]
     return ("⚡ live (выгодных по misli нет): " if odds else "⚡ live сейчас: ") + " · ".join(parts)
+
+
+# ---------------------------------------------------------------- reading the match itself
+# Chance quality from in-match statistics: an average shot on target is worth ~0.30 goals, a
+# shot off target / blocked ~0.07 (typical xG values). The pre-match expectation is updated
+# with what the teams actually created, weighted by minutes played (STATS_PRIOR_MIN = how
+# many minutes of evidence count as much as the pre-match forecast).
+# START VALUES: being checked on the snapshots collected by scripts/collect_live.py.
+XG_ON, XG_OFF = 0.30, 0.07
+STATS_PRIOR_MIN = 90.0
+
+
+def created_xg(s: dict) -> float:
+    return XG_ON * (s.get("Shon") or 0) + XG_OFF * ((s.get("Shof") or 0) + (s.get("Shbl") or 0))
+
+
+def stats_adjust(lam: float, mu: float, minute: float, stats: dict | None) -> tuple[float, float, dict]:
+    """Pre-match goal rates updated with the chances created so far (per 90 minutes)."""
+    if not stats or minute < 10:
+        return lam, mu, {}
+    w = minute / (minute + STATS_PRIOR_MIN)
+    xh, xa = created_xg(stats["h"]), created_xg(stats["a"])
+    lam2 = (1 - w) * lam + w * xh * 90 / minute
+    mu2 = (1 - w) * mu + w * xa * 90 / minute
+    return lam2, mu2, {"xh": xh, "xa": xa, "w": w}
+
+
+def describe(minute, hg, ag, stats, red_h, red_a, home, away, info) -> str:
+    """A plain-Russian reading of the match so far."""
+    bits = [f"{int(minute)}', {hg}:{ag}"]
+    if red_h or red_a:
+        bits.append(("у " + home if red_h else "у " + away) + " удаление — в меньшинстве")
+    if stats:
+        h, a = stats["h"], stats["a"]
+        on_h, on_a = h.get("Shon") or 0, a.get("Shon") or 0
+        pss = h.get("Pss")
+        line = f"удары в створ {on_h}:{on_a}"
+        if pss:
+            line += f", владение {pss}% — {100 - pss}%"
+        bits.append(line)
+        xh, xa = info.get("xh", 0), info.get("xa", 0)
+        if xh - xa > 0.6 and hg <= ag:
+            bits.append(f"{home} создаёт больше, чем говорит счёт — их гол вероятнее")
+        elif xa - xh > 0.6 and ag <= hg:
+            bits.append(f"{away} создаёт больше, чем говорит счёт — их гол вероятнее")
+        elif xh + xa < 0.4 * minute / 45:
+            bits.append("моментов мало — игра закрытая")
+        elif xh + xa > 1.2 * minute / 45:
+            bits.append("много моментов — игра открытая")
+    else:
+        bits.append("статистики по матчу нет — учитываю только счёт, время и карточки")
+    return "; ".join(bits)
+
+
+def live_analysis(lam, mu, minute, hg, ag, red_h=0, red_a=0, odds: dict | None = None,
+                  stats: dict | None = None, home: str = "хозяева", away: str = "гости") -> tuple[str, str]:
+    """(reading of the match, suggestion) for the live panel."""
+    lam2, mu2, info = stats_adjust(lam, mu, minute, stats)
+    text = describe(minute, hg, ag, stats, red_h, red_a, home, away, info)
+    return text, live_suggestion(lam2, mu2, minute, hg, ag, red_h, red_a, odds)

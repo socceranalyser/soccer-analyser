@@ -115,3 +115,4 @@
 .sa-lrow .sa-ltip { margin-left: auto; color: #93a3bf; font-size: .8rem; }
 .sa-lrow.goal { background: rgba(34, 197, 94, .15); border-radius: 6px; }
 .sa-lrow.sa-live-tip { color: #fcd34d; font-size: .8rem; padding-left: 46px; border-bottom-style: dashed; }
+.sa-lrow.sa-live-read { color: #a7b4cc; font-size: .8rem; padding-left: 46px; white-space: normal; border-bottom: none; }

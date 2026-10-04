@@ -204,3 +204,14 @@ def test_live_suggestion_finds_value_and_respects_closed_odds():
     # bookmaker price below fair -> no value line, falls back to fair odds
     tip2 = live_suggestion(1.8, 0.8, 60, 1, 0, odds={"o1x": 1.01})
     assert "выгодно" not in tip2 and "честный кф" in tip2
+
+
+def test_live_analysis_reads_pressure():
+    from soccer.inplay import live_analysis, live_markets, score_matrix_live, stats_adjust
+    stats = {"h": {"Shon": 7, "Shof": 6, "Pss": 65}, "a": {"Shon": 0, "Shof": 2, "Pss": 35}}
+    text, tip = live_analysis(1.3, 1.2, 60, 0, 0, stats=stats, home="Arsenal", away="Chelsea")
+    assert "удары в створ 7:0" in text and "Arsenal создаёт больше" in text
+    lam2, mu2, _ = stats_adjust(1.3, 1.2, 60, stats)
+    assert lam2 > 1.3 and mu2 < 1.2  # the pressing side's goal is now more likely
+    assert live_markets(score_matrix_live(lam2, mu2, 60, 0, 0))["o1"] > \
+        live_markets(score_matrix_live(1.3, 1.2, 60, 0, 0))["o1"]

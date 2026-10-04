@@ -686,10 +686,12 @@ def live_panel(day: pd.DataFrame):
         rows.append(f"<div class='sa-lrow{' goal' if goal else ''}'><span class='sa-lmin'>{minute}</span>"
                     f"<span class='sa-lteams'>{_h.escape(str(home))} <b>{int(r['hg'])}:{int(r['ag'])}</b> "
                     f"{_h.escape(str(away))}{' ⚽' if goal else ''}{reds}</span>{tip}</div>")
-        lt = live_tip(d, r, odds_by_idx.get(r["our_idx"])) if d is not None else ""
+        reading, lt = live_tip(d, r, odds_by_idx.get(r["our_idx"])) if d is not None else ("", "")
+        if reading:
+            rows.append(f"<div class='sa-lrow sa-live-read'>🔎 {_h.escape(reading)}</div>")
         if lt:
             rows.append(f"<div class='sa-lrow sa-live-tip'>{_h.escape(lt)}</div>")
-    with st.container(height=min(42 + 30 * len(rows), 260), border=True):
+    with st.container(height=min(42 + 30 * len(rows), 320), border=True):
         st.markdown("".join(rows), unsafe_allow_html=True)
 
 
@@ -702,17 +704,30 @@ def get_live_odds() -> pd.DataFrame:
         return pd.DataFrame()
 
 
-def live_tip(d, r, odds=None) -> str:
-    """In-play suggestion for one of our matches (soccer.inplay.live_suggestion)."""
-    from soccer.inplay import live_suggestion
+@st.cache_data(ttl=60, show_spinner=False)
+def get_match_stats(event_id: str):
+    from soccer.livescore import match_stats
+    try:
+        return match_stats(event_id)
+    except Exception:
+        return None
+
+
+def live_tip(d, r, odds=None) -> tuple[str, str]:
+    """(reading of the match, live suggestion) for one of our matches: score, time, cards,
+    the chances each side has created (livescore statistics) and misli live odds."""
+    from soccer.inplay import live_analysis
     src = odds if odds is not None else r
     lam, mu = d.get("xg_home"), d.get("xg_away")
     vals = (lam, mu, src.get("minute"), src.get("hg"), src.get("ag"))
     if any(pd.isna(v) for v in vals):
-        return ""
-    return live_suggestion(float(lam), float(mu), float(vals[2]), int(vals[3]), int(vals[4]),
-                           int(src.get("red_h") or 0), int(src.get("red_a") or 0),
-                           None if odds is None else odds.to_dict())
+        return "", ""
+    rid = str(r.get("id", ""))
+    stats = get_match_stats(rid) if rid.startswith("ls") else None
+    return live_analysis(float(lam), float(mu), float(vals[2]), int(vals[3]), int(vals[4]),
+                         int(src.get("red_h") or 0), int(src.get("red_a") or 0),
+                         None if odds is None else odds.to_dict(), stats,
+                         str(d.get("home")), str(d.get("away")))
 
 
 def _calls_columns(view: pd.DataFrame) -> dict:

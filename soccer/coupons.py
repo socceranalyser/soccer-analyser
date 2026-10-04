@@ -43,20 +43,31 @@ def market_probs(r) -> dict:
 # agree_min: both our model AND the market must give the outcome at least this chance.
 # History (23k matches, scripts check 2026-10-03): when both agree at 75-85% the call came
 # true 80.3%, at 85%+ 92%; when they disagree the hit rate drops to 63-66%.
+# A ladder from "almost sure, small odds" to "rare, big odds". score(p, odds, p_model) ranks the
+# outcomes that pass the filters (odds window + both our model AND the market >= agree_min).
+# "value" = our model rates the outcome higher than the bookmaker: on higher odds this is where
+# our own analysis helps (2-match 1.5-2.2: -7.2% vs -11.1% when ranked by plain likelihood).
 STYLES = {
     "single": {"title": "💎 Ставка дня — одна самая надёжная игра", "size": 1, "min_odds": 1.25,
-               "min_p": 0.0, "agree_min": 0.75, "score": lambda p, o: p},
-    "double": {"title": "✌️ Двойной — две надёжные игры", "size": 2, "min_odds": 1.25,
-               "min_p": 0.0, "agree_min": 0.72, "score": lambda p, o: p},
-    "safe": {"title": "🛡️ Тройной — три надёжные игры", "size": 3, "min_odds": 1.20,
-             "min_p": 0.0, "agree_min": 0.70, "score": lambda p, o: p},
+               "max_odds": 99, "min_p": 0.0, "agree_min": 0.75,
+               "score": lambda p, o, pm: p},
+    "double": {"title": "✌️ Двойной — две надёжные игры", "size": 2, "min_odds": 1.30,
+               "max_odds": 1.60, "min_p": 0.0, "agree_min": 0.62,
+               "score": lambda p, o, pm: min(p, pm)},
+    "medium": {"title": "⚖️ Средний — две игры с хорошим коэффициентом", "size": 2,
+               "min_odds": 1.50, "max_odds": 2.20, "min_p": 0.0, "agree_min": 0.50,
+               "score": lambda p, o, pm: pm - p},
+    "big": {"title": "🚀 Крупный — три игры, большой коэффициент", "size": 3, "min_odds": 1.50,
+            "max_odds": 2.20, "min_p": 0.0, "agree_min": 0.50,
+            "score": lambda p, o, pm: pm - p},
 }
-# How such coupons did on 2023-25 league matches with real odds (scripts/backtest_coupons.py).
-# 4-match "balanced" and "bold" coupons were dropped: they came true 13.6% / 11.4% of days with
-# losing streaks of 33 / 39 days. No coupon beats the bookmaker's margin in the long run.
-HISTORY = {"single": {"hit": 0.758, "streak": 3, "ret": -0.053},
-           "double": {"hit": 0.554, "streak": 5, "ret": -0.110},
-           "safe": {"hit": 0.469, "streak": 5, "ret": -0.091}}
+# How such coupons did on 2023-25 league matches with real odds (scripts/backtest_coupons.py):
+# share of days the coupon came true, average total odds, longest losing streak (days), money
+# result per stake. Promised chances matched reality within 1-2 points for every style.
+HISTORY = {"single": {"hit": 0.758, "odds": 1.25, "streak": 3, "ret": -0.053},
+           "double": {"hit": 0.500, "odds": 1.89, "streak": 10, "ret": -0.067},
+           "medium": {"hit": 0.316, "odds": 2.99, "streak": 12, "ret": -0.072},
+           "big": {"hit": 0.170, "odds": 5.16, "streak": 28, "ret": -0.141}}
 
 
 def _label(col: str, line) -> str:
@@ -88,7 +99,8 @@ def candidates(events: pd.DataFrame) -> pd.DataFrame:
 
 def build(cands: pd.DataFrame, style: str, exclude=frozenset(), agree: bool = False) -> dict | None:
     st = STYLES[style]
-    c = cands[(cands["odds"] >= st["min_odds"]) & (cands["p"] >= st["min_p"])
+    c = cands[(cands["odds"] >= st["min_odds"]) & (cands["odds"] <= st["max_odds"])
+              & (cands["p"] >= st["min_p"])
               & (cands["mbs"] <= st["size"]) & ~cands["event_id"].isin(exclude)
               & cands["p_model"].notna()  # only matches our model also covers
               & ~cands["avoid"].astype(bool)]  # news analysis: unpredictable today
@@ -97,7 +109,8 @@ def build(cands: pd.DataFrame, style: str, exclude=frozenset(), agree: bool = Fa
               >= st["agree_min"]]
     if c.empty:
         return None
-    c = c.assign(score=[st["score"](p, o) for p, o in zip(c["p"], c["odds"])])
+    pm = c["p_model"].astype(float).fillna(c["p"]) if "p_model" in c else c["p"]
+    c = c.assign(score=[st["score"](p, o, m) for p, o, m in zip(c["p"], c["odds"], pm)])
     best = c.sort_values("score", ascending=False).drop_duplicates("event_id")
     picks = best.head(st["size"])
     if len(picks) < st["size"]:
@@ -144,7 +157,7 @@ def suggest(events: pd.DataFrame, source: str = "combined") -> list[dict]:
         cands = cands[cands["p_model"].notna()]
     agree = source == "combined"
     out, used = [], set()
-    for style in ("single", "double", "safe"):
+    for style in STYLES:
         cp = build(cands, style, frozenset(used), agree) or build(cands, style, agree=agree)
         if cp:
             out.append(cp)

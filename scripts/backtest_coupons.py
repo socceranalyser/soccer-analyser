@@ -48,11 +48,11 @@ def candidates() -> pd.DataFrame:
 
 def simulate(c: pd.DataFrame, style: str) -> pd.DataFrame:
     st = STYLES[style]
-    c = c[(c.odds >= st["min_odds"]) & (c.p >= st["min_p"])
+    c = c[(c.odds >= st["min_odds"]) & (c.odds <= st["max_odds"]) & (c.p >= st["min_p"])
           & (np.minimum(c.p, c.p_model) >= st["agree_min"])]
     out = []
     for day, g in c.groupby("date"):
-        g = g.assign(score=[st["score"](p, o) for p, o in zip(g.p, g.odds)])
+        g = g.assign(score=[st["score"](p, o, m) for p, o, m in zip(g.p, g.odds, g.p_model)])
         picks = g.sort_values("score", ascending=False).drop_duplicates("match").head(st["size"])
         if len(picks) < st["size"]:
             continue
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8")
     c = candidates()
     print(f"кандидатов: {len(c):,}")
-    for style in ("single", "safe", "balanced", "bold"):
+    for style in STYLES:
         r = simulate(c, style)
         if r.empty:
             continue

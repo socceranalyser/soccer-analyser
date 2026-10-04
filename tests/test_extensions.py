@@ -87,7 +87,7 @@ def test_plain_language_calls():
 
 
 def test_coupon_suggestions():
-    from soccer.coupons import market_probs, suggest
+    from soccer.coupons import STYLES, market_probs, suggest
     rows = []
     for i in range(8):
         f = 1 + i * 0.15  # increasingly even matches
@@ -103,10 +103,11 @@ def test_coupon_suggestions():
     assert mp["o1"] + mp["ox"] + mp["o2"] == pytest.approx(1.0)
     assert mp["o_over"] + mp["o_under"] == pytest.approx(1.0)
     coupons = suggest(df, "market")
-    assert [cp["style"] for cp in coupons] == ["single", "double", "safe"]
+    assert [cp["style"] for cp in coupons][0] == "single"
+    assert {cp["style"] for cp in coupons} <= set(STYLES)
     assert len(coupons[0]["picks"]) == 1 and coupons[0]["picks"]["mbs"].iloc[0] == 1
     # "my analysis": a model at 50% never confirms the outcome -> no confident coupon
-    assert suggest(df, "combined") == []
+    assert not {cp["style"] for cp in suggest(df, "combined")} & {"single", "double"}
     for cp in coupons:
         ids = list(cp["picks"]["event_id"])
         assert len(ids) == len(set(ids))            # one pick per match

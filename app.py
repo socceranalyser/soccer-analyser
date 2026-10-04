@@ -440,28 +440,71 @@ def page_today():
     favs = storage.load_favorites()
     keys = [(r["competition"], pd.Timestamp(r.get("sched_date", r.get("date"))).strftime("%Y-%m-%d"),
              r["home"], r["away"]) for _, r in view.iterrows()]
-    table.insert(0, "⭐", [k in favs for k in keys])
-    cfg["⭐"] = st.column_config.CheckboxColumn("⭐", help="Отметьте — матч появится в «⭐ Мои матчи» "
-                                                "наверху страницы с live-счётом", width="small")
-    edited = st.data_editor(table, hide_index=True, width="stretch", key=f"tbl_{date:%Y%m%d}",
-                            disabled=[c for c in table.columns if c != "⭐"],
-                            height=min(38 * (len(table) + 1), 700), column_config=cfg)
-    changed = [i for i, (old, new_) in enumerate(zip(table["⭐"], edited["⭐"])) if old != new_]
-    for i in changed:
-        storage.set_favorite(*keys[i], on=bool(edited["⭐"].iloc[i]))
-    if changed:
-        st.rerun()
-    labels = ["— выберите матч —"] + [f"{t} · {m}" for t, m in zip(table["Время"], table["Матч"])]
-    pick = st.selectbox("🔍 Выберите матч — анализ, ставки, новости", range(len(labels)),
-                        format_func=lambda i: labels[i], key=f"card_{date:%Y%m%d}")
-    if pick:
-        match_menu(eng, view.iloc[pick - 1])
+    table.insert(0, "⭐", ["⭐" if k in favs else "" for k in keys])
+    cfg["⭐"] = st.column_config.TextColumn("⭐", width="small")
+    st.caption("👆 Нажмите на матч — ниже откроется меню: анализ, история встреч, ставки, новости, ⭐.")
+    event = st.dataframe(table, hide_index=True, width="stretch", on_select="rerun",
+                         selection_mode="single-cell", key=f"tbl_{date:%Y%m%d}",
+                         height=min(38 * (len(table) + 1), 460), column_config=cfg)
+    sel = event.selection if event else None
+    cells = (sel.get("cells") if isinstance(sel, dict) else getattr(sel, "cells", None)) or []
+    rows = [int(cells[0][0])] if cells else []  # a click on any cell (e.g. the team) opens it
+    if rows:
+        match_menu(eng, view.iloc[rows[0]], keys[rows[0]], keys[rows[0]] in favs)
 
 
-def match_menu(eng: Engine, r):
-    """Everything about one match in three tabs: analysis, misli.az bets, news."""
-    st.markdown(f"### {r['home']} — {r['away']}")
-    t_an, t_bet, t_news = st.tabs(["📊 Анализ", "🎟️ Ставки misli.az", "📰 Новости"])
+def match_menu(eng: Engine, r, fav_key=None, is_fav: bool = False):
+    """Everything about one match: analysis, history, misli.az bets, news, favourite star."""
+    with st.container(border=True):
+        h = st.columns([4, 1])
+        h[0].markdown(f"### {r['home']} — {r['away']}")
+        if fav_key is not None and h[1].button("★ Убрать" if is_fav else "⭐ В избранное",
+                                               key=f"fav_{'_'.join(map(str, fav_key))}", width="stretch"):
+            storage.set_favorite(*fav_key, on=not is_fav)
+            st.rerun()
+        _match_tabs(eng, r)
+
+
+def match_history(eng: Engine, r):
+    """Head-to-head meetings of the two teams and each team's latest matches."""
+    src = eng.intl if r["kind"] == "national" else eng.matches
+    pair = src[((src["home"] == r["home"]) & (src["away"] == r["away"]))
+               | ((src["home"] == r["away"]) & (src["away"] == r["home"]))]
+    pair = pair[pair["hg"].notna()].sort_values("date", ascending=False).head(10)
+    st.markdown("**Личные встречи**")
+    if pair.empty:
+        st.caption("Эти команды между собой в нашей базе не встречались.")
+    else:
+        hw = ((pair["home"] == r["home"]) & (pair["hg"] > pair["ag"])) | (
+            (pair["away"] == r["home"]) & (pair["ag"] > pair["hg"]))
+        aw = ((pair["home"] == r["away"]) & (pair["hg"] > pair["ag"])) | (
+            (pair["away"] == r["away"]) & (pair["ag"] > pair["hg"]))
+        st.caption(f"Последние {len(pair)}: {r['home']} выиграл {int(hw.sum())}, ничьих "
+                   f"{int(len(pair) - hw.sum() - aw.sum())}, {r['away']} выиграл {int(aw.sum())}; "
+                   f"в среднем {(pair['hg'] + pair['ag']).mean():.1f} гола за матч.")
+        st.dataframe(pd.DataFrame({
+            "Дата": pair["date"].dt.strftime("%d.%m.%Y"),
+            "Матч": pair["home"] + " — " + pair["away"],
+            "Счёт": [f"{int(a)}:{int(b)}" for a, b in zip(pair["hg"], pair["ag"])]}),
+            hide_index=True, width="stretch")
+    st.markdown("**Последние матчи команд**")
+    lg_home = r["competition"] if r["competition"] in LEAGUES else _league_of(eng, r.get("home_key"), r["home"])
+    lg_away = r["competition"] if r["competition"] in LEAGUES else _league_of(eng, r.get("away_key"), r["away"])
+    fc = st.columns(2)
+    for col, team, lg in zip(fc, (r["home"], r["away"]), (lg_home, lg_away)):
+        form = team_form(eng, r["kind"], team, lg, n=8)
+        col.markdown(f"**{team}**")
+        if form.empty:
+            col.caption("нет данных")
+        else:
+            col.dataframe(form, hide_index=True, width="stretch")
+
+
+def _match_tabs(eng: Engine, r):
+    t_an, t_hist, t_bet, t_news = st.tabs(["📊 Анализ", "📜 История", "🎟️ Ставки misli.az",
+                                           "📰 Новости"])
+    with t_hist:
+        match_history(eng, r)
     with t_an:
         odds = None
         if pd.notna(r.get("odds_h")):
@@ -577,7 +620,7 @@ def favorites_panel(today: pd.Timestamp, built_at):
                     f"{_h.escape(str(r['call_total']).split(' · ⚖️')[0])}</span></div>")
     with st.container(border=True):
         st.markdown(f"**⭐ Мои матчи: {len(fav)}** · обновляется каждые 30 с · "
-                    "убрать — снимите звёздочку в таблице")
+                    "убрать — нажмите на матч в таблице → «★ Убрать»")
         st.markdown("".join(html), unsafe_allow_html=True)
 
 

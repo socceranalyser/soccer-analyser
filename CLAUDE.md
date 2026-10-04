@@ -145,6 +145,10 @@ tests/           test_core.py (в т.ч. проверка отсутствия �
   «Run workflow»: `scripts/cloud_job.py` (import_state → Engine → results → forecasts → Telegram →
   export_state) и коммит `data/state/*` обратно в репозиторий. Секреты Actions:
   TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID (вводит пользователь).
+- **Быстрый холодный старт (2026-10-05):** data/seed/raw_seed.tar.xz (12.5 МБ, прошлые сезоны всех источников,
+  без кэша API-Football; scripts/make_seed.py — пересобирать раз в сезон) распаковывается soccer/seed.ensure_raw
+  при пустой data/raw → старт облака 7–8 мин → ~70 с. app._fresh_soccer_modules перезагружает пакет soccer
+  при изменении кода (иначе после деплоя ImportError из-за старых модулей в памяти).
 - **Дашборд в облаке:** https://soccer-analyser.streamlit.app (Streamlit Community Cloud, деплой
   из main при каждом push). Secrets: `TZ = "Asia/Baku"`, `APP_PASSWORD` (вход по паролю; без него
   — открыт). Диск временный → прогнозы восстанавливаются из `data/state/` (storage.import_state).

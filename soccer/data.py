@@ -217,6 +217,8 @@ def _load_all(refresh: bool) -> pd.DataFrame:
     """Every league; parsed frame cached in data/matches.pkl, rebuilt when raw files change."""
     leagues = list(LEAGUES)
     seasons = all_seasons()
+    from .seed import ensure_raw
+    ensure_raw()  # fresh install: unpack past seasons instead of downloading them
     files = _fetch_all(leagues, seasons, refresh)
     stamp = [("version", CACHE_VERSION)] + sorted((str(p), p.stat().st_mtime) for _, _, p in files)
     if CACHE_PATH.exists():

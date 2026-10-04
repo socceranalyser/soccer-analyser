@@ -205,6 +205,49 @@ class Engine:
                 season_teams=current_teams(self.matches, league))
         return self._dc[league]
 
+    SEASON_GOALS_N0 = 1000  # prior strength (matches) of the pooled and the league offset;
+    SEASON_GOALS_N1 = 1000  # scripts/test_season_goals*.py: 2023-25 ~0, 2026 O/U 0.6739 -> 0.6729
+
+    def season_goal_offsets(self) -> dict:
+        """Logit shift of over-2.5 per league from how this season's finished matches went
+        compared with the model (all leagues pooled + league on top, MAP-shrunk). Seasons
+        differ in scoring level (2026/27 started at 2.89 goals vs ~2.72) and a model fitted on
+        several seasons lags behind; the fit includes these matches, so this is conservative."""
+        if getattr(self, "_season_goals", None) is not None:
+            return self._season_goals
+        from .probability import over_prob
+        cal = _goals_cal() or {"a": 0.0, "b": 1.0, "league": {}}
+        recent = self.matches["date"].max() - pd.Timedelta(days=365)
+        rows = []
+        for lg in LEAGUES:
+            lm = self.matches[self.matches["league"] == lg]
+            if lm.empty:
+                continue
+            cur = lm[(lm["season"] == lm["season"].max()) & (lm["date"] >= recent)]
+            if len(cur) < 20:
+                continue
+            try:
+                dc = self.dc(lg)
+                lam, mu = dc.rates(cur["home"], cur["away"])
+                po = np.clip(over_prob(score_matrix(lam, mu, dc.rho)), 1e-6, 1 - 1e-6)
+            except Exception:
+                continue
+            z = cal["a"] + cal["b"] * np.log(po / (1 - po)) + cal["league"].get(lg, 0.0)
+            rows.append(pd.DataFrame({"league": lg, "p": 1 / (1 + np.exp(-z)),
+                                      "y": ((cur["hg"] + cur["ag"]) > 2.5).to_numpy(float)}))
+        if not rows:
+            self._season_goals = {}
+            return self._season_goals
+        d = pd.concat(rows, ignore_index=True)
+        o0 = (d["y"] - d["p"]).sum() / ((d["p"] * (1 - d["p"])).sum() + self.SEASON_GOALS_N0 / 4)
+        d["q"] = 1 / (1 + np.exp(-(np.log(d["p"] / (1 - d["p"])) + o0)))
+        out = {}
+        for lg, g in d.groupby("league"):
+            o1 = (g["y"] - g["q"]).sum() / ((g["q"] * (1 - g["q"])).sum() + self.SEASON_GOALS_N1 / 4)
+            out[lg] = float(o0 + o1)
+        self._season_goals = out
+        return out
+
     # --------------------------------------------------------------- forecast
     def forecast(self, kind: str, competition: str, home: str, away: str, neutral=False,
                  home_key=None, away_key=None, odds=None, date=None) -> dict:
@@ -227,6 +270,12 @@ class Engine:
                 head = np.exp(z - z.max()) / np.exp(z - z.max()).sum()
             m = rescale_to_outcomes(m_dc, head)
             m = calibrate_goals(m, competition)  # test 2025-26: O/U 0.6832 -> 0.6810
+            off = self.season_goal_offsets().get(competition, 0.0)
+            if abs(off) > 1e-3:  # this season scores more/less than the model expects
+                from .probability import goal_tilt, outcome_probs, over_prob
+                po = float(np.clip(over_prob(m), 1e-6, 1 - 1e-6))
+                m = goal_tilt(m, 1 / (1 + np.exp(-(np.log(po / (1 - po)) + off))),
+                              outcome_probs(m))
             elo_h, elo_a = self.elo.rating(home, competition), self.elo.rating(away, competition)
             known = home in dc._idx and away in dc._idx
         elif kind == "cup":

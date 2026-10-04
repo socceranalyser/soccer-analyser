@@ -452,12 +452,17 @@ def page_today():
     if changed:
         st.rerun()
     labels = ["— выберите матч —"] + [f"{t} · {m}" for t, m in zip(table["Время"], table["Матч"])]
-    pick = st.selectbox("🔍 Подробный разбор матча", range(len(labels)),
+    pick = st.selectbox("🔍 Выберите матч — анализ, ставки, новости", range(len(labels)),
                         format_func=lambda i: labels[i], key=f"card_{date:%Y%m%d}")
-    rows = [pick - 1] if pick else []
-    if rows:
-        r = view.iloc[rows[0]]
-        st.divider()
+    if pick:
+        match_menu(eng, view.iloc[pick - 1])
+
+
+def match_menu(eng: Engine, r):
+    """Everything about one match in three tabs: analysis, misli.az bets, news."""
+    st.markdown(f"### {r['home']} — {r['away']}")
+    t_an, t_bet, t_news = st.tabs(["📊 Анализ", "🎟️ Ставки misli.az", "📰 Новости"])
+    with t_an:
         odds = None
         if pd.notna(r.get("odds_h")):
             odds = np.array([r["odds_h"], r["odds_d"], r["odds_a"]], float)
@@ -465,6 +470,67 @@ def page_today():
         match_card(eng, r["kind"], r["competition"], r["home"], r["away"],
                    bool(r.get("neutral", False)), r.get("home_key"), r.get("away_key"),
                    odds, res, r.get("sched_date", r.get("date")))
+    with t_bet:
+        match_bets(eng, r)
+    with t_news:
+        match_news(r)
+
+
+def match_bets(eng: Engine, r):
+    try:
+        ev = get_misli(eng.built_at, st.session_state.get("misli_token", 0))
+    except Exception:
+        ev = pd.DataFrame()
+    hit = ev[(ev.get("home") == r["home"]) & (ev.get("away") == r["away"])] if len(ev) else ev
+    if hit.empty:
+        st.info("На misli.az ставок на этот матч сейчас нет (или матч уже начался).")
+        return
+    e = hit.iloc[0]
+    if e["kickoff"] <= pd.Timestamp.now(tz="UTC"):
+        st.info("Матч уже начался — ставки до матча закрыты.")
+        return
+    in_coupon = {p["event_id"]: p["market"] for p in _coupon()}
+    st.caption("Шанс — честный (по коэффициентам без маржи); «мой анализ» — оценка модели с учётом "
+               "травм и новостей. ✅ — оба уверены (≥ 60%).")
+    for col in ODDS_COLS:
+        o = e.get(col)
+        if pd.isna(o) or o <= 1:
+            continue
+        pm, pq = e.get(f"p_{col}"), _market_p(e, col)
+        c = st.columns([3, 1, 2, 2, 2])
+        both = pd.notna(pm) and pq is not None and min(pm, pq) >= 0.60
+        c[0].markdown(("✅ " if both else "") + f"**{_market_label(col, e.get('ou_line'))}**")
+        c[1].markdown(f"@ **{o:.2f}**")
+        c[2].caption(f"шанс {pct(pq)}" if pq is not None else "")
+        c[3].caption(f"мой анализ {pct(pm)}" if pd.notna(pm) else "")
+        chosen = in_coupon.get(int(e["event_id"])) == col
+        if c[4].button("✔️ в купоне" if chosen else "➕ в купон", key=f"add_{e['event_id']}_{col}",
+                       disabled=chosen, width="stretch"):
+            _add_pick(e, col)
+            st.toast(f"Добавлено в купон: {_market_label(col, e.get('ou_line'))} @ {o:.2f}")
+            st.rerun()
+    n = len(_coupon())
+    if n:
+        st.caption(f"🎟️ В вашем купоне {n} ставк(и) — оформить и сохранить на странице «Купон».")
+
+
+def match_news(r):
+    from soccer import news
+    item = next((n for n in news.load() if n["home"] == r["home"] and n["away"] == r["away"]), None)
+    if item is None:
+        st.info("По этому матчу новости не анализировались: каждый день я изучаю новости по 12 "
+                "главным матчам (в первую очередь — кандидатам в купоны).")
+        return
+    if item.get("avoid"):
+        st.warning(f"⛔ Матч исключён из купонов: {item.get('avoid_reason', '')}")
+    st.markdown(item.get("summary", ""))
+    side = {"home": r["home"], "away": r["away"]}
+    for f in item.get("factors", []):
+        sign = "+" if f["impact"] > 0 else ""
+        st.markdown(f"- {sign}{f['impact']} · **{side.get(f['team'], 'обе')}** · {f['description']} "
+                    f"(уверенность {f['certainty']:.0%})")
+    for u in item.get("sources", [])[:4]:
+        st.caption(u)
 
 
 # ====================================================================== favourites

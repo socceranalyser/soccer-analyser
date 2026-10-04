@@ -4,7 +4,7 @@ name: live-collect
 # live odds, livescore statistics) -> branch 'livedata' (keeps the dashboard from redeploying).
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "7,22,37,52 * * * *"   # off the round minutes GitHub often skips
   workflow_dispatch: {}
 
 permissions:

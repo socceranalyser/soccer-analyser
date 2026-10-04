@@ -2,7 +2,7 @@ name: daily-update
 
 on:
   schedule:
-    - cron: "0 6 * * *"      # 06:00 UTC = 10:00 Baku
+    - cron: "23 5 * * *"     # 05:23 UTC = 09:23 Baku (off the full hour: GitHub delays those)
   workflow_dispatch: {}       # "Run workflow" button for a manual run
 
 permissions:

@@ -14,7 +14,7 @@ walk-forward бэктесте** (подбор — на валидационны�
 
 - Python 3.12 (winget, user scope) → `.venv`; пакет `soccer` установлен editable (`pip install -e .[dev]`).
 - Git: `C:\Program Files\Git\cmd\git.exe` (в новом терминале доступен как `git`).
-- Часы компьютера пользователя стоят в Pacific Time — в дашборде есть выбор часового пояса.
+- Часы компьютера пользователя: с 2026-10-04 Asia/Baku (раньше были Pacific Time); в дашборде есть выбор пояса.
 
 | что | команда |
 |---|---|
@@ -56,8 +56,8 @@ soccer/
                  Claude Code в сессии: `python scripts/news_free.py todo` → WebSearch по каждому
                  матчу → data/news_answer.json (схема TOOL) → `python scripts/news_free.py submit`
                  → commit data/state/news*.  Делать в начале каждой сессии (до матчей дня).
-                 Автоматически: задача приложения Claude «soccer-daily-news» (01:02 по часам ПК =
-                 ~12:00 Баку; ПК включён и приложение открыто), с 2026-10-03.
+                 Автоматически: задача приложения Claude «soccer-daily-news» в 12:02 (часы ПК = Баку;
+                 ПК включён и приложение открыто). Если сессия задачи висит — ждёт разрешения (Allow).
   xg.py          xG understat.com (топ-5 лиг с 2014, кэш data/raw/understat, алиас FC Cologne);
                  DC учится на 0.1·голы + 0.9·xG (tuned.XG_WEIGHT, Engine.dc)
   national.py    сборные (martj42): данные, важность турнира, NationalElo, DC для сборных
@@ -141,7 +141,7 @@ tests/           test_core.py (в т.ч. проверка отсутствия �
 
 - **GitHub:** https://github.com/socceranalyser/soccer-analyser (публичный; email в истории
   заменён на noreply; `gh` CLI залогинен как socceranalyser). Ветка `main`.
-- **Ежедневная задача в облаке:** `.github/workflows/daily.yml` — 06:00 UTC (10:00 Баку) и кнопка
+- **Ежедневная задача в облаке:** `.github/workflows/daily.yml` — 05:23 UTC (09:23 Баку; ровные часы GitHub задерживает до 5 ч) и кнопка
   «Run workflow»: `scripts/cloud_job.py` (import_state → Engine → results → forecasts → Telegram →
   export_state) и коммит `data/state/*` обратно в репозиторий. Секреты Actions:
   TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID (вводит пользователь).

@@ -149,6 +149,10 @@ tests/           test_core.py (в т.ч. проверка отсутствия �
   без кэша API-Football; scripts/make_seed.py — пересобирать раз в сезон) распаковывается soccer/seed.ensure_raw
   при пустой data/raw → старт облака 7–8 мин → ~70 с. app._fresh_soccer_modules перезагружает пакет soccer
   при изменении кода (иначе после деплоя ImportError из-за старых модулей в памяти).
+- **Память облака (2026-10-05):** Engine пересоздаётся каждые 3 ч (ttl кэша) и при смене кода; старый Engine
+  в циклических ссылках не освобождался → +260 МБ на пересборку → облако зависло (белый экран). Лечение:
+  gc.collect() в app._engine и app._fresh_soccer_modules; проверка на копии: 835→1084→838 МБ (без gc: 552→812→1073).
+  Зависшее облако перезапускает только владелец: share.streamlit.io → ⋮ у приложения → Reboot.
 - **Дашборд в облаке:** https://soccer-analyser.streamlit.app (Streamlit Community Cloud, деплой
   из main при каждом push). Secrets: `TZ = "Asia/Baku"`, `APP_PASSWORD` (вход по паролю; без него
   — открыт). Диск временный → прогнозы восстанавливаются из `data/state/` (storage.import_state).

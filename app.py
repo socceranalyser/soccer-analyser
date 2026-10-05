@@ -25,6 +25,8 @@ def _fresh_soccer_modules():
             del sys.modules[name]
         st.cache_resource.clear()
         st.cache_data.clear()
+        import gc
+        gc.collect()  # the old models are in reference cycles: free them now, not "some day"
     import soccer
     soccer._src_stamp = stamp
 
@@ -86,7 +88,12 @@ def get_engine() -> Engine:
 
 @st.cache_resource(ttl=3 * 3600, show_spinner="Загружаю данные и обучаю модели (≈1 мин)…")
 def _engine(refresh_token: int) -> Engine:
+    import gc
     import threading
+    # The previous Engine (cache expired every 3 h or code updated) sits in reference cycles;
+    # without an explicit collection each rebuild kept ~260 MB more until the cloud app
+    # ran out of memory and hung (white page).
+    gc.collect()
     eng = Engine(refresh=refresh_token > 0)
 
     def store():  # results + forecasts for the next days, without blocking the page

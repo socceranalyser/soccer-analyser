@@ -58,7 +58,7 @@ LEAGUES = {
     "NOR": _lg("Норвегия — Элитсериен", "Норвегия", source="extra", top=3, relegated=2),
     "POL": _lg("Польша — Экстракласа", "Польша", source="extra", top=3, relegated=3),
     "ROU": _lg("Румыния — Суперлига", "Румыния", source="extra", sim=False),
-    "RUS": _lg("Россия — Премьер-лига", "Россия", source="extra", top=4, relegated=2),
+    # "RUS" (Russia) removed 2026-10-05 at the user's request (source also stopped updating in Aug 2026)
     "SWE": _lg("Швеция — Аллсвенскан", "Швеция", source="extra", top=3, relegated=2),
     "SWZ": _lg("Швейцария — Суперлига", "Швейцария", source="extra", sim=False),
     "USA": _lg("США — MLS", "США", source="extra", sim=False),

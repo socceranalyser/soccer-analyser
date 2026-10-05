@@ -718,85 +718,6 @@
   ]
  },
  {
-  "event_id": 2996862,
-  "kickoff": "2026-10-05T18:45:00+00:00",
-  "date": "2026-10-05",
-  "league": "UNL",
-  "home": "Romania",
-  "away": "Sweden",
-  "home_raw": "Rumıniya",
-  "away_raw": "İsveç",
-  "p_home": 0.24190884089877313,
-  "p_draw": 0.2896943148560773,
-  "p_away": 0.4683968442451497,
-  "p_over": 0.560719854717388,
-  "p_btts": 0.6055431831197869,
-  "s": -0.09999999999999987,
-  "goals_shift": 0,
-  "avoid": false,
-  "avoid_reason": "",
-  "summary": "У Румынии дисквалифицированы оба основных центральных защитника, у Швеции нет звёздного нападающего Исака и двух защитников.",
-  "factors": [
-   {
-    "team": "home",
-    "kind": "suspension",
-    "description": "Дисквалифицированы центральные защитники Драгуш (красная) и Гица",
-    "impact": -2,
-    "certainty": 0.95
-   },
-   {
-    "team": "away",
-    "kind": "injury",
-    "description": "Покинули сборную Исак и Эмиль Хольм, вероятно не сыграет Старфельт",
-    "impact": -2,
-    "certainty": 0.9
-   }
-  ],
-  "sources": [
-   "https://www.sportsmole.co.uk/football/romania/uefa-nations-league/preview/romania-vs-sweden-prediction-team-news-lineups_606184.html"
-  ]
- },
- {
-  "event_id": 2996851,
-  "kickoff": "2026-10-05T18:45:00+00:00",
-  "date": "2026-10-05",
-  "league": "UNL",
-  "home": "Bosnia and Herzegovina",
-  "away": "Poland",
-  "home_raw": "Bosniya və Herseqovina",
-  "away_raw": "Polşa",
-  "p_home": 0.4196833826015316,
-  "p_draw": 0.30585954374735796,
-  "p_away": 0.2744570736511104,
-  "p_over": 0.46257617075689006,
-  "p_btts": 0.5319913340660019,
-  "s": 0.04999999999999993,
-  "goals_shift": 0,
-  "avoid": false,
-  "avoid_reason": "",
-  "summary": "У Боснии нет Дедича и уже нет Джеко, у Польши травмированы два вратаря; Левандовский в строю.",
-  "factors": [
-   {
-    "team": "home",
-    "kind": "injury",
-    "description": "Выбыл защитник Амар Дедич; Джеко завершил карьеру в сборной",
-    "impact": -1,
-    "certainty": 0.8
-   },
-   {
-    "team": "away",
-    "kind": "injury",
-    "description": "Травмированы вратари Грабара и Дронговский, а также Бенедычак и Рузга",
-    "impact": -1,
-    "certainty": 0.85
-   }
-  ],
-  "sources": [
-   "https://ratingbet.com/predictions/bosnia-and-herzegovina-vs-poland-prediction-team-news-lineups-expert-analysis/",
-   "https://heavy.com/sports/soccer/poland-vs-bosnia-team-news-probable-lineups-how-to-watch/"
-  ]
- },
- {
   "event_id": 2996854,
   "kickoff": "2026-10-04T13:00:00+00:00",
   "date": "2026-10-04",
@@ -967,6 +888,446 @@
   ],
   "sources": [
    "https://www.sportsmole.co.uk/football/netherlands/uefa-nations-league/preview/netherlands-vs-serbia-prediction-team-news-lineups_606118.html"
+  ]
+ },
+ {
+  "event_id": 3005482,
+  "kickoff": "2026-10-05T13:00:00+00:00",
+  "date": "2026-10-05",
+  "league": "INT",
+  "home": "Indonesia",
+  "away": "Thailand",
+  "home_raw": "İndoneziya",
+  "away_raw": "Tayland",
+  "p_home": 0.3970908512111684,
+  "p_draw": 0.30846382423661795,
+  "p_away": 0.2944453245522137,
+  "p_over": 0.5880001344237584,
+  "p_btts": 0.646389815958243,
+  "s": -0.09999999999999998,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Финал Кубка АСЕАН в Джакарте. Таиланд возвращает дисквалифицированного полузащитника, Индонезию поддержит домашний стадион.",
+  "factors": [
+   {
+    "team": "away",
+    "kind": "return",
+    "description": "Том Хайе вернулся после дисквалификации",
+    "impact": 1,
+    "certainty": 0.7
+   },
+   {
+    "team": "home",
+    "kind": "motivation",
+    "description": "Финал Кубка АСЕАН дома на ГБК, полный стадион",
+    "impact": 1,
+    "certainty": 0.6
+   }
+  ],
+  "sources": [
+   "https://www.fifa.com/en/tournaments/mens/asean-cup/2026/articles/asian-cup-final-bronze-preview-indonesia",
+   "https://jakartaglobe.id/news/indonesia-seeks-redemption-against-thailand-in-asean-cup-final-at-gbk"
+  ]
+ },
+ {
+  "event_id": 3001077,
+  "kickoff": "2026-10-05T13:00:00+00:00",
+  "date": "2026-10-05",
+  "league": "INT",
+  "home": "Uganda",
+  "away": "DR Congo",
+  "home_raw": "Uqanda",
+  "away_raw": "Konqo DR",
+  "p_home": 0.15715437670940127,
+  "p_draw": 0.24167742679990148,
+  "p_away": 0.6011681964906971,
+  "p_over": 0.30260188866204246,
+  "p_btts": 0.332580436535759,
+  "s": 0.0,
+  "goals_shift": 0,
+  "avoid": true,
+  "avoid_reason": "Товарищеский матч на нейтральном поле, второй подряд — составы непредсказуемы",
+  "summary": "Второй товарищеский матч подряд в ЮАР; в первом Уганда неожиданно выиграла 2:0. Составы могут быть экспериментальными.",
+  "factors": [
+   {
+    "team": "both",
+    "kind": "other",
+    "description": "Повторный товарищеский матч в ЮАР (нейтральное поле) через 3 дня после 2:0 Уганды; возможны эксперименты в составах",
+    "impact": 0,
+    "certainty": 0.6
+   }
+  ],
+  "sources": [
+   "https://www.vavel.com/en-us/soccer/2026/10/02/1273621-dr-congo-vs-uganda-live-score-friendly.html",
+   "https://africasoccer.com/dr-congo-vs-uganda-leopards-given-the-edge-in-johannesburg-friendly/"
+  ]
+ },
+ {
+  "event_id": 2996860,
+  "kickoff": "2026-10-05T18:45:00+00:00",
+  "date": "2026-10-05",
+  "league": "UNL",
+  "home": "France",
+  "away": "Belgium",
+  "home_raw": "Fransa",
+  "away_raw": "Belçika",
+  "p_home": 0.6082593206313252,
+  "p_draw": 0.24938386572277002,
+  "p_away": 0.14235681364590475,
+  "p_over": 0.657151198451578,
+  "p_btts": 0.6694020361298371,
+  "s": 0.9000000000000001,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У Франции нет Мбаппе и двух защитников, но Бельгия теряет сразу Де Брёйне и Тилеманса — потери гостей серьёзнее.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "Мбаппе не сыграет (колено); также нет Упамекано и Гендузи (дисквал.), Конате, Заир-Эмери",
+    "impact": -2,
+    "certainty": 0.9
+   },
+   {
+    "team": "away",
+    "kind": "suspension",
+    "description": "Де Брёйне и капитан Тилеманс дисквалифицированы; Троссар под вопросом",
+    "impact": -3,
+    "certainty": 0.9
+   }
+  ],
+  "sources": [
+   "https://www.aljazeera.com/sports/2026/10/5/france-belgium-uefa-nations-league-olise-de-bruyne-tielemans-teams-format",
+   "https://thefalse9.com/2026/10/france-belgium-predicted-lineups-october-5-nations-league.html"
+  ]
+ },
+ {
+  "event_id": 2996851,
+  "kickoff": "2026-10-05T18:45:00+00:00",
+  "date": "2026-10-05",
+  "league": "UNL",
+  "home": "Bosnia and Herzegovina",
+  "away": "Poland",
+  "home_raw": "Bosniya və Herseqovina",
+  "away_raw": "Polşa",
+  "p_home": 0.41966158742462706,
+  "p_draw": 0.3059330970651693,
+  "p_away": 0.2744053155102037,
+  "p_over": 0.45387808526714946,
+  "p_btts": 0.526907840381057,
+  "s": 0.9999999999999999,
+  "goals_shift": -1,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Польша без дисквалифицированного Левандовски, Босния — уже без завершившего карьеру в сборной Джеко. Обе команды теряют главных бомбардиров.",
+  "factors": [
+   {
+    "team": "away",
+    "kind": "suspension",
+    "description": "Левандовски дисквалифицирован и покинул сбор; Каминьский травмирован",
+    "impact": -2,
+    "certainty": 0.95
+   },
+   {
+    "team": "home",
+    "kind": "other",
+    "description": "Джеко завершил карьеру в сборной",
+    "impact": -1,
+    "certainty": 0.9
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/bosnia-herzegovina/uefa-nations-league/preview/bosnia-hvina-vs-poland-prediction-team-news-lineups_606185.html",
+   "https://ua.news/en/sport/levandovskii-zalishiv-roztashuvannia-zbirnoyi-polshchi-pislia-diskvalifikatsiyi-interia-sport"
+  ]
+ },
+ {
+  "event_id": 3001986,
+  "kickoff": "2026-10-05T21:00:00+00:00",
+  "date": "2026-10-06",
+  "league": "INT",
+  "home": "Cuba",
+  "away": "Saint Kitts and Nevis",
+  "home_raw": "Kuba",
+  "away_raw": "Sent-Kits və Nevis",
+  "p_home": 0.6557065543295637,
+  "p_draw": 0.22724844554192408,
+  "p_away": 0.11704500012851231,
+  "p_over": 0.6172748671949613,
+  "p_btts": 0.6168638686557312,
+  "s": 0.0,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Существенных новостей нет. Первая встреча этих команд 2 октября закончилась 3:3; матч снова на нейтральном поле в Тринидаде.",
+  "factors": [],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/concacaf-nations-league/cuba-vs-saint-kitts-and-nevis_game_259438.html"
+  ]
+ },
+ {
+  "event_id": 2995323,
+  "kickoff": "2026-10-05T22:00:00+00:00",
+  "date": "2026-10-06",
+  "league": "ARG",
+  "home": "Velez Sarsfield",
+  "away": "Platense",
+  "home_raw": "Veles Sarsfild",
+  "away_raw": "Platense",
+  "p_home": 0.5465259935409965,
+  "p_draw": 0.2840243670908765,
+  "p_away": 0.16944963936812685,
+  "p_over": 0.33960027762393763,
+  "p_btts": 0.3588951504469841,
+  "s": 0.7,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У Платенсе большой лазарет — семь травмированных и дисквалифицированный; у Велеса нет двух игроков.",
+  "factors": [
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "У Платенсе 7 травмированных (Васкес, Саборидо, Бобадилья, Гоньи, Хименес, Кирос, Насиф) и дисквалификация Ингентрона",
+    "impact": -2,
+    "certainty": 0.7
+   },
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "Без Маммана и Пеллегрини",
+    "impact": -1,
+    "certainty": 0.7
+   }
+  ],
+  "sources": [
+   "https://www.vavel.com/ar/futbol-argentino/2026/10/04/velez/1273986-velez-busca-consolidar-su-gran-momento-frente-a-platense-por-la-fecha-numero-11-del-torneo-clausura.html",
+   "https://bolavip.com/ar/futbolargentino/alineaciones-de-velez-y-platense-por-la-torneo-clausura-formaciones-probables"
+  ]
+ },
+ {
+  "event_id": 3001835,
+  "kickoff": "2026-10-06T14:00:00+00:00",
+  "date": "2026-10-06",
+  "league": "UNL",
+  "home": "Kazakhstan",
+  "away": "Faroe Islands",
+  "home_raw": "Qazaxıstan",
+  "away_raw": "Farer Adaları",
+  "p_home": 0.4964137304708951,
+  "p_draw": 0.28984594715241147,
+  "p_away": 0.21374032237669344,
+  "p_over": 0.358986043098238,
+  "p_btts": 0.4170628230334982,
+  "s": 0.0,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Значимых кадровых новостей нет. Казахстан дома в Астане, Фареры сыграли вничью все три матча турнира.",
+  "factors": [],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/kazakhstan/uefa-nations-league/preview/kazakhstan-vs-faroe-islands-prediction-team-news-lineups_606212.html"
+  ]
+ },
+ {
+  "event_id": 3003666,
+  "kickoff": "2026-10-06T18:45:00+00:00",
+  "date": "2026-10-06",
+  "league": "UNL",
+  "home": "Belarus",
+  "away": "Finland",
+  "home_raw": "Belarus",
+  "away_raw": "Finlandiya",
+  "p_home": 0.42224940505762565,
+  "p_draw": 0.3055741936237034,
+  "p_away": 0.27217640131867094,
+  "p_over": 0.4125445580267926,
+  "p_btts": 0.4849982571320539,
+  "s": -1.5,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Беларусь проводит «домашний» матч в Будапеште, так что преимущества своего поля нет. У Финляндии все в строю.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "travel",
+    "description": "Беларусь играет «дома» в Будапеште — домашнего преимущества фактически нет",
+    "impact": -1,
+    "certainty": 0.9
+   },
+   {
+    "team": "away",
+    "kind": "return",
+    "description": "Без новых травм; вернулись Камара и Кайринен",
+    "impact": 1,
+    "certainty": 0.6
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/belarus/uefa-nations-league/preview/belarus-vs-finland-prediction-team-news-lineups_606218.html"
+  ]
+ },
+ {
+  "event_id": 2996856,
+  "kickoff": "2026-10-05T16:00:00+00:00",
+  "date": "2026-10-05",
+  "league": "UNL",
+  "home": "Cyprus",
+  "away": "Latvia",
+  "home_raw": "Kipr",
+  "away_raw": "Latviya",
+  "p_home": 0.5852714019874754,
+  "p_draw": 0.2591197053924767,
+  "p_away": 0.15560889262004798,
+  "p_over": 0.4109300649899519,
+  "p_btts": 0.4541818795688796,
+  "s": 0.7,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У Кипра проблемы в обороне, но Латвия теряет двух ведущих атакующих игроков и защитника.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "suspension",
+    "description": "Пилеас дисквалифицирован, Лайфис травмирован, Шелис под вопросом",
+    "impact": -1,
+    "certainty": 0.8
+   },
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "Нет Икауниекса и Кроллиса (травмы) и Черноморда (дисквал.)",
+    "impact": -2,
+    "certainty": 0.75
+   }
+  ],
+  "sources": [
+   "https://www.goal.com/en-us/news/watch-cyprus-v-latvia-live-stream-online-tv-channel/blt0ec11384a6652c59",
+   "https://www.sportskeeda.com/football/cyprus-vs-latvia-prediction-betting-tips-october-5th-2026"
+  ]
+ },
+ {
+  "event_id": 2996863,
+  "kickoff": "2026-10-05T18:45:00+00:00",
+  "date": "2026-10-05",
+  "league": "UNL",
+  "home": "Italy",
+  "away": "Turkey",
+  "home_raw": "İtaliya",
+  "away_raw": "Türkiyə",
+  "p_home": 0.604415421803473,
+  "p_draw": 0.2510585525341334,
+  "p_away": 0.14452602566239353,
+  "p_over": 0.5972563278871349,
+  "p_btts": 0.5940262863262564,
+  "s": 1.0000000000000002,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У Италии несколько травмированных, но Турция без своих звёзд — Гюлера, Чалханоглу, Йылдыза — и без основного вратаря.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "Нет Дзаньоло, Димарко, Кристанте, Распадори; Кин покинул сбор",
+    "impact": -2,
+    "certainty": 0.85
+   },
+   {
+    "team": "away",
+    "kind": "suspension",
+    "description": "Дисквалифицированы Арда Гюлер, Барыш Алпер Йылмаз и вратарь Чакыр; травмированы Чалханоглу и Кенан Йылдыз",
+    "impact": -3,
+    "certainty": 0.9
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/italy/uefa-nations-league/preview/italy-vs-turkey-prediction-team-news-lineups_606152.html",
+   "https://africasoccer.com/italy-v-turkey-mancinis-side-set-for-nations-league-clash-with-key-absences/"
+  ]
+ },
+ {
+  "event_id": 2996862,
+  "kickoff": "2026-10-05T18:45:00+00:00",
+  "date": "2026-10-05",
+  "league": "UNL",
+  "home": "Romania",
+  "away": "Sweden",
+  "home_raw": "Rumıniya",
+  "away_raw": "İsveç",
+  "p_home": 0.24185752054935916,
+  "p_draw": 0.2897588175162277,
+  "p_away": 0.46838366193441316,
+  "p_over": 0.554105790499597,
+  "p_btts": 0.6072152919451351,
+  "s": -0.10000000000000009,
+  "goals_shift": 1,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "Румыния без обоих основных центральных защитников, Швеция без Исака. Оборона хозяев ослаблена — матч может быть результативным.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "suspension",
+    "description": "Центральные защитники Драгушин и Гицэ дисквалифицированы",
+    "impact": -2,
+    "certainty": 0.9
+   },
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "Нет Исака и Хольма (травмы), Строуд и Волемарк ушли из-за болезни",
+    "impact": -2,
+    "certainty": 0.85
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/romania/uefa-nations-league/preview/romania-vs-sweden-prediction-team-news-lineups_606184.html",
+   "https://swedenherald.com/article/guide-sweden-face-romania-in-bucharest-as-nations-league-group-stage-heats-up"
+  ]
+ },
+ {
+  "event_id": 2996848,
+  "kickoff": "2026-10-05T18:45:00+00:00",
+  "date": "2026-10-05",
+  "league": "UNL",
+  "home": "Northern Ireland",
+  "away": "Georgia",
+  "home_raw": "Şimali İrlandiya",
+  "away_raw": "Gürcüstan",
+  "p_home": 0.5584573412589303,
+  "p_draw": 0.26959617647244377,
+  "p_away": 0.17194648226862602,
+  "p_over": 0.37318937926588475,
+  "p_btts": 0.4235187824316093,
+  "s": -0.5,
+  "goals_shift": 0,
+  "avoid": false,
+  "avoid_reason": "",
+  "summary": "У Северной Ирландии нет капитана Брэдли и нескольких полузащитников. Грузия без Китеишвили, но с Кварацхелией.",
+  "factors": [
+   {
+    "team": "home",
+    "kind": "injury",
+    "description": "Без капитана Брэдли и полузащитников Маккэнна, Лайонса, Макдоннелла; возвращается Баллард",
+    "impact": -2,
+    "certainty": 0.6
+   },
+   {
+    "team": "away",
+    "kind": "injury",
+    "description": "Китеишвили травмирован",
+    "impact": -1,
+    "certainty": 0.7
+   }
+  ],
+  "sources": [
+   "https://www.sportsmole.co.uk/football/northern-ireland/uefa-nations-league/preview/n-ireland-vs-georgia-prediction-team-news-lineups_606190.html",
+   "https://sports.yahoo.com/articles/northern-ireland-vs-georgia-match-062500978.html"
   ]
  }
 ]

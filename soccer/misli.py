@@ -33,13 +33,17 @@ COUNTRY = {
     "CH": "Швейцария", "US": "США",
 }
 # competitions that are not senior men's football
-EXCLUDE = re.compile(r"qad[ıi]n|u\d{2}|rezerv|\(q\)|olimp|asiya oyunlar|futzal|amator|həvəskar"
-                     r"|\bII\b|\bB$|\s2$", re.IGNORECASE)  # women, youth, reserve/B teams
+EXCLUDE = re.compile(r"qad[ıi]n|u\d{2}|rezerv|\(q\)|olimp|asiya oyunlar|futzal|amator|həvəskar",
+                     re.IGNORECASE)  # women, youth, reserves (competition or team name)
+# second teams ("Real Madrid B", "Jong ... II", "... 2") - team names only: a competition such as
+# "KONKAKAF ML - LİQA A, QRUP B" ends with "B" too and was wrongly dropped (fixed 2026-10-05)
+EXCLUDE_TEAM = re.compile(r"\bII\b|\bB$|\s2$", re.IGNORECASE)
 CUP_WORDS = re.compile(r"kubo|kuboku|cup|pokal|coppa|copa|taça|coupe", re.IGNORECASE)
 EURO_CUPS = {"çempionlar liqası": "UCL", "avropa liqası": "UEL", "konfrans liqası": "UECL"}
 
 # Azerbaijani -> English (martj42 spelling) national-team names
 NATIONS_AZ = {
+    "Malavi": "Malawi", "Mavritius": "Mauritius", "Ruanda": "Rwanda", "Sri Lanka": "Sri Lanka",
     "Almaniya": "Germany", "Serbiya": "Serbia", "İspaniya": "Spain", "Xorvatiya": "Croatia",
     "İngiltərə": "England", "Çexiya": "Czech Republic", "İtaliya": "Italy", "Türkiyə": "Turkey",
     "Rumıniya": "Romania", "İsveç": "Sweden", "Fransa": "France", "Belçika": "Belgium",
@@ -282,7 +286,8 @@ def link_events(df: pd.DataFrame, engine) -> pd.DataFrame:
         link = {"kind": None, "competition": None, "home": None, "away": None,
                 "home_key": None, "away_key": None}
         comp = r.comp_az.replace("İ", "i").replace("I", "ı").lower()  # Azerbaijani casing
-        if EXCLUDE.search(comp) or EXCLUDE.search(r.home_raw) or EXCLUDE.search(r.away_raw):
+        if EXCLUDE.search(comp) or any(EXCLUDE.search(t) or EXCLUDE_TEAM.search(t)
+                                       for t in (r.home_raw, r.away_raw)):
             out.append(link)
             continue
         if r.ct == "INT":

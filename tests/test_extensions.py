@@ -215,3 +215,24 @@ def test_live_analysis_reads_pressure():
     assert lam2 > 1.3 and mu2 < 1.2  # the pressing side's goal is now more likely
     assert live_markets(score_matrix_live(lam2, mu2, 60, 0, 0))["o1"] > \
         live_markets(score_matrix_live(1.3, 1.2, 60, 0, 0))["o1"]
+
+
+def test_motivation_flags_dead_rubber():
+    import pandas as pd
+    from soccer.motivation import season_flags, shift
+    teams = [f"T{i}" for i in range(12)]          # 22 rounds in total
+    rows, order = [], teams[:]
+    for rnd in range(20):                          # circle method: 20 rounds played, 2 left
+        for k in range(6):
+            h, a = order[k], order[11 - k]
+            if rnd % 2:
+                h, a = a, h
+            i, j = teams.index(h), teams.index(a)
+            rows.append({"home": h, "away": a, "hg": int(i < j), "ag": int(i > j)})
+        order = [order[0]] + [order[-1]] + order[1:-1]
+    flags = season_flags(pd.DataFrame(rows), teams)
+    assert all(left == 2 for left, _ in flags.values())
+    nothing = [t for t, (_, n) in flags.items() if n]
+    assert nothing and "T0" not in nothing and "T11" not in nothing  # mid-table only
+    t, top = nothing[0], "T0"
+    assert shift(flags, top, t) > 0 and shift(flags, t, top) < 0

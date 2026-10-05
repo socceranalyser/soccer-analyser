@@ -205,6 +205,18 @@ class Engine:
                 season_teams=current_teams(self.matches, league))
         return self._dc[league]
 
+    def motivation_shift(self, league: str, home: str, away: str) -> float:
+        from .motivation import season_flags, shift
+        cache = self.__dict__.setdefault("_motivation", {})
+        if league not in cache:
+            lm = self.matches[self.matches["league"] == league]
+            cur = lm[lm["season"] == current_season(self.matches, league)] if len(lm) else lm
+            try:
+                cache[league] = season_flags(cur, current_teams(self.matches, league)) if len(cur) else {}
+            except Exception:
+                cache[league] = {}
+        return shift(cache[league], home, away)
+
     SEASON_GOALS_N0 = 1000  # prior strength (matches) of the pooled and the league offset;
     SEASON_GOALS_N1 = 1000  # scripts/test_season_goals*.py: 2023-25 ~0, 2026 O/U 0.6739 -> 0.6729
 
@@ -267,6 +279,10 @@ class Engine:
                 d = len(absent["away"]) - len(absent["home"])
                 z = np.log(np.clip(head, 1e-9, 1)) + np.array([INJURY_BETA * d, 0.0,
                                                               -INJURY_BETA * d])
+                head = np.exp(z - z.max()) / np.exp(z - z.max()).sum()
+            mot = self.motivation_shift(competition, home, away)
+            if mot:  # end of season: a side with nothing left to play for (test 2025 -0.0005)
+                z = np.log(np.clip(head, 1e-9, 1)) + np.array([mot, 0.0, -mot])
                 head = np.exp(z - z.max()) / np.exp(z - z.max()).sum()
             m = rescale_to_outcomes(m_dc, head)
             m = calibrate_goals(m, competition)  # test 2025-26: O/U 0.6832 -> 0.6810

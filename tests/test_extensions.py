@@ -236,3 +236,18 @@ def test_motivation_flags_dead_rubber():
     assert nothing and "T0" not in nothing and "T11" not in nothing  # mid-table only
     t, top = nothing[0], "T0"
     assert shift(flags, top, t) > 0 and shift(flags, t, top) < 0
+
+
+def test_friendlies_stay_out_of_reliable_coupons():
+    from soccer.coupons import suggest
+    rows = []
+    for i in range(6):
+        rows.append({"event_id": i, "kickoff": pd.Timestamp("2030-01-01", tz="UTC"),
+                     "home_raw": f"H{i}", "away_raw": f"A{i}", "mbs": 1,
+                     "competition_az": "Beynəlxalq · Yoldaşlıq, Ölkələr" if i < 3 else "X",
+                     "o1": 1.30, "ox": 5.5, "o2": 9.0, "ou_line": 2.5, "o_over": 1.9, "o_under": 1.9,
+                     "p_o1": 0.80, "p_ox": 0.13, "p_o2": 0.07, "p_o_over": 0.5, "p_o_under": 0.5})
+    df = pd.DataFrame(rows)
+    for cp in suggest(df):
+        if cp["style"] in ("single", "double"):
+            assert set(cp["picks"]["event_id"]) <= {3, 4, 5}

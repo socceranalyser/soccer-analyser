@@ -12,3 +12,4 @@ data/telegram_chat_id.txt
 data/state/coupons.csv
 data/news_todo.json
 data/news_answer.json
+data/misli_fixtures.csv

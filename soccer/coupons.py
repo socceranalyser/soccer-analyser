@@ -49,10 +49,10 @@ def market_probs(r) -> dict:
 # our own analysis helps (2-match 1.5-2.2: -7.2% vs -11.1% when ranked by plain likelihood).
 STYLES = {
     "single": {"title": "💎 Ставка дня — одна самая надёжная игра", "size": 1, "min_odds": 1.25,
-               "max_odds": 99, "min_p": 0.0, "agree_min": 0.75,
+               "max_odds": 99, "min_p": 0.0, "agree_min": 0.75, "no_friendly": True,
                "score": lambda p, o, pm: p},
     "double": {"title": "✌️ Двойной — две надёжные игры", "size": 2, "min_odds": 1.30,
-               "max_odds": 1.60, "min_p": 0.0, "agree_min": 0.62,
+               "max_odds": 1.60, "min_p": 0.0, "agree_min": 0.62, "no_friendly": True,
                "score": lambda p, o, pm: min(p, pm)},
     "medium": {"title": "⚖️ Средний — две игры с хорошим коэффициентом", "size": 2,
                "min_odds": 1.50, "max_odds": 2.20, "min_p": 0.0, "agree_min": 0.50,
@@ -93,7 +93,9 @@ def candidates(events: pd.DataFrame) -> pd.DataFrame:
                          "home": r.get("home") if pd.notna(r.get("home")) else None,
                          "away": r.get("away") if pd.notna(r.get("away")) else None,
                          "line": None if pd.isna(r.get("ou_line")) else float(r["ou_line"]),
-                         "news": r.get("news_note") or "", "avoid": bool(r.get("news_avoid"))})
+                         "news": r.get("news_note") or "", "avoid": bool(r.get("news_avoid")),
+                         # experimental line-ups: national friendlies stay out of reliable coupons
+                         "friendly": "yoldaşlıq" in str(r.get("competition_az", "")).lower()})
     return pd.DataFrame(rows)
 
 
@@ -103,7 +105,8 @@ def build(cands: pd.DataFrame, style: str, exclude=frozenset(), agree: bool = Fa
               & (cands["p"] >= st["min_p"])
               & (cands["mbs"] <= st["size"]) & ~cands["event_id"].isin(exclude)
               & cands["p_model"].notna()  # only matches our model also covers
-              & ~cands["avoid"].astype(bool)]  # news analysis: unpredictable today
+              & ~cands["avoid"].astype(bool)  # news analysis: unpredictable today
+              & ~(cands["friendly"].astype(bool) & st.get("no_friendly", False))]
     if agree:  # our own analysis must confirm the outcome, not just the bookmaker's price
         c = c[np.minimum(c["p_model"].astype(float), c["p_market"].astype(float))
               >= st["agree_min"]]

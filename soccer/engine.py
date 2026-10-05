@@ -138,7 +138,61 @@ class Engine:
         log("national models fitted")
         self._dc: dict[str, DixonColes] = {}
         self._injuries: dict = {}
+        try:
+            log("misli-only fixtures added", self._add_misli_fixtures())
+        except Exception:
+            pass  # misli.az unreachable: the official calendars are enough
         self.built_at = pd.Timestamp.now()
+
+    MISLI_FIXTURES = DATA_DIR / "misli_fixtures.csv"
+
+    def _add_misli_fixtures(self) -> int:
+        """Matches on misli.az our models can forecast but no official calendar lists (national
+        friendlies, some cup ties): added to the schedule. Kept in a small file so a match does
+        not vanish from 'Matches of the day' once it starts and leaves misli's pre-match list."""
+        from .fixtures import competition_name, local_tz
+        from .misli import fetch_events, link_events
+        tz = local_tz()
+        ev = link_events(fetch_events(), self)
+        ev = ev[ev["kind"].notna()] if len(ev) else ev
+        rows = []
+        for r in ev.itertuples():
+            kick = r.kickoff.tz_convert(tz)
+            comp = str(r.competition)
+            rows.append({"competition": comp, "kickoff": kick, "home_src": r.home_raw,
+                         "away_src": r.away_raw, "home": r.home, "away": r.away,
+                         "home_key": r.home_key, "away_key": r.away_key, "kind": r.kind,
+                         "season": kick.year, "date": kick.tz_localize(None).normalize(),
+                         "odds_h": r.o1, "odds_d": r.ox, "odds_a": r.o2, "played": False,
+                         "neutral": False, "hg": np.nan, "ag": np.nan,
+                         "friendly": "yoldaşlıq" in str(r.competition_az).lower(),
+                         "comp_name": ("🤝 Товарищеский — менее предсказуем"
+                                       if "yoldaşlıq" in str(r.competition_az).lower()
+                                       else competition_name(comp))})
+        new = pd.DataFrame(rows)
+        f = self.MISLI_FIXTURES
+        today = pd.Timestamp.now().normalize()
+        if f.exists():
+            old = pd.read_csv(f, parse_dates=["date"])
+            old["kickoff"] = pd.to_datetime(old["kickoff"], utc=True).dt.tz_convert(tz)
+            new = pd.concat([old[old["date"] >= today - pd.Timedelta(days=3)], new],
+                            ignore_index=True)
+        if new.empty:
+            return 0
+        new = new.drop_duplicates(["home", "away", "date"], keep="last")
+        new.to_csv(f, index=False)
+        # only what the official calendars do not have (same pair within a day, either order)
+        sch = self.schedule
+        have = set()
+        for h, a, d in zip(sch["home"], sch["away"], sch["date"]):
+            for k in (-1, 0, 1):
+                have.add((h, a, d + pd.Timedelta(days=k)))
+                have.add((a, h, d + pd.Timedelta(days=k)))
+        add = new[[(h, a, d) not in have for h, a, d in zip(new["home"], new["away"], new["date"])]]
+        if "friendly" not in sch:
+            sch = sch.assign(friendly=False)
+        self.schedule = pd.concat([sch, add], ignore_index=True).sort_values("kickoff")
+        return len(add)
 
     def _national_calibration(self, max_age_days: int = 7):
         """VectorScaling fitted on out-of-sample national forecasts; cached for a week

@@ -251,3 +251,12 @@ def test_friendlies_stay_out_of_reliable_coupons():
     for cp in suggest(df):
         if cp["style"] in ("single", "double"):
             assert set(cp["picks"]["event_id"]) <= {3, 4, 5}
+
+
+def test_misli_azerbaijani_club_names():
+    from soccer.misli import _club_match, az_to_latin
+    assert az_to_latin("Naqoya Qrampus") == "Nagoya Grampus"
+    teams = ["Kawasaki Frontale", "Nagoya Grampus", "Club Brugge", "Cercle Brugge", "Shimizu S-Pulse"]
+    assert _club_match("Naqoya Qrampus", teams, 0.8)[0] == "Nagoya Grampus"
+    assert _club_match("Serkl Brügge", teams, 0.8)[0] == "Cercle Brugge"
+    assert _club_match("Şimizu", teams, 0.8)[0] == "Shimizu S-Pulse"

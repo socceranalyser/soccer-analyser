@@ -134,14 +134,14 @@ def fetch_events(force: bool = False) -> pd.DataFrame:
         comps, events = {}, []  # misli.az occasionally answers with no data
     rows = []
     for e in events:
-        if len(e.get("p", [])) != 2:
+        if len(e.get("p") or []) != 2:
             continue
         country, comp = comps.get(e["cp"], ("", ""))
         row = {"event_id": e["i"], "kickoff": pd.Timestamp(e["d"], unit="ms", tz="UTC"),
                "home_raw": e["p"][0]["n"].strip(), "away_raw": e["p"][1]["n"].strip(),
                "ct": e.get("ct", ""), "country_az": country, "comp_az": comp,
                "mbs": int(e.get("mbs", 1))}
-        for m in e.get("m", []):
+        for m in e.get("m") or []:  # misli sometimes sends "m": null
             o = _odds(m)
             if m["t"] == 1 and m["s"] == 1:
                 row.update(o1=o.get(1), ox=o.get(2), o2=o.get(3))
@@ -270,6 +270,34 @@ def attach_results(day: pd.DataFrame, res: pd.DataFrame) -> pd.DataFrame:
 
 
 # -------------------------------------------------------------------- linking
+_AZ_LATIN = str.maketrans({"ş": "sh", "Ş": "Sh", "ç": "ch", "Ç": "Ch", "q": "g", "Q": "G",
+                           "x": "h", "X": "H", "ı": "i", "İ": "I", "ə": "e", "Ə": "E",
+                           "ö": "o", "Ö": "O", "ü": "u", "Ü": "U", "ğ": "g", "Ğ": "G"})
+# misli.az writes foreign clubs the Azerbaijani way ("Şimizu", "Xirosima", "Naqoya Qrampus")
+MISLI_CLUBS = {
+    "Şimizu": "Shimizu S-Pulse", "Xirosima": "Sanfrecce Hiroshima", "Tokio Verdi": "Verdy",
+    "FK Tokio": "FC Tokyo", "Urava": "Urawa Reds", "Kyoto Purple Sanqa": "Kyoto",
+    "Maçida Zelvia": "Machida", "Yunayted İchihara": "Chiba", "Serkl Brügge": "Cercle Brugge",
+}
+
+
+def az_to_latin(name: str) -> str:
+    """'Naqoya Qrampus' -> 'Nagoya Grampus', 'Kaşima' -> 'Kashima' (misli's Azerbaijani spelling)."""
+    return str(name).translate(_AZ_LATIN).replace("Tokio", "Tokyo").replace("tokio", "tokyo")
+
+
+def _club_match(name: str, candidates, threshold: float, **kw):
+    """best_match on misli's spelling, then on its English-like transliteration."""
+    if name in MISLI_CLUBS and MISLI_CLUBS[name] in candidates:
+        return MISLI_CLUBS[name], 1.0
+    hit, score = best_match(name, candidates, CLUB_ALIASES, threshold, **kw)
+    if hit is None:
+        hit2, score2 = best_match(az_to_latin(name), candidates, CLUB_ALIASES, threshold, **kw)
+        if hit2 is not None:
+            return hit2, score2
+    return hit, score
+
+
 def link_events(df: pd.DataFrame, engine) -> pd.DataFrame:
     """Add kind / competition / home / away (+ keys) for events our models can forecast."""
     seasons = engine.matches.groupby("league")["season"].max()
@@ -293,8 +321,8 @@ def link_events(df: pd.DataFrame, engine) -> pd.DataFrame:
         if r.ct == "INT":
             euro = next((code for word, code in EURO_CUPS.items() if word in comp), None)
             if euro:
-                hk, _ = best_match(r.home_raw, club_keys, CLUB_ALIASES, 0.82, both_ways=False)
-                ak, _ = best_match(r.away_raw, club_keys, CLUB_ALIASES, 0.82, both_ways=False)
+                hk, _ = _club_match(r.home_raw, club_keys, 0.82, both_ways=False)
+                ak, _ = _club_match(r.away_raw, club_keys, 0.82, both_ways=False)
                 if hk and ak:
                     link.update(kind="cup", competition=euro, home=hk.split("|", 1)[1],
                                 away=ak.split("|", 1)[1], home_key=hk, away_key=ak)
@@ -305,8 +333,8 @@ def link_events(df: pd.DataFrame, engine) -> pd.DataFrame:
                                 else "INT", home=h, away=a)
         elif r.ct in COUNTRY and COUNTRY[r.ct] in by_country:
             teams = by_country[COUNTRY[r.ct]]
-            h, sh = best_match(r.home_raw, teams, CLUB_ALIASES, 0.8)
-            a, sa = best_match(r.away_raw, teams, CLUB_ALIASES, 0.8)
+            h, sh = _club_match(r.home_raw, teams, 0.8)
+            a, sa = _club_match(r.away_raw, teams, 0.8)
             if h and a and h != a:
                 lh, la = teams[h], teams[a]
                 if lh == la:

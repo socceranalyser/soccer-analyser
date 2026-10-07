@@ -141,8 +141,78 @@ class Engine:
         try:
             log("misli-only fixtures added", self._add_misli_fixtures())
         except Exception:
+            pass
+        try:
+            log("livescore fixtures added", self._add_livescore_fixtures())
+        except Exception:
             pass  # misli.az unreachable: the official calendars are enough
         self.built_at = pd.Timestamp.now()
+
+    # livescore.com country names of our leagues (main leagues have Russian names in config)
+    LS_COUNTRY = {"Англия": "England", "Шотландия": "Scotland", "Германия": "Germany",
+                  "Италия": "Italy", "Испания": "Spain", "Франция": "France",
+                  "Нидерланды": "Netherlands", "Бельгия": "Belgium", "Португалия": "Portugal",
+                  "Турция": "Turkey", "Греция": "Greece", "Аргентина": "Argentina",
+                  "Австрия": "Austria", "Бразилия": "Brazil", "Китай": "China",
+                  "Дания": "Denmark", "Финляндия": "Finland", "Ирландия": "Ireland",
+                  "Япония": "Japan", "Мексика": "Mexico", "Норвегия": "Norway",
+                  "Польша": "Poland", "Румыния": "Romania", "Швеция": "Sweden",
+                  "Швейцария": "Switzerland", "США": "USA"}
+
+    def _add_livescore_fixtures(self, days: int = 4) -> int:
+        """League matches from livescore.com's daily lists (today + 3 days) that no calendar
+        has - e.g. Belgium, Greece, Japan, second divisions publish no season calendar for us.
+        The league is found by both team names matching that league's current teams."""
+        from .fixtures import competition_name, local_tz
+        from .livescore import _events, _get
+        from .names import CLUB_ALIASES, best_match
+        tz = local_tz()
+        by_country: dict[str, dict[str, list]] = {}
+        for lg, meta in LEAGUES.items():
+            en = self.LS_COUNTRY.get(meta["country"])
+            if not en:
+                continue
+            try:
+                teams = sorted(current_teams(self.matches, lg))
+            except Exception:
+                continue
+            by_country.setdefault(en, {})[lg] = teams
+        rows = []
+        today = pd.Timestamp.now(tz="UTC").normalize()
+        for k in range(days):
+            day = today + pd.Timedelta(days=k)
+            try:
+                evs = _events(_get(f"date/soccer/{day:%Y%m%d}/0?MD=1"))
+            except Exception:
+                continue
+            for e in evs:
+                country = e["competition"].split(" · ")[0]
+                if country not in by_country or e["ended"] or pd.isna(e["kickoff"]):
+                    continue
+                for lg, teams in by_country[country].items():
+                    h, sh = best_match(e["home_raw"], teams, CLUB_ALIASES, 0.8)
+                    a, sa = best_match(e["away_raw"], teams, CLUB_ALIASES, 0.8)
+                    if h and a and h != a:
+                        kick = e["kickoff"].tz_convert(tz)
+                        rows.append({"competition": lg, "kickoff": kick, "home_src": e["home_raw"],
+                                     "away_src": e["away_raw"], "home": h, "away": a,
+                                     "kind": "league", "season": kick.year,
+                                     "date": kick.tz_localize(None).normalize(), "played": False,
+                                     "neutral": False, "hg": np.nan, "ag": np.nan,
+                                     "friendly": False, "comp_name": competition_name(lg)})
+                        break
+        add = pd.DataFrame(rows)
+        if add.empty:
+            return 0
+        sch = self.schedule
+        have = set()
+        for h, a, d in zip(sch["home"], sch["away"], sch["date"]):
+            for k in (-1, 0, 1):
+                have.add((h, a, d + pd.Timedelta(days=k)))
+        add = add[[(h, a, d) not in have for h, a, d in zip(add["home"], add["away"], add["date"])]]
+        add = add.drop_duplicates(["home", "away", "date"])
+        self.schedule = pd.concat([sch, add], ignore_index=True).sort_values("kickoff")
+        return len(add)
 
     MISLI_FIXTURES = DATA_DIR / "misli_fixtures.csv"
 

@@ -10,6 +10,7 @@ headline 1X2 so all numbers shown for a match are consistent.
 from __future__ import annotations
 
 import json
+import re
 import time
 from functools import lru_cache
 from dataclasses import dataclass, field
@@ -159,13 +160,30 @@ class Engine:
                   "Польша": "Poland", "Румыния": "Romania", "Швеция": "Sweden",
                   "Швейцария": "Switzerland", "США": "USA"}
 
+    # livescore spellings that fuzzy matching gets wrong; None = a club we do not cover that
+    # looks like one we do ("Yokohama FC" is not "Yokohama F. Marinos")
+    LS_ALIASES = {"Yokohama FC": None, "Tokyo Verdy": "Verdy", "Urawa Red Diamonds": "Urawa Reds",
+                  "Kyoto Sanga": "Kyoto", "Fagiano Okayama FC": "Okayama",
+                  "JEF United Chiba": "Chiba", "FC Machida Zelvia": "Machida",
+                  "Mito HollyHock": "Mito", "Yokohama F.Marinos": "Yokohama F. Marinos"}
+    LS_CUP = re.compile(r"cup|pokal|copa|coupe|coppa|ta[çc]a|trophy|shield|emperor|beker|kupa"
+                        r"|cupa|puchar|super ?cup|play-?off", re.IGNORECASE)
+
+    def _ls_team(self, name: str, teams):
+        from .names import CLUB_ALIASES, best_match
+        if name in self.LS_ALIASES:
+            hit = self.LS_ALIASES[name]
+            return hit if hit in teams else None
+        # one-way: "Kyoto Sangyo University" must not become "Kyoto"
+        return best_match(name, teams, CLUB_ALIASES, 0.85, both_ways=False)[0]
+
     def _add_livescore_fixtures(self, days: int = 4) -> int:
-        """League matches from livescore.com's daily lists (today + 3 days) that no calendar
-        has - e.g. Belgium, Greece, Japan, second divisions publish no season calendar for us.
-        The league is found by both team names matching that league's current teams."""
+        """Fixtures of our leagues from livescore.com's daily lists (today + 3 days) that no
+        calendar has - Belgium, Greece, Japan, second divisions publish no season calendar for
+        us. League games: both teams must be in that league; domestic cups ("Emperor's Cup",
+        "FA Cup"...): both teams must be in one of the country's leagues (Elo across tiers)."""
         from .fixtures import competition_name, local_tz
         from .livescore import _events, _get
-        from .names import CLUB_ALIASES, best_match
         tz = local_tz()
         by_country: dict[str, dict[str, list]] = {}
         for lg, meta in LEAGUES.items():
@@ -186,20 +204,32 @@ class Engine:
             except Exception:
                 continue
             for e in evs:
-                country = e["competition"].split(" · ")[0]
+                country, _, stage = e["competition"].partition(" · ")
                 if country not in by_country or e["ended"] or pd.isna(e["kickoff"]):
                     continue
-                for lg, teams in by_country[country].items():
-                    h, sh = best_match(e["home_raw"], teams, CLUB_ALIASES, 0.8)
-                    a, sa = best_match(e["away_raw"], teams, CLUB_ALIASES, 0.8)
+                kick = e["kickoff"].tz_convert(tz)
+                base = {"kickoff": kick, "home_src": e["home_raw"], "away_src": e["away_raw"],
+                        "season": kick.year, "date": kick.tz_localize(None).normalize(),
+                        "played": False, "neutral": False, "hg": np.nan, "ag": np.nan,
+                        "friendly": False}
+                leagues = by_country[country]
+                if self.LS_CUP.search(stage):
+                    hl = next(((lg, t) for lg, ts in leagues.items()
+                               if (t := self._ls_team(e["home_raw"], ts))), None)
+                    al = next(((lg, t) for lg, ts in leagues.items()
+                               if (t := self._ls_team(e["away_raw"], ts))), None)
+                    if hl and al and hl[1] != al[1]:
+                        c = LEAGUES[hl[0]]["country"]
+                        rows.append({**base, "competition": hl[0], "kind": "cup",
+                                     "home": hl[1], "away": al[1], "home_key": f"{c}|{hl[1]}",
+                                     "away_key": f"{LEAGUES[al[0]]['country']}|{al[1]}",
+                                     "comp_name": f"{c} — кубок ({stage})"})
+                    continue
+                for lg, teams in leagues.items():
+                    h, a = self._ls_team(e["home_raw"], teams), self._ls_team(e["away_raw"], teams)
                     if h and a and h != a:
-                        kick = e["kickoff"].tz_convert(tz)
-                        rows.append({"competition": lg, "kickoff": kick, "home_src": e["home_raw"],
-                                     "away_src": e["away_raw"], "home": h, "away": a,
-                                     "kind": "league", "season": kick.year,
-                                     "date": kick.tz_localize(None).normalize(), "played": False,
-                                     "neutral": False, "hg": np.nan, "ag": np.nan,
-                                     "friendly": False, "comp_name": competition_name(lg)})
+                        rows.append({**base, "competition": lg, "kind": "league", "home": h,
+                                     "away": a, "comp_name": competition_name(lg)})
                         break
         add = pd.DataFrame(rows)
         if add.empty:

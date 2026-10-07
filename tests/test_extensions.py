@@ -260,3 +260,17 @@ def test_misli_azerbaijani_club_names():
     assert _club_match("Naqoya Qrampus", teams, 0.8)[0] == "Nagoya Grampus"
     assert _club_match("Serkl Brügge", teams, 0.8)[0] == "Cercle Brugge"
     assert _club_match("Şimizu", teams, 0.8)[0] == "Shimizu S-Pulse"
+
+
+def test_future_forecast_not_scored_by_earlier_meeting(tmp_path):
+    from soccer import storage
+    db = tmp_path / "t.db"
+    future = pd.Timestamp.now().normalize() + pd.Timedelta(days=3)
+    storage.save_run("live", "live", pd.DataFrame([{
+        "model": "final", "league": "E0", "season": 2026, "date": future, "home": "A", "away": "B",
+        "p_home": 0.5, "p_draw": 0.3, "p_away": 0.2}]), path=db)
+    storage.save_results(pd.DataFrame([{
+        "league": "E0", "season": 2026, "home": "A", "away": "B",
+        "date": future - pd.Timedelta(days=20), "hg": 2, "ag": 0, "result": "H"}]), path=db)
+    p = storage.load_predictions("live", path=db)
+    assert p["result"].isna().all()   # the old meeting must not count

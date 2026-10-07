@@ -175,7 +175,13 @@ def load_predictions(run_id: str | None = None, kind: str | None = None,
     preds = preds.reset_index(names="_row")
     m = preds.merge(res, on=["league", "home", "away"], how="inner")
     m["_gap"] = (m["r_date"] - m["date"]).abs().dt.days
-    m = m[m["_gap"] <= MAX_RESCHEDULE_DAYS].sort_values("_gap").drop_duplicates("_row")
+    # never score a forecast with an EARLIER meeting of the same pair (a forecast for 10.10
+    # was matched to their game of 05.10): the result must not be more than 3 days before the
+    # scheduled date (postponements move games later), nor before the forecast was made
+    made = pd.to_datetime(m["created_at"], errors="coerce").dt.normalize()
+    ok = (m["r_date"] >= m["date"] - pd.Timedelta(days=3)) & (
+        made.isna() | (m["r_date"] >= made - pd.Timedelta(days=1)) | (m["kind"] != "live"))
+    m = m[ok & (m["_gap"] <= MAX_RESCHEDULE_DAYS)].sort_values("_gap").drop_duplicates("_row")
     out = preds.merge(m[["_row", "hg", "ag", "result"]], on="_row", how="left")
     return out.drop(columns="_row")
 

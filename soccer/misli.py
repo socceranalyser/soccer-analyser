@@ -33,7 +33,8 @@ COUNTRY = {
     "CH": "Швейцария", "US": "США",
 }
 # competitions that are not senior men's football
-EXCLUDE = re.compile(r"qad[ıi]n|u\d{2}|rezerv|\(q\)|olimp|asiya oyunlar|futzal|amator|həvəskar",
+EXCLUDE = re.compile(r"qad[ıi]n|u\d{2}|rezerv|\(q\)|olimp|asiya oyunlar|futzal|amator|həvəskar"
+                     r"|\bWFC\b|\bQFK\b|women|ladies",
                      re.IGNORECASE)  # women, youth, reserves (competition or team name)
 # second teams ("Real Madrid B", "Jong ... II", "... 2") - team names only: a competition such as
 # "KONKAKAF ML - LİQA A, QRUP B" ends with "B" too and was wrongly dropped (fixed 2026-10-05)

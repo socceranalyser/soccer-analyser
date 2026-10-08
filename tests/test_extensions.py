@@ -274,3 +274,32 @@ def test_future_forecast_not_scored_by_earlier_meeting(tmp_path):
         "date": future - pd.Timedelta(days=20), "hg": 2, "ag": 0, "result": "H"}]), path=db)
     p = storage.load_predictions("live", path=db)
     assert p["result"].isna().all()   # the old meeting must not count
+
+
+def test_women_and_youth_results_are_not_taken_as_league_games():
+    from soccer.engine import Engine
+    from soccer.misli import EXCLUDE
+    for stage in ["Women's Super League", "WSL", "Primavera 1", "Premier League 2", "U21 League"]:
+        assert Engine.LS_NOT_MEN.search(stage), stage
+    for stage in ["Premier League", "Serie B", "J1 League", "Eliteserien"]:
+        assert not Engine.LS_NOT_MEN.search(stage), stage
+    for team in ["Chelsea Women", "Barcelona B", "Jong Ajax U21", "Borussia Dortmund II"]:
+        assert Engine.LS_NOT_MEN_TEAM.search(team), team
+    for team in ["Chelsea", "Club Brugge", "Bayern Munich"]:
+        assert not Engine.LS_NOT_MEN_TEAM.search(team), team
+    assert EXCLUDE.search("WFC Mançester Siti") and EXCLUDE.search("QFK Arsenal")
+    assert not EXCLUDE.search("Mançester Siti")
+
+
+def test_health_check_flags_broken_data():
+    import types
+    from soccer import health
+    today = pd.Timestamp.now().normalize()
+    m = pd.DataFrame({"league": ["E0"] * 3,
+                      "date": [today - pd.Timedelta(days=5), today - pd.Timedelta(days=4),
+                               today + pd.Timedelta(days=400)],
+                      "home": ["Chelsea", "Chelsea", "Arsenal"], "away": ["Arsenal", "Everton", "Fulham"]})
+    s = pd.DataFrame({"kind": ["league"], "date": [today], "competition": ["E0"],
+                      "home": ["X"], "away": ["Y"], "played": [False]})
+    w = health.check(types.SimpleNamespace(matches=m, schedule=s))
+    assert any("будущем" in x for x in w) and any("дважды" in x for x in w)

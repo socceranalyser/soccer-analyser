@@ -35,6 +35,14 @@ if __name__ == "__main__":
         print(send_daily_digest(eng))
         from soccer import analysis
         from soccer.notify import send
+        try:
+            from soccer import health
+            problems = health.run(eng)
+            print("health:", problems or "ok")
+            if problems:
+                send("⚠️ <b>Проверка данных нашла проблемы</b>\n" + "\n".join("• " + p for p in problems))
+        except Exception:
+            traceback.print_exc()
         age = (pd.Timestamp.now() - pd.Timestamp(analysis.REPORT.stat().st_mtime, unit="s")).days             if analysis.REPORT.exists() else 99
         if pd.Timestamp.now().weekday() == 0 or age >= 7:
             report = analysis.weekly_report()

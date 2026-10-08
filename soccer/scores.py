@@ -20,7 +20,21 @@ def fetch_results(dates) -> pd.DataFrame:
                 frames.append(df.assign(source=src))
         except Exception:
             continue
-    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+    if not frames:
+        return pd.DataFrame()
+    df = pd.concat(frames, ignore_index=True)
+    return df[~_not_senior_men(df)].reset_index(drop=True)
+
+
+def _not_senior_men(df: pd.DataFrame) -> pd.Series:
+    """Women's, youth and reserve games: their clubs share the men's names ("Chelsea" in the
+    WSL, "WFC Mançester Siti") and must never be matched to a men's fixture."""
+    from .engine import Engine
+    from .misli import EXCLUDE
+    comp = df.get("competition", pd.Series("", index=df.index)).fillna("").astype(str)
+    names = df["home_raw"].fillna("").astype(str) + " | " + df["away_raw"].fillna("").astype(str)
+    team = df["home_raw"].fillna("").astype(str).str.contains(Engine.LS_NOT_MEN_TEAM) |         df["away_raw"].fillna("").astype(str).str.contains(Engine.LS_NOT_MEN_TEAM)
+    return (comp.str.contains(Engine.LS_NOT_MEN) | names.str.contains(EXCLUDE) | team)
 
 
 def fetch_live() -> pd.DataFrame:

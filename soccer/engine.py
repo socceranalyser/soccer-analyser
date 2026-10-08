@@ -113,7 +113,15 @@ class Engine:
         self.matches = (pd.concat([self.base_matches, fresh], ignore_index=True)
                         .sort_values("date").reset_index(drop=True)
                         if len(fresh) else self.base_matches)
-        self.n_fresh = len(fresh)
+        try:  # football-data publishes with delays (stopped at 20.09 in 2026): fill the gap
+            back = self._livescore_backfill()
+            if len(back):
+                self.matches = (pd.concat([self.matches, back], ignore_index=True)
+                                .sort_values("date").reset_index(drop=True))
+            log("livescore results backfilled", len(back))
+        except Exception:
+            back = []
+        self.n_fresh = len(fresh) + len(back)
         cur_cups = current_cup_matches(self.schedule)
         if len(cur_cups):
             euro_hist = euro_hist[euro_hist["season"] < cur_cups["season"].min()]
@@ -166,8 +174,83 @@ class Engine:
                   "Kyoto Sanga": "Kyoto", "Fagiano Okayama FC": "Okayama",
                   "JEF United Chiba": "Chiba", "FC Machida Zelvia": "Machida",
                   "Mito HollyHock": "Mito", "Yokohama F.Marinos": "Yokohama F. Marinos"}
+    # not senior men's football: women's leagues reuse the men's club names ("Chelsea",
+    # "Arsenal" in the WSL) and polluted the Premier League with 6 women's results (2026-10-08)
+    LS_NOT_MEN = re.compile(r"women|wsl|femen|f[ée]minin|frauen|ladies|liga f\b|\bu\d{2}\b"
+                            r"|youth|reserve|primavera|premier league 2|development|academy"
+                            r"|junior|amateur|regional", re.IGNORECASE)
+    LS_NOT_MEN_TEAM = re.compile(r"\bII\b|\sB$|\bU\d{2}\b|women|\bW\b", re.IGNORECASE)  # names only
     LS_CUP = re.compile(r"cup|pokal|copa|coupe|coppa|ta[çc]a|trophy|shield|emperor|beker|kupa"
                         r"|cupa|puchar|super ?cup|play-?off", re.IGNORECASE)
+
+    LS_DAYS = DATA_DIR / "raw" / "livescore_days"
+    BACKFILL_MAX_DAYS = 45
+
+    def _ls_day(self, day: pd.Timestamp) -> list:
+        """livescore.com list of one (UTC) day; finished days are cached on disk."""
+        import json as _json
+        from .livescore import _events, _get
+        f = self.LS_DAYS / f"{day:%Y%m%d}.json"
+        old = day < pd.Timestamp.now(tz="UTC").normalize() - pd.Timedelta(days=1)
+        if old and f.exists():
+            ev = _json.loads(f.read_text(encoding="utf-8"))
+        else:
+            ev = _events(_get(f"date/soccer/{day:%Y%m%d}/0?MD=1"))
+            for e in ev:
+                e["kickoff"] = None if pd.isna(e["kickoff"]) else e["kickoff"].isoformat()
+            if old:
+                self.LS_DAYS.mkdir(parents=True, exist_ok=True)
+                f.write_text(_json.dumps(ev), encoding="utf-8")
+        for e in ev:
+            e["kickoff"] = pd.Timestamp(e["kickoff"]) if e["kickoff"] else pd.NaT
+        return ev
+
+    def _livescore_backfill(self) -> pd.DataFrame:
+        """League results football-data has not published yet, from livescore.com's daily
+        lists: every finished league game since a league's last known result (max 45 days)."""
+        m = self.matches
+        today = pd.Timestamp.now(tz="UTC").normalize()
+        last = m.groupby("league")["date"].max()
+        stale = {lg: d for lg, d in last.items()
+                 if lg in LEAGUES and self.LS_COUNTRY.get(LEAGUES[lg]["country"])
+                 and (today.tz_localize(None) - d).days > 1}
+        if not stale:
+            return pd.DataFrame()
+        teams = {lg: sorted(current_teams(m, lg)) for lg in stale}
+        season = {lg: int(m.loc[m["league"] == lg, "season"].max()) for lg in stale}
+        start = max(min(stale.values()) + pd.Timedelta(days=1),
+                    today.tz_localize(None) - pd.Timedelta(days=self.BACKFILL_MAX_DAYS))
+        rows = []
+        for day in pd.date_range(start, today.tz_localize(None) - pd.Timedelta(days=1)):
+            for e in self._ls_day(day.tz_localize("UTC")):
+                country, _, stage = e["competition"].partition(" · ")
+                if (not e["ended"] or e["hg"] is None or self.LS_CUP.search(stage)
+                        or self.LS_NOT_MEN.search(stage)
+                        or any(self.LS_NOT_MEN_TEAM.search(t) for t in (e["home_raw"], e["away_raw"]))):
+                    continue
+                for lg, d0 in stale.items():
+                    if self.LS_COUNTRY.get(LEAGUES[lg]["country"]) != country or day <= d0:
+                        continue
+                    h, a = self._ls_team(e["home_raw"], teams[lg]), self._ls_team(e["away_raw"], teams[lg])
+                    if h and a and h != a:
+                        hg, ag = int(e["hg"]), int(e["ag"])
+                        rows.append({"league": lg, "season": season[lg], "date": day, "home": h,
+                                     "away": a, "hg": hg, "ag": ag,
+                                     "result": "H" if hg > ag else "A" if hg < ag else "D"})
+                        break
+        out = pd.DataFrame(rows)
+        if out.empty:
+            return out
+        out = out.drop_duplicates(["league", "home", "away", "date"])
+        # never duplicate a game we already have (same pair within 2 days)
+        have = {(r.league, r.home, r.away): r.date for r in
+                m[m["date"] >= start - pd.Timedelta(days=3)].itertuples()}
+        keep = [not ((l, h, a) in have and abs((d - have[(l, h, a)]).days) <= 2)
+                for l, h, a, d in zip(out["league"], out["home"], out["away"], out["date"])]
+        out = out[keep]
+        out["match_id"] = (out["league"] + "_" + out["date"].dt.strftime("%Y%m%d") + "_"
+                           + out["home"] + "_" + out["away"]).str.replace(" ", "")
+        return out
 
     def _ls_team(self, name: str, teams):
         from .names import CLUB_ALIASES, best_match
@@ -205,7 +288,9 @@ class Engine:
                 continue
             for e in evs:
                 country, _, stage = e["competition"].partition(" · ")
-                if country not in by_country or e["ended"] or pd.isna(e["kickoff"]):
+                if (country not in by_country or e["ended"] or pd.isna(e["kickoff"])
+                        or self.LS_NOT_MEN.search(stage)
+                        or any(self.LS_NOT_MEN_TEAM.search(t) for t in (e["home_raw"], e["away_raw"]))):
                     continue
                 kick = e["kickoff"].tz_convert(tz)
                 base = {"kickoff": kick, "home_src": e["home_raw"], "away_src": e["away_raw"],

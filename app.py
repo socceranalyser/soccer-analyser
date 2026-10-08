@@ -1137,15 +1137,21 @@ ODDS_COLS = ["o1", "ox", "o2", "o1x", "o12", "ox2", "o_over", "o_under", "o_btts
              "o_btts_no"]
 
 
-def _best_value(r) -> tuple[str | None, float]:
-    best, val = None, -1.0
+def _best_value(r) -> tuple[str | None, float, float, float]:
+    """The most reliable outcome worth betting (odds >= 1.20): the highest chance that BOTH our
+    model and the market give it. Ranking by p*odds picked 15% long shots where the model simply
+    disagreed with the market - and in such disagreements the market is usually right."""
+    from soccer.coupons import market_probs
+    mk = market_probs(r)
+    best, val, pm_b, pq_b = None, -1.0, np.nan, np.nan
     for c in ODDS_COLS:
-        o, p = r.get(c), r.get(f"p_{c}")
-        if pd.notna(o) and pd.notna(p) and o > 1:
-            v = p * o - 1
-            if v > val:
-                best, val = c, v
-    return best, val
+        o, pm, pq = r.get(c), r.get(f"p_{c}"), mk.get(c)
+        if pd.isna(o) or pd.isna(pm) or pq is None or o < 1.20:
+            continue
+        v = min(float(pm), float(pq))
+        if v > val:
+            best, val, pm_b, pq_b = c, v, float(pm), float(pq)
+    return best, val, pm_b, pq_b
 
 
 def _market_label(col: str, line) -> str:
@@ -1368,7 +1374,7 @@ def page_coupon():
     day = c[0].segmented_control("🗓️ Когда", ["Сегодня", "Завтра", "Все"], default="Все")
     query = c[1].text_input("🔎 Поиск команды или турнира", key="coupon_q")
     only_model = c[2].toggle("🧠 Только с прогнозом модели", value=True)
-    sort = c[3].selectbox("↕️ Сортировка", ["По времени", "По преимуществу модели"])
+    sort = c[3].selectbox("↕️ Сортировка", ["По времени", "По надёжности"])
     if c[3].button("🔄 Обновить коэффициенты"):
         st.session_state["misli_token"] = st.session_state.get("misli_token", 0) + 1
     try:
@@ -1395,24 +1401,22 @@ def page_coupon():
                 | df["away"].fillna("").str.lower().str.contains(q, regex=False)]
     best = df.apply(_best_value, axis=1, result_type="expand") if len(df) else None
     if best is not None:
-        df = df.assign(best_col=best[0], best_val=best[1])
-        if sort == "По преимуществу модели":
+        df = df.assign(best_col=best[0], best_val=best[1], best_pm=best[2], best_pq=best[3])
+        if sort == "По надёжности":
             df = df.sort_values("best_val", ascending=False)
         else:
             df = df.sort_values("kickoff")
     margin = (1 / df[["o1", "ox", "o2"]]).sum(axis=1) - 1 if len(df) else pd.Series(dtype=float)
     st.caption(f"Матчей: {len(df)} · средняя маржа букмекера на 1X2: "
                f"{margin.mean():.1%}" if len(df) else "Матчей не найдено.")
-    with st.expander("ℹ️ Как пользоваться и как понимать «преимущество»", expanded=False):
+    with st.expander("ℹ️ Как пользоваться", expanded=False):
         st.markdown(
             "- Выберите матч в таблице → внизу появятся все исходы с коэффициентами misli и "
             "вероятностями модели → нажмите **➕**, чтобы добавить в купон (он слева).\n"
-            "- **Справедливый коэффициент** = 1 / вероятность модели. Если коэффициент misli "
-            "выше справедливого, модель считает ставку выгодной (**преимущество > 0**).\n"
-            "- **Важно:** проверка на 47 тыс. матчей показала, что закрывающие коэффициенты "
-            "букмекеров точнее нашей модели, и добавлять к ним модель почти бесполезно. Поэтому "
-            "«преимущество» модели — это место, где модель и букмекер расходятся, а не "
-            "гарантированная выгода. Маржа misli ~6–10% на матч, в экспрессе она перемножается.\n"
+            "- **«Надёжнее всего»** — исход с коэффициентом от 1.20, в котором уверены и наша "
+            "модель, и рынок (берётся меньший из двух шансов). Если модель и букмекер сильно "
+            "расходятся, такой исход сюда не попадает: в споре по прошлым матчам чаще прав рынок.\n"
+            "- Маржа misli ~6–10% на матч, в экспрессе она перемножается.\n"
             "- **MBS** — минимальное число событий в купоне по правилам misli для этого матча.")
     if df.empty:
         render_coupon_sidebar()
@@ -1425,10 +1429,11 @@ def page_coupon():
         "Матч": df["home_raw"] + " — " + df["away_raw"],
         "1": df["o1"], "X": df["ox"], "2": df["o2"],
         "Модель П1": df.get("p_o1"), "Модель Х": df.get("p_ox"), "Модель П2": df.get("p_o2"),
-        "Лучший вариант по модели": [
-            (f"{_market_label(b, l)} @ {r[b]:.2f} ({v:+.0%})" if isinstance(b, str) else "—")
-            for b, v, l, (_, r) in zip(df["best_col"], df["best_val"], df["ou_line"],
-                                       df.iterrows())],
+        "Надёжнее всего": [
+            (f"{_market_label(b, l)} @ {r[b]:.2f} (модель {pm:.0%}, рынок {pq:.0%})"
+             if isinstance(b, str) else "—")
+            for b, pm, pq, l, (_, r) in zip(df["best_col"], df["best_pm"], df["best_pq"],
+                                            df["ou_line"], df.iterrows())],
         "MBS": df["mbs"],
     })
     pc = lambda l: st.column_config.ProgressColumn(l, format="percent", min_value=0, max_value=1)

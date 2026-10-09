@@ -278,6 +278,11 @@ class Engine:
             except Exception:
                 continue
             by_country.setdefault(en, {})[lg] = teams
+        from .names import CLUB_ALIASES, best_match
+        s = self.schedule
+        open_pairs: dict[tuple, list] = {}
+        for c, h, a, d in zip(s["competition"], s["home"], s["away"], s["date"]):
+            open_pairs.setdefault((c, h, a), []).append(d)
         rows = []
         today = pd.Timestamp.now(tz="UTC").normalize()
         for k in range(days):
@@ -312,6 +317,15 @@ class Engine:
                     continue
                 for lg, teams in leagues.items():
                     h, a = self._ls_team(e["home_raw"], teams), self._ls_team(e["away_raw"], teams)
+                    if not (h and a):
+                        # looser names ("Borussia Dortmund", "FC Cologne") only for a pair our
+                        # calendar already has - it just brings that game's real kick-off time
+                        h2, a2 = (h or best_match(e["home_raw"], teams, CLUB_ALIASES, 0.6)[0],
+                                  a or best_match(e["away_raw"], teams, CLUB_ALIASES, 0.6)[0])
+                        near = [d for d in open_pairs.get((lg, h2, a2), [])
+                                if abs((d - base["date"]).days) <= 4]
+                        if near:  # amateur "ASC Dortmund" must not become a later Dortmund game
+                            h, a = h2, a2
                     if h and a and h != a:
                         rows.append({**base, "competition": lg, "kind": "league", "home": h,
                                      "away": a, "comp_name": competition_name(lg)})
@@ -320,6 +334,16 @@ class Engine:
         if add.empty:
             return 0
         sch = self.schedule
+        # calendars publish a round before its times are set (fixturedownload: every game of
+        # the round at 00:00 UTC on its first day) -> livescore's real kick-off wins, otherwise
+        # a Sunday game "has started" at 04:00 on Friday
+        add = add.drop_duplicates(["home", "away", "date"])
+        open_ = sch.index[~sch["played"].astype(bool)]
+        pos = {(h, a): i for i, h, a in zip(open_, sch.loc[open_, "home"], sch.loc[open_, "away"])}
+        for _, r in add.iterrows():
+            i = pos.get((r["home"], r["away"]))
+            if i is not None and abs((sch.at[i, "date"] - r["date"]).days) <= 4:
+                sch.at[i, "kickoff"], sch.at[i, "date"] = r["kickoff"], r["date"]
         have = set()
         for h, a, d in zip(sch["home"], sch["away"], sch["date"]):
             for k in (-1, 0, 1):
@@ -364,6 +388,8 @@ class Engine:
                             ignore_index=True)
         if new.empty:
             return 0
+        # the same misli event linked anew wins over its cached link (fixed name mappings)
+        new = new.drop_duplicates(["home_src", "away_src", "date"], keep="last")
         new = new.drop_duplicates(["home", "away", "date"], keep="last")
         new.to_csv(f, index=False)
         # only what the official calendars do not have (same pair within a day, either order)

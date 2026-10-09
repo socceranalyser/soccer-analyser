@@ -8,6 +8,8 @@ from .euro import _norm
 # exact source-name -> our-name fixes (applied before fuzzy matching)
 CLUB_ALIASES = {
     "Atleti": "Ath Madrid", "Atlético Madrid": "Ath Madrid", "Athletic Club": "Ath Bilbao",
+    "FC Cologne": "FC Koln", "Borussia Dortmund": "Dortmund", "Bayer Leverkusen": "Leverkusen",
+    "Independiente Rivadavia": "Ind. Rivadavia",
     "Paris": "Paris SG", "Paris Saint-Germain": "Paris SG", "B. Dortmund": "Dortmund",
     "Man Utd": "Man United", "Leipzig": "RB Leipzig", "Bayern München": "Bayern Munich",
     "Real Betis": "Betis", "Sporting CP": "Sp Lisbon", "Sporting": "Sp Lisbon",

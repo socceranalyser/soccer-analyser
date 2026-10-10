@@ -54,6 +54,11 @@ def score_calls(p, p_over, p_btts, hg, ag, line: float = 2.5) -> dict:
     return out
 
 
+# model and bookmaker 10+ points apart on the called outcome: in live games the bookmaker was
+# the more accurate one in such disagreements -> the verdict carries a warning
+DISAGREE = 0.10
+
+
 def calls_columns(view: pd.DataFrame) -> dict:
     """Plain-language calls for each match plus ✅/❌ once it is finished."""
     cols = {k: [] for k in ("call_outcome", "call_total", "call_btts", "exp_goals", "checks",
@@ -66,7 +71,13 @@ def calls_columns(view: pd.DataFrame) -> dict:
             continue
         p = [r["p_home"], r["p_draw"], r["p_away"]]
         lab, cov, pr = outcome_call(p, r["home"], r["away"])
-        cols["call_outcome"].append(f"{'🏆' if len(cov) == 1 else '🛡️'} {lab} · {pr:.0%}")
+        warn = ""
+        if pd.notna(r.get("q_home")):
+            q = [r["q_home"], r["q_draw"], r["q_away"]]
+            qr = sum(q[i] for i in cov)
+            if abs(qr - pr) >= DISAGREE:
+                warn = f" ⚠️ букмекер {qr:.0%}"
+        cols["call_outcome"].append(f"{'🏆' if len(cov) == 1 else '🛡️'} {lab} · {pr:.0%}{warn}")
         po, pb = r.get("p_over25"), r.get("p_btts")
         if pd.isna(po):
             cols["call_total"].append("—")

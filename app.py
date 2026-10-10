@@ -152,6 +152,19 @@ def with_scores(day: pd.DataFrame, date: pd.Timestamp) -> pd.DataFrame:
         for c in fields:
             ok = m[c].notna()
             day.loc[m.index[ok], c] = m.loc[ok, c].astype(float)
+    # the bookmaker's view: in live matches where it differs from the model by 10+ points it
+    # was right more often (53 such games: log loss 0.985 vs model 1.082)
+    try:
+        mk = storage.prematch_forecasts([date - timedelta(days=1), date, date + timedelta(days=1)],
+                                        model="market")
+    except Exception:
+        mk = pd.DataFrame()
+    if len(mk):
+        mk = mk.drop_duplicates(["league", "home", "away"], keep="last").rename(
+            columns={"league": "competition", "p_home": "q_home", "p_draw": "q_draw",
+                     "p_away": "q_away"})[["competition", "home", "away", "q_home", "q_draw", "q_away"]]
+        day = day.drop(columns=[c for c in ("q_home", "q_draw", "q_away") if c in day])
+        day = day.reset_index().merge(mk, on=["competition", "home", "away"], how="left")             .set_index("index").rename_axis(None)
     fresh = day[day["played"] & day["hg"].notna()]
     if len(fresh):
         try:
@@ -437,7 +450,9 @@ def page_today():
         col.metric(label, f"{int(s_.sum())} из {len(s_)}" if len(s_) else "—")
     st.caption(f"Часовой пояс: {st.session_state.get('tz_label', 'Время компьютера')} "
                "(меняется в меню слева). Нажмите на строку — откроется подробный разбор. "
-               "Для начавшихся и сыгранных матчей показан прогноз, сделанный до начала.")
+               "Для начавшихся и сыгранных матчей показан прогноз, сделанный до начала. "
+               "⚠️ букмекер X% — букмекер оценивает этот исход иначе (на 10+ пунктов): "
+               "в таких матчах модель ошибается чаще, лучше не брать их в купон.")
 
     if view.empty:
         st.warning("Ничего не найдено.")

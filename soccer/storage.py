@@ -123,15 +123,16 @@ def delete_coupon(coupon_id: int, path=DB_PATH) -> None:
     _backup(True)
 
 
-def prematch_forecasts(dates, path=DB_PATH) -> pd.DataFrame:
-    """Headline ('final') forecasts stored before kick-off for the given dates."""
+def prematch_forecasts(dates, path=DB_PATH, model: str = "final") -> pd.DataFrame:
+    """Headline ('final') forecasts stored before kick-off for the given dates
+    (model='market': the bookmaker's margin-free odds stored alongside)."""
     days = sorted({pd.Timestamp(d).strftime("%Y-%m-%d") for d in dates})
     with closing(connect(path)) as con:
         df = pd.read_sql(
             f"SELECT league, date, home, away, p_home, p_draw, p_away, p_over25, p_btts, "
             f"xg_home, xg_away FROM predictions "
-            f"WHERE run_id = 'live' AND model = 'final' AND date IN ({','.join('?' * len(days))})",
-            con, params=days)
+            f"WHERE run_id = 'live' AND model = ? AND date IN ({','.join('?' * len(days))})",
+            con, params=[model] + days)
     return df
 
 

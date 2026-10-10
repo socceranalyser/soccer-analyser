@@ -2,4 +2,4 @@ run_id,kind,created_at,description,params
 test_2023_2025,backtest,2026-10-01T07:59:28,"seasons=[2023, 2024, 2025] freq=W","{""dc"": {""xi"": 0.0025, ""ridge"": 6.0, ""window_days"": 1825, ""n_samples"": 0, ""newcomer_shift"": 0.0, ""newcomer_ridge_mult"": 6.0}, ""elo"": {""k"": 15.0, ""home_adv"": 65.0, ""season_regress"": 0.0}, ""seasons"": [2023, 2024, 2025]}"
 nat_test_2023_2026,backtest,2026-10-01T08:22:17,сборные 2023-2026,{}
 bt_all,backtest,2026-10-03T19:47:38,"все турниры: лиги 2023–25, еврокубки 2023–25, сборные 2023–26","{""dc"": {""xi"": 0.0025, ""ridge"": 6.0, ""window_days"": 1825, ""n_samples"": 0, ""newcomer_shift"": 0.0, ""newcomer_ridge_mult"": 6.0}, ""elo"": {""k"": 15.0, ""home_adv"": 65.0, ""season_regress"": 0.0, ""country_spill"": 0.35, ""k_cup_mult"": 2.0}}"
-live,live,2026-10-09T09:38:43,ежедневные прогнозы,{}
+live,live,2026-10-10T09:36:52,ежедневные прогнозы,{}

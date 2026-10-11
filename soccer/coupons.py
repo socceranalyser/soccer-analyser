@@ -139,21 +139,75 @@ def _why(r) -> str:
     return f"{lead} (модель {pm:.0%}, рынок {pq:.0%})" + (f" · 📰 {news}" if news else "")
 
 
-def suggest(events: pd.DataFrame, source: str = "combined") -> list[dict]:
-    """Single, double and treble coupons, using different matches where possible.
+# "Package of the day": several SEPARATE single bets instead of one accumulator. An accumulator
+# multiplies the bookmaker's margin; singles do not (scripts/backtest_portfolio.py, 2023-25,
+# 5 per bet): the 4 ladder coupons together -9.4%, day in plus 29%; a 2-of-3 system -8..-14%;
+# up to 5 singles at odds 1.25-1.60 where model AND market give >= 65%: -1.9%, day in plus 54%,
+# longest losing run 6 days. No rule beat the margin in every season - honest, not a money machine.
+PACKAGE = {"max_n": 5, "min_odds": 1.25, "max_odds": 1.60, "agree_min": 0.65}
+PACKAGE_MARKETS = ("o1", "ox", "o2", "o_over", "o_under")
+PACKAGE_HISTORY = {"days_plus": 0.54, "ret": -0.019, "streak": 6, "all_won": 0.31}
 
-    source="combined" (default): market chance, confirmed by our model (agree_min);
-    source="model": our model alone; source="market": bookmaker's margin-free odds alone.
-    """
+
+def package(events: pd.DataFrame, tz=None) -> dict | None:
+    """Up to 5 single bets on different matches + the chance distribution of the day's result."""
+    cands = _prepared(events)
+    if cands.empty:
+        return None
+    r = PACKAGE
+    c = cands[(cands["odds"] >= r["min_odds"]) & (cands["odds"] <= r["max_odds"])
+              & cands["p_model"].notna() & ~cands["avoid"].astype(bool)
+              & ~cands["friendly"].astype(bool)]
+    if c.empty:
+        return None
+    c = c[c["market"].isin(PACKAGE_MARKETS)]  # the markets the history above was measured on
+    c = c.assign(agree=np.minimum(c["p_model"].astype(float), c["p_market"]))
+    c = c[c["agree"] >= r["agree_min"]]
+    if c.empty:
+        return None
+    # one day: the nearest local day (Baku by default) with at least two such bets
+    from .fixtures import local_tz
+    day = pd.to_datetime(c["kickoff"], utc=True).dt.tz_convert(tz or local_tz()).dt.date
+    counts = day.value_counts().sort_index()
+    ok = counts[counts >= 2]
+    c = c[day == (ok.index[0] if len(ok) else counts.index[0])]
+    picks = c.sort_values("agree", ascending=False).drop_duplicates("event_id").head(r["max_n"])
+    picks = picks.assign(why=[_why(x) for x in picks.itertuples()]).drop(columns="agree")
+    p, o = picks["p"].to_numpy(float), picks["odds"].to_numpy(float)
+    # exact distribution of the day's money result (independent matches, n <= 5 -> 32 cases)
+    n = len(picks)
+    plus, dist = 0.0, np.zeros(n + 1)
+    for mask in range(1 << n):
+        won = np.array([(mask >> i) & 1 for i in range(n)], bool)
+        pr = float(np.prod(np.where(won, p, 1 - p)))
+        dist[won.sum()] += pr
+        if (o * won).sum() > n:
+            plus += pr
+    # wins needed to be in plus whichever games they are (the cheapest odds win)
+    need = next((k for k in range(n + 1) if np.sort(o)[:k].sum() > n), n + 1)
+    return {"picks": picks, "n": n, "p_plus": plus, "dist": dist, "need_sure": need,
+            "ev": float((p * o).mean() - 1)}
+
+
+def _prepared(events: pd.DataFrame) -> pd.DataFrame:
     try:  # today's news analysis corrects the model and vetoes unpredictable matches
         from .news import apply
         events = apply(events)
     except Exception:
         pass
     cands = candidates(events)
+    return cands.assign(p_market=cands["p"]) if not cands.empty else cands
+
+
+def suggest(events: pd.DataFrame, source: str = "combined") -> list[dict]:
+    """Single, double and treble coupons, using different matches where possible.
+
+    source="combined" (default): market chance, confirmed by our model (agree_min);
+    source="model": our model alone; source="market": bookmaker's margin-free odds alone.
+    """
+    cands = _prepared(events)
     if cands.empty:
         return []
-    cands = cands.assign(p_market=cands["p"])
     if source == "model":
         cands = cands[cands["p_model"].notna()].assign(p=lambda d: d["p_model"].astype(float))
     elif source == "combined":  # chance = honest market; our model (and news) must confirm it

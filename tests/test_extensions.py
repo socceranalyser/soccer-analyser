@@ -303,3 +303,17 @@ def test_health_check_flags_broken_data():
                       "home": ["X"], "away": ["Y"], "played": [False]})
     w = health.check(types.SimpleNamespace(matches=m, schedule=s))
     assert any("будущем" in x for x in w) and any("дважды" in x for x in w)
+
+
+def test_package_of_singles_distribution():
+    from soccer import coupons
+    k = pd.Timestamp.now(tz="UTC").normalize() + pd.Timedelta(days=1, hours=12)
+    ev = pd.DataFrame([{"event_id": i, "kickoff": k, "home_raw": f"H{i}", "away_raw": f"A{i}",
+                        "competition_az": "Liqa", "mbs": 1, "o1": 1.30, "ox": 5.5, "o2": 9.0,
+                        "p_o1": 0.74, "p_ox": 0.17, "p_o2": 0.09, "home": f"H{i}", "away": f"A{i}"}
+                       for i in range(3)])
+    pk = coupons.package(ev, "Asia/Baku")
+    assert pk is not None and pk["n"] == 3
+    assert abs(pk["dist"].sum() - 1) < 1e-9
+    assert pk["need_sure"] == 3  # 2 x 1.30 = 2.60 < 3 staked
+    assert abs(pk["p_plus"] - pk["dist"][3]) < 1e-9

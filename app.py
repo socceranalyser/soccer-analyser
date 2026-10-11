@@ -1326,6 +1326,7 @@ def render_suggestions(df: pd.DataFrame):
     source = {"Мой анализ (рекомендую)": "combined", "Только модель": "model",
               "Только букмекер": "market"}[st.session_state.get("chance_source",
                                                                  "Мой анализ (рекомендую)")]
+    render_package(upcoming)
     coupons = suggest(upcoming, source)
     if not coupons:
         st.info("Для выбранного периода не хватает матчей с прогнозом модели, чтобы собрать "
@@ -1379,6 +1380,53 @@ def render_suggestions(df: pd.DataFrame):
     st.caption("Шанс каждого исхода — по выбранному источнику (по умолчанию наша модель); "
                "коэффициент misli.az — это только цена ставки. Шанс купона — произведение "
                "шансов. Это не гарантия выигрыша — ставьте только то, что готовы потерять.")
+
+
+def render_package(upcoming: pd.DataFrame):
+    """'Package of the day': several separate single bets - loses the least on history."""
+    from soccer.coupons import PACKAGE, PACKAGE_HISTORY, package
+    pk = package(upcoming, user_tz() or local_tz())
+    with st.container(border=True):
+        st.markdown("**📦 Пакет дня — несколько отдельных ставок на один день (рекомендую вместо экспрессов)**")
+        if pk is None:
+            st.caption("Сейчас нет исходов, в которых модель и букмекер оба уверены (≥ "
+                       f"{PACKAGE['agree_min']:.0%}) при кф {PACKAGE['min_odds']}–"
+                       f"{PACKAGE['max_odds']}. Проверьте позже.")
+            return
+        stake = st.number_input("Ставка на каждую игру, ₼", min_value=1.0, value=5.0, step=1.0,
+                                key="pkg_stake")
+        n = pk["n"]
+        for _, r in pk["picks"].iterrows():
+            t = pd.Timestamp(r["kickoff"]).tz_convert(user_tz() or local_tz())
+            st.markdown(f"{t:%d.%m %H:%M} · {r['match']}  \n**{r['label']}** @ **{r['odds']:.2f}** · "
+                        f"шанс {pct(r['p'])} → {stake:.0f} ₼ вернут {stake * r['odds']:.2f} ₼"
+                        f"  \n<small>💡 {r['why']}</small>", unsafe_allow_html=True)
+        st.divider()
+        c = st.columns(3)
+        c[0].metric("Всего поставить", f"{stake * n:.0f} ₼", f"{n} отдельн. ставок",
+                    delta_color="off")
+        c[1].metric("Шанс закончить день в плюсе", pct(pk["p_plus"]))
+        c[2].metric("Все сбудутся", pct(pk["dist"][-1]),
+                    f"+{stake * (pk['picks']['odds'].sum() - n):.2f} ₼", delta_color="off")
+        st.caption("Сколько угадаем: " + " · ".join(f"{k} из {n} — {pct(v)}" for k, v in
+                                                     enumerate(pk["dist"]) if v >= 0.005)
+                   + (f". Чтобы быть в плюсе, нужно угадать {pk['need_sure']} из {n}."
+                      if pk["need_sure"] <= n else ""))
+        h = PACKAGE_HISTORY
+        st.caption(f"📜 Такие пакеты в 2023–25: день в плюсе {h['days_plus']:.0%} дней, все игры "
+                   f"сбылись {h['all_won']:.0%} дней, худшая серия минусовых дней — {h['streak']}, "
+                   f"итог {h['ret']:+.1%} от поставленного. Для сравнения: экспрессы −7…−14%. "
+                   "Каждая игра — отдельный купон: проигрыш одной не «сжигает» остальные.")
+        if st.button(f"💾 Сохранить {n} ставок в «Мои купоны»", key="pkg_save", width="stretch"):
+            for _, r in pk["picks"].iterrows():
+                storage.save_coupon([{
+                    "event_id": int(r["event_id"]), "kickoff": str(r["kickoff"]),
+                    "match": r["match"], "comp": r["comp"], "market": r["market"],
+                    "label": r["label"], "odds": float(r["odds"]),
+                    "p_model": float(r["p_model"]), "p_market": float(r["p_market"]),
+                    "home": r["home"], "away": r["away"], "line": r["line"],
+                    "mbs": int(r["mbs"])}], stake, float(r["odds"]), float(r["p"]))
+            st.success(f"Сохранено {n} отдельных ставок — результаты появятся в «🧾 Мои купоны».")
 
 
 def page_coupon():

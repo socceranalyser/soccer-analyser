@@ -459,7 +459,29 @@ def page_today():
         st.warning("Ничего не найдено.")
         return
     now = now_in_tz()
-    show_probs = st.toggle("📊 Показать вероятности П1 / Х / П2", value=False)
+    tg = st.columns(2)
+    show_probs = tg[0].toggle("📊 Показать вероятности П1 / Х / П2", value=False)
+    only_sure = tg[1].toggle("🔒 Только «почти наверняка»", value=False,
+                             help="Матчи, где и моя модель, и букмекер дают исходу 85% и больше. "
+                                  "В 2023–25 такие прогнозы сбылись в 92% случаев (~3 матча в день), "
+                                  "но коэффициенты на них маленькие: 1.03–1.10.")
+    if only_sure:
+        from soccer.verdicts import sure_call
+        sure = [sure_call(r, r["home"], r["away"]) for _, r in view.iterrows()]
+        keep = [s is not None for s in sure]
+        view = view[keep].copy()
+        sure = [s for s in sure if s is not None]
+        if view.empty:
+            st.info("Сегодня нет матчей, где и модель, и букмекер уверены на 85%+. "
+                    "Так бывает — попробуйте завтрашний день.")
+            return
+        res = [None if not (r["played"] and pd.notna(r["hg"])) else
+               (0 if r["hg"] > r["ag"] else 1 if r["hg"] == r["ag"] else 2) for _, r in view.iterrows()]
+        view["call_outcome"] = [f"🔒 {s[0]} · модель {s[1]:.0%} · букмекер {s[2]:.0%}" for s in sure]
+        view["checks"] = ["" if y is None else ("✅" if y in s[3] else "❌") for s, y in zip(sure, res)]
+        done = [y in s[3] for s, y in zip(sure, res) if y is not None]
+        if done:
+            st.caption(f"🔒 Сегодня сбылось {sum(done)} из {len(done)} «почти наверняка».")
     table = pd.DataFrame({
         "Время": [("вчера " if y is True else "") + (k.strftime("%H:%M") if pd.notna(k) else "")
                   for k, y in zip(view["kickoff"], view.get("from_yesterday",

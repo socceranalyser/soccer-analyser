@@ -316,3 +316,13 @@ def test_package_of_singles_distribution():
     assert abs(pk["dist"].sum() - 1) < 1e-9
     assert pk["need_sure"] == 3  # 2 x 1.30 = 2.60 < 3 staked
     assert abs(pk["p_plus"] - pk["dist"][3]) < 1e-9
+
+
+def test_sure_call_needs_model_and_market():
+    from soccer.verdicts import sure_call
+    r = {"p_home": 0.70, "p_draw": 0.20, "p_away": 0.10, "q_home": 0.68, "q_draw": 0.20, "q_away": 0.12}
+    lab, pm, pq, cov = sure_call(r, "A", "B")
+    assert lab == "A не проиграет" and cov == {0, 1} and min(pm, pq) >= 0.85
+    r["q_home"], r["q_draw"], r["q_away"] = 0.50, 0.25, 0.25  # bookmaker not that sure
+    assert sure_call(r, "A", "B") is None
+    assert sure_call({**r, "q_home": float("nan")}, "A", "B") is None

@@ -29,6 +29,25 @@ def outcome_call(p, home: str, away: str) -> tuple[str, frozenset, float]:
     return f"{away} не проиграет", frozenset({1, 2}), float(xa)
 
 
+# "Almost sure": the safest 1X2 call that BOTH our model and the bookmaker rate >= 85%.
+# 2023-25 league history (bt_all, 3 088 calls, ~3 per match day): came true 92.4%
+# (>= 88%: 94.6%) - but such odds are ~1.03-1.10, so they are for confidence, not for profit.
+SURE = 0.85
+
+
+def sure_call(r, home: str, away: str):
+    """(label, model p, market p, covered results) of the safest call, or None."""
+    if pd.isna(r.get("q_home")) or pd.isna(r.get("p_home")):
+        return None
+    p = np.array([r["p_home"], r["p_draw"], r["p_away"]], float)
+    q = np.array([r["q_home"], r["q_draw"], r["q_away"]], float)
+    opts = [(f"Победа {home}", {0}), (f"Победа {away}", {2}),
+            (f"{home} не проиграет", {0, 1}), (f"{away} не проиграет", {1, 2})]
+    best = max(opts, key=lambda o: min(p[list(o[1])].sum(), q[list(o[1])].sum()))
+    pm, pq = p[list(best[1])].sum(), q[list(best[1])].sum()
+    return (best[0], float(pm), float(pq), frozenset(best[1])) if min(pm, pq) >= SURE else None
+
+
 def total_call(p_over: float, line: float = 2.5) -> tuple[str, bool, float]:
     """(label, True if the call is 'over', probability)."""
     return (f"Больше {line:g}", True, p_over) if p_over >= 0.5 else \

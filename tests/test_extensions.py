@@ -103,15 +103,14 @@ def test_coupon_suggestions():
     assert mp["o1"] + mp["ox"] + mp["o2"] == pytest.approx(1.0)
     assert mp["o_over"] + mp["o_under"] == pytest.approx(1.0)
     coupons = suggest(df, "market")
-    assert [cp["style"] for cp in coupons][0] == "single"
     assert {cp["style"] for cp in coupons} <= set(STYLES)
-    assert len(coupons[0]["picks"]) == 1 and coupons[0]["picks"]["mbs"].iloc[0] == 1
+    assert all(len(cp["picks"]) == STYLES[cp["style"]]["size"] >= 2 for cp in coupons)
     # "my analysis": a model at 50% never confirms the outcome -> no confident coupon
-    assert not {cp["style"] for cp in suggest(df, "combined")} & {"single", "double"}
+    assert not {cp["style"] for cp in suggest(df, "combined")} & {"double", "three", "four"}
     for cp in coupons:
         ids = list(cp["picks"]["event_id"])
         assert len(ids) == len(set(ids))            # one pick per match
-        assert 0 not in ids                          # MBS 5 never fits a 1-3 match coupon
+        assert 0 not in ids                          # MBS 5 never fits a 2-4 match coupon
         assert cp["prob"] == pytest.approx(np.prod(cp["picks"]["p"]))
 
 
@@ -249,7 +248,7 @@ def test_friendlies_stay_out_of_reliable_coupons():
                      "p_o1": 0.80, "p_ox": 0.13, "p_o2": 0.07, "p_o_over": 0.5, "p_o_under": 0.5})
     df = pd.DataFrame(rows)
     for cp in suggest(df):
-        if cp["style"] in ("single", "double"):
+        if cp["style"] in ("double", "three", "four"):
             assert set(cp["picks"]["event_id"]) <= {3, 4, 5}
 
 

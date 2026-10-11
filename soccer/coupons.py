@@ -48,12 +48,17 @@ def market_probs(r) -> dict:
 # "value" = our model rates the outcome higher than the bookmaker: on higher odds this is where
 # our own analysis helps (2-match 1.5-2.2: -7.2% vs -11.1% when ranked by plain likelihood).
 STYLES = {
-    "single": {"title": "💎 Ставка дня — одна самая надёжная игра", "size": 1, "min_odds": 1.25,
-               "max_odds": 99, "min_p": 0.0, "agree_min": 0.75, "no_friendly": True,
-               "score": lambda p, o, pm: p},
     "double": {"title": "✌️ Двойной — две надёжные игры", "size": 2, "min_odds": 1.30,
                "max_odds": 1.60, "min_p": 0.0, "agree_min": 0.62, "no_friendly": True,
                "score": lambda p, o, pm: min(p, pm)},
+    "three": {"title": "🎯 Тройка — 3 надёжные игры", "size": 3, "min_odds": 1.25,
+              "max_odds": 1.50, "min_p": 0.0, "agree_min": 0.68, "no_friendly": True,
+              "markets": ("o1", "ox", "o2", "o_over", "o_under"),
+              "score": lambda p, o, pm: min(p, pm)},
+    "four": {"title": "🧱 Четвёрка — 4 надёжные игры", "size": 4, "min_odds": 1.20,
+             "max_odds": 1.45, "min_p": 0.0, "agree_min": 0.70, "no_friendly": True,
+             "markets": ("o1", "ox", "o2", "o_over", "o_under"),  # as measured on history
+             "score": lambda p, o, pm: min(p, pm)},
     "medium": {"title": "⚖️ Средний — две игры с хорошим коэффициентом", "size": 2,
                "min_odds": 1.50, "max_odds": 2.20, "min_p": 0.0, "agree_min": 0.50,
                "score": lambda p, o, pm: pm - p},
@@ -64,8 +69,11 @@ STYLES = {
 # How such coupons did on 2023-25 league matches with real odds (scripts/backtest_coupons.py):
 # share of days the coupon came true, average total odds, longest losing streak (days), money
 # result per stake. Promised chances matched reality within 1-2 points for every style.
-HISTORY = {"single": {"hit": 0.758, "odds": 1.25, "streak": 3, "ret": -0.053},
+HISTORY = {"three": {"hit": 0.426, "odds": 2.19, "streak": 9, "ret": -0.076},
            "double": {"hit": 0.500, "odds": 1.89, "streak": 10, "ret": -0.067},
+           # few days (88) - 45% came true vs 32% promised, +13%: most likely luck, the same
+           # legs bet one by one gave -2% over 900 bets
+           "four": {"hit": 0.455, "odds": 2.51, "streak": 6, "ret": 0.131, "days": 88},
            "medium": {"hit": 0.316, "odds": 2.99, "streak": 12, "ret": -0.072},
            "big": {"hit": 0.170, "odds": 5.16, "streak": 28, "ret": -0.141}}
 
@@ -107,6 +115,8 @@ def build(cands: pd.DataFrame, style: str, exclude=frozenset(), agree: bool = Fa
               & cands["p_model"].notna()  # only matches our model also covers
               & ~cands["avoid"].astype(bool)  # news analysis: unpredictable today
               & ~(cands["friendly"].astype(bool) & st.get("no_friendly", False))]
+    if st.get("markets"):
+        c = c[c["market"].isin(st["markets"])]
     if agree:  # our own analysis must confirm the outcome, not just the bookmaker's price
         c = c[np.minimum(c["p_model"].astype(float), c["p_market"].astype(float))
               >= st["agree_min"]]
@@ -165,12 +175,14 @@ def package(events: pd.DataFrame, tz=None) -> dict | None:
     c = c[c["agree"] >= r["agree_min"]]
     if c.empty:
         return None
-    # one day: the nearest local day (Baku by default) with at least two such bets
+    # one day: the nearest local day (Baku by default) with at least three such bets
     from .fixtures import local_tz
     day = pd.to_datetime(c["kickoff"], utc=True).dt.tz_convert(tz or local_tz()).dt.date
     counts = day.value_counts().sort_index()
-    ok = counts[counts >= 2]
-    c = c[day == (ok.index[0] if len(ok) else counts.index[0])]
+    ok = counts[counts >= 3]
+    if ok.empty:  # one or two singles is not a package
+        return None
+    c = c[day == ok.index[0]]
     picks = c.sort_values("agree", ascending=False).drop_duplicates("event_id").head(r["max_n"])
     picks = picks.assign(why=[_why(x) for x in picks.itertuples()]).drop(columns="agree")
     p, o = picks["p"].to_numpy(float), picks["odds"].to_numpy(float)

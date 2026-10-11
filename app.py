@@ -447,7 +447,8 @@ def page_today():
     for col, key, label in ((m[2], "ok_outcome", "Исход угадан"), (m[3], "ok_total", "Тотал угадан"),
                             (m[4], "ok_btts", "«Обе забьют» угадано")):
         s_ = played[key].dropna() if len(played) else pd.Series(dtype=float)
-        col.metric(label, f"{int(s_.sum())} из {len(s_)}" if len(s_) else "—")
+        col.metric(label, f"{int(s_.sum())}/{len(s_)}" if len(s_) else "—",
+                   f"{s_.mean():.0%}" if len(s_) else None, delta_color="off", delta_arrow="off")
     st.caption(f"Часовой пояс: {st.session_state.get('tz_label', 'Время компьютера')} "
                "(меняется в меню слева). Нажмите на строку — откроется подробный разбор. "
                "Для начавшихся и сыгранных матчей показан прогноз, сделанный до начала. "
@@ -1326,7 +1327,6 @@ def render_suggestions(df: pd.DataFrame):
     source = {"Мой анализ (рекомендую)": "combined", "Только модель": "model",
               "Только букмекер": "market"}[st.session_state.get("chance_source",
                                                                  "Мой анализ (рекомендую)")]
-    render_package(upcoming)
     coupons = suggest(upcoming, source)
     if not coupons:
         st.info("Для выбранного периода не хватает матчей с прогнозом модели, чтобы собрать "
@@ -1340,9 +1340,9 @@ def render_suggestions(df: pd.DataFrame):
                   "когда появятся новые коэффициенты и новости.")
     stake = st.number_input("Пример ставки для расчёта, ₼", min_value=1.0, value=10.0,
                             step=1.0, key="sugg_stake")
-    singles = [cp for cp in coupons if cp["style"] == "single"]
-    others = [cp for cp in coupons if cp["style"] != "single"]
-    slots = ([st.container()] if singles else []) + (list(st.columns(len(others))) if others else [])
+    singles, others = [], coupons
+    grid = [c for i in range(0, len(others), 2) for c in st.columns(2)][:len(others)]
+    slots = ([st.container()] if singles else []) + grid
     for col, cp in zip(slots, singles + others):
         with col.container(border=True):
             st.markdown(f"**{cp['title']}**")
@@ -1362,7 +1362,9 @@ def render_suggestions(df: pd.DataFrame):
             h = HISTORY.get(cp["style"])
             if h:
                 st.caption(f"📜 Такие купоны в 2023–25: сбылись в {h['hit']:.0%} дней, самая длинная "
-                           f"серия проигрышей — {h['streak']} дн. подряд, итог {h['ret']:+.0%} на ставку.")
+                           f"серия проигрышей — {h['streak']} дн. подряд, итог {h['ret']:+.0%} на ставку."
+                           + (f" Но таких дней было мало ({h['days']}) — плюс скорее удача, рассчитывайте "
+                              f"на шанс купона выше." if h.get("days") else ""))
             st.caption(f"Ставка {stake:.0f} ₼ → если зайдёт, {stake * cp['total_odds']:.2f} ₼. "
                        f"Если ставить так 100 раз по 1 ₼, вернётся ≈ "
                        f"{(cp['ev'] + 1) * 100:.0f} ₼ (маржа букмекера).")
@@ -1377,6 +1379,7 @@ def render_suggestions(df: pd.DataFrame):
                      "home": pk["home"], "away": pk["away"], "line": pk["line"],
                      "mbs": int(pk["mbs"])} for _, pk in cp["picks"].iterrows()])
                 st.rerun()
+    render_package(upcoming)
     st.caption("Шанс каждого исхода — по выбранному источнику (по умолчанию наша модель); "
                "коэффициент misli.az — это только цена ставки. Шанс купона — произведение "
                "шансов. Это не гарантия выигрыша — ставьте только то, что готовы потерять.")
@@ -1387,11 +1390,10 @@ def render_package(upcoming: pd.DataFrame):
     from soccer.coupons import PACKAGE, PACKAGE_HISTORY, package
     pk = package(upcoming, user_tz() or local_tz())
     with st.container(border=True):
-        st.markdown("**📦 Пакет дня — несколько отдельных ставок на один день (рекомендую вместо экспрессов)**")
+        st.markdown("**📦 Пакет дня — те же надёжные игры, но отдельными ставками**")
         if pk is None:
-            st.caption("Сейчас нет исходов, в которых модель и букмекер оба уверены (≥ "
-                       f"{PACKAGE['agree_min']:.0%}) при кф {PACKAGE['min_odds']}–"
-                       f"{PACKAGE['max_odds']}. Проверьте позже.")
+            st.caption("Пакет собирается, когда на один день есть хотя бы 3 игры, где модель и "
+                       f"букмекер оба уверены (≥ {PACKAGE['agree_min']:.0%}). Сейчас таких нет.")
             return
         stake = st.number_input("Ставка на каждую игру, ₼", min_value=1.0, value=5.0, step=1.0,
                                 key="pkg_stake")

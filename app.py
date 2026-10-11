@@ -1647,11 +1647,19 @@ def page_my_coupons():
     m[1].metric("Выиграно", len(won))
     m[2].metric("Проиграно", len(lost))
     m[3].metric("Баланс по сыгранным", f"{returned - staked:+.2f} ₼")
+    # how many should have come true by their own chances (bookmaker's margin-free odds)
+    probs = [c["model_prob"] if c.get("model_prob") is not None and not pd.isna(c["model_prob"])
+             else 0.95 / c["total_odds"] for c in won + lost]
+    if probs:
+        st.caption(f"По шансам этих купонов ожидалось выиграть ≈ {sum(probs):.1f} из {len(probs)}, "
+                   f"выиграно {len(won)}. Купоны с большим коэффициентом (4–8) заходят редко — "
+                   "это нормально, важно сравнивать с ожидаемым.")
     head = {"won": "✅ выигран", "lost": "❌ проигран", "pending": "⏳ в игре"}
     for state, cpn, lines in blocks:
         title = (f"#{cpn['id']} · {cpn['created_at'][:16].replace('T', ' ')} · коэф. "
                  f"{cpn['total_odds']:.2f} · ставка {cpn['stake']:.2f} ₼ · {head[state]}"
-                 + (f" (+{cpn['stake'] * cpn['total_odds']:.2f} ₼)" if state == "won" else ""))
+                 + (f": вернули {cpn['stake'] * cpn['total_odds']:.2f} ₼ "
+                    f"(+{cpn['stake'] * (cpn['total_odds'] - 1):.2f} ₼ чистыми)" if state == "won" else ""))
         with st.expander(title, expanded=state == "pending"):
             st.markdown("\n".join(lines))
             if st.button("Удалить", key=f"del_{cpn['id']}"):

@@ -83,6 +83,25 @@ def _label(col: str, line) -> str:
     return MARKET_LABELS[col].format(line=f"{line:g}")
 
 
+# markets that back one side: a coupon must never back the side our model rates LOWER
+# (Villarreal - Napoli: model 40/25/35 says "Villarreal won't lose", but "Napoli or draw" at 60%
+# vs the market's 56% looked like value - a pick against our own verdict)
+SIDE = {"o1": "home", "o1x": "home", "o2": "away", "ox2": "away"}
+
+
+def _model_side(r) -> str | None:
+    p1, p2 = r.get("p_o1"), r.get("p_o2")
+    if p1 is None or p2 is None or pd.isna(p1) or pd.isna(p2):
+        return None
+    return "home" if p1 >= p2 else "away"
+
+
+def against_model(cands: pd.DataFrame) -> pd.Series:
+    """True where the outcome backs the side our model rates lower."""
+    side = cands["market"].map(SIDE)
+    return side.notna() & cands["side"].notna() & (side != cands["side"])
+
+
 def candidates(events: pd.DataFrame) -> pd.DataFrame:
     """One row per (match, market outcome) with misli odds and model probability."""
     rows = []
@@ -97,6 +116,7 @@ def candidates(events: pd.DataFrame) -> pd.DataFrame:
                          "comp": r.get("competition_az", ""), "market": c,
                          "label": _label(c, r.get("ou_line")), "odds": float(o), "p": float(p),
                          "p_model": None if pd.isna(pm) else float(pm),
+                         "side": _model_side(r),
                          "mbs": int(r.get("mbs", 1)),
                          "home": r.get("home") if pd.notna(r.get("home")) else None,
                          "away": r.get("away") if pd.notna(r.get("away")) else None,
@@ -208,7 +228,10 @@ def _prepared(events: pd.DataFrame) -> pd.DataFrame:
     except Exception:
         pass
     cands = candidates(events)
-    return cands.assign(p_market=cands["p"]) if not cands.empty else cands
+    if cands.empty:
+        return cands
+    cands = cands[~against_model(cands)]
+    return cands.assign(p_market=cands["p"])
 
 
 def suggest(events: pd.DataFrame, source: str = "combined") -> list[dict]:

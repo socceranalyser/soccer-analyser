@@ -259,6 +259,7 @@ def test_misli_azerbaijani_club_names():
     assert _club_match("Naqoya Qrampus", teams, 0.8)[0] == "Nagoya Grampus"
     assert _club_match("Serkl Brügge", teams, 0.8)[0] == "Cercle Brugge"
     assert _club_match("Şimizu", teams, 0.8)[0] == "Shimizu S-Pulse"
+    assert _club_match("Yokohama FC", ["Yokohama F. Marinos", "Urawa Reds"], 0.6)[0] is None
 
 
 def test_future_forecast_not_scored_by_earlier_meeting(tmp_path):
@@ -326,3 +327,14 @@ def test_sure_call_needs_model_and_market():
     r["q_home"], r["q_draw"], r["q_away"] = 0.50, 0.25, 0.25  # bookmaker not that sure
     assert sure_call(r, "A", "B") is None
     assert sure_call({**r, "q_home": float("nan")}, "A", "B") is None
+
+
+def test_coupon_never_backs_the_side_the_model_rates_lower():
+    from soccer.coupons import _prepared
+    ev = pd.DataFrame([{"event_id": 1, "kickoff": pd.Timestamp("2030-01-01", tz="UTC"),
+                        "home_raw": "Villarreal", "away_raw": "Napoli", "competition_az": "X",
+                        "mbs": 1, "o1": 2.06, "ox": 3.45, "o2": 3.15, "o1x": 1.26, "ox2": 1.62,
+                        "p_o1": 0.40, "p_ox": 0.25, "p_o2": 0.35, "p_o1x": 0.65, "p_ox2": 0.60}])
+    c = _prepared(ev)
+    assert "ox2" not in set(c["market"]) and "o2" not in set(c["market"])
+    assert {"o1", "o1x", "ox"} <= set(c["market"])

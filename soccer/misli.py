@@ -279,6 +279,10 @@ MISLI_CLUBS = {
     "Şimizu": "Shimizu S-Pulse", "Xirosima": "Sanfrecce Hiroshima", "Tokio Verdi": "Verdy",
     "FK Tokio": "FC Tokyo", "Urava": "Urawa Reds", "Kyoto Purple Sanqa": "Kyoto",
     "Maçida Zelvia": "Machida", "Yunayted İchihara": "Chiba", "Serkl Brügge": "Cercle Brugge",
+    # not Yokohama F. Marinos (2nd division club; "Yokohama FC" was linked to Marinos -> 71% vs 52%)
+    "Yokohama FC": None, "Yokohama": None,
+    # misli "Paris" is Paris FC (PSG is "Paris Sen-Jermen"); "Lans" is RC Lens, not Lanus
+    "Paris": "Paris FC", "Lans": "Lens",
 }
 
 
@@ -289,8 +293,13 @@ def az_to_latin(name: str) -> str:
 
 def _club_match(name: str, candidates, threshold: float, **kw):
     """best_match on misli's spelling, then on its English-like transliteration."""
-    if name in MISLI_CLUBS and MISLI_CLUBS[name] in candidates:
-        return MISLI_CLUBS[name], 1.0
+    if name in MISLI_CLUBS:
+        if MISLI_CLUBS[name] is None:  # a club we do not cover - never a look-alike
+            return None, 0.0
+        target = MISLI_CLUBS[name]  # a league name, or "Country|name" among cup keys
+        hit = next((c for c in candidates if c == target or str(c).endswith("|" + target)), None)
+        if hit is not None:
+            return hit, 1.0
     hit, score = best_match(name, candidates, CLUB_ALIASES, threshold, **kw)
     if hit is None:
         hit2, score2 = best_match(az_to_latin(name), candidates, CLUB_ALIASES, threshold, **kw)

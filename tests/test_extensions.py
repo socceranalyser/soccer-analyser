@@ -338,3 +338,13 @@ def test_coupon_never_backs_the_side_the_model_rates_lower():
     c = _prepared(ev)
     assert "ox2" not in set(c["market"]) and "o2" not in set(c["market"])
     assert {"o1", "o1x", "ox"} <= set(c["market"])
+
+
+def test_link_check_flags_lookalike_clubs():
+    from soccer.health import link_check
+    ev = pd.DataFrame([{"home_raw": "Paris", "away_raw": "Renn", "home": "Paris SG", "away": "Rennes",
+                        "o1": 2.3, "ox": 3.4, "o2": 3.0, "p_o1": 0.73},
+                       {"home_raw": "Lans", "away_raw": "Sportinq", "home": "Lens", "away": "Sp Lisbon",
+                        "o1": 2.5, "ox": 3.4, "o2": 2.8, "p_o1": 0.41}])
+    w = link_check(ev)
+    assert len(w) == 1 and "Paris SG" in w[0]

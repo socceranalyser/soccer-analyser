@@ -58,3 +58,18 @@ def run(engine) -> list[str]:
                                        "warnings": warnings}, ensure_ascii=False, indent=1),
                            encoding="utf-8")
     return warnings
+
+
+def link_check(events: pd.DataFrame, gap: float = 0.25) -> list[str]:
+    """misli events whose model and bookmaker home-win chances differ by 25+ points: almost
+    always a club linked to a look-alike (Yokohama FC -> Marinos, Paris -> PSG, Lans -> Lanus)."""
+    import numpy as np
+    x = events[events.get("p_o1", pd.Series(dtype=float)).notna()] if len(events) else events
+    if x.empty:
+        return []
+    z = 1 / x[["o1", "ox", "o2"]].to_numpy(float)
+    z = z / z.sum(1, keepdims=True)
+    d = np.abs(x["p_o1"].to_numpy(float) - z[:, 0])
+    bad = x[d >= gap]
+    return [f"проверить привязку: «{r.home_raw} — {r.away_raw}» (misli) = {r.home} — {r.away}: "
+            f"модель {r.p_o1:.0%}, букмекер {q:.0%}" for r, q in zip(bad.itertuples(), z[d >= gap, 0])]

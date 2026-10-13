@@ -24,6 +24,12 @@ if __name__ == "__main__":
             from soccer.misli import events_with_model, save_market_snapshot
             ev = events_with_model(eng)
             print("bookmaker odds stored:", save_market_snapshot(eng, ev))
+            from soccer.health import link_check
+            from soccer.notify import send as _send
+            sus = link_check(ev)
+            print("suspicious links:", sus or "none")
+            if sus:
+                _send("🔗 <b>Возможная путаница команд</b>" + "".join(f"\n• {s}" for s in sus[:10]))
             from soccer import news
             if news.available():  # Claude reads today's news; the maths weighs it
                 print("news analysed:", len(news.analyse(ev)), "W, G, n =", news.weights())

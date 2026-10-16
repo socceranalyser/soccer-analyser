@@ -359,3 +359,17 @@ def test_coupons_never_share_a_match():
             for i in range(12)]
     used = [e for cp in suggest(pd.DataFrame(rows)) for e in cp["picks"]["event_id"]]
     assert len(used) == len(set(used))
+
+
+def test_coupon_journal_keeps_first_offer_of_the_day(tmp_path, monkeypatch):
+    from soccer import coupons
+    monkeypatch.setattr(coupons, "JOURNAL", tmp_path / "j.csv")
+    day = pd.Timestamp("2030-01-01")
+    rows = [{"event_id": i, "kickoff": pd.Timestamp("2030-01-01 15:00", tz="UTC"), "home_raw": f"H{i}",
+             "away_raw": f"A{i}", "competition_az": "X", "mbs": 1, "o1": 1.35 + 0.02 * i, "ox": 4.5,
+             "o2": 7.0, "p_o1": 0.75, "p_ox": 0.15, "p_o2": 0.10} for i in range(10)]
+    ev = pd.DataFrame(rows)
+    now = pd.Timestamp("2030-01-01 08:00", tz="UTC")
+    n = coupons.log_offers(ev, day, "UTC", now=now)
+    assert n >= 1 and coupons.log_offers(ev, day, "UTC", now=now) == 0  # no duplicates
+    assert coupons.on_day(ev, pd.Timestamp("2030-01-02"), "UTC").empty

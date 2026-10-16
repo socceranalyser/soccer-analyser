@@ -137,77 +137,117 @@ def _e(s) -> str:
     return html.escape(str(s))
 
 
+SITE = "https://soccer-analyser.streamlit.app"
+
+
+def _with_market(day: pd.DataFrame, date) -> pd.DataFrame:
+    """Add the bookmaker's stored margin-free 1X2 (q_*) - needed for 'almost sure' calls."""
+    from . import storage
+    try:
+        mk = storage.prematch_forecasts([date - timedelta(days=1), date, date + timedelta(days=1)],
+                                        model="market")
+    except Exception:
+        return day
+    if mk.empty or day.empty:
+        return day
+    mk = mk.drop_duplicates(["league", "home", "away"], keep="last").rename(
+        columns={"league": "competition", "p_home": "q_home", "p_draw": "q_draw", "p_away": "q_away"})
+    return day.reset_index().merge(mk[["competition", "home", "away", "q_home", "q_draw", "q_away"]],
+                                   on=["competition", "home", "away"], how="left").set_index("index")
+
+
+def _journal_lines(today) -> list[str]:
+    """Today's offered coupons (the same ones the journal recorded) + how yesterday's did."""
+    from .coupons import JOURNAL, journal_results
+    if not JOURNAL.exists():
+        return []
+    res = journal_results()
+    if res.empty:
+        return []
+    out = []
+    t = res[res["day"] == f"{today:%Y-%m-%d}"]
+    if len(t):
+        out += ["", "🎯 <b>Купоны дня</b>"]
+        for r in t.itertuples():
+            out.append(f"\n<b>{_e(r.title)}</b> — коэф. <b>{r.total_odds:.2f}</b>, шанс {r.prob:.0%}")
+            for p in sorted(r.picks, key=lambda p: pd.Timestamp(p["kickoff"])):
+                k = pd.Timestamp(p["kickoff"]).tz_convert("Asia/Baku")
+                out.append(f" • {k:%H:%M} {_e(p['match'])}: <b>{_e(p['label'])}</b> @ {p['odds']:.2f}")
+    y = res[res["day"] == f"{today - timedelta(days=1):%Y-%m-%d}"]
+    if len(y):
+        icon = {"won": "✅", "lost": "❌", "pending": "⏳"}
+        out += ["", "📜 <b>Вчерашние купоны</b>"]
+        out += [f"{icon[r.state]} {_e(r.title.split(' — ')[0])} (коэф. {r.total_odds:.2f})"
+                for r in y.itertuples()]
+    done = res[res["state"] != "pending"]
+    if len(done):
+        won = int((done["state"] == "won").sum())
+        out.append(f"<i>Всего с 16.10: выиграно {won} из {len(done)} · итог {done['pl'].sum():+.2f} ₼ "
+                   f"на 1 ₼ в каждом купоне</i>")
+    return out
+
+
 def daily_digest(engine, coupons: bool = True) -> str:
+    """Short morning message: coupons of the day, 'almost sure' calls, how yesterday went."""
+    from .verdicts import sure_call
     today = pd.Timestamp.now().normalize()
     yesterday = today - timedelta(days=1)
     lines = [f"⚽ <b>Soccer Analyser — {today:%d.%m.%Y}</b>"]
+
+    if coupons:
+        try:
+            lines += _journal_lines(today)
+        except Exception as exc:  # coupons are optional
+            lines.append(f"\n(купоны недоступны: {_e(exc)})")
+
+    t = _day(engine, today)
+    t = t[t["p_home"].notna()] if len(t) and "p_home" in t else t
+    if len(t):
+        t = _with_market(t, today)
+        sure = [(r, s) for _, r in t.iterrows() if (s := sure_call(r, r["home"], r["away"]))]
+        if sure:
+            lines += ["", "🔒 <b>Почти наверняка</b> (модель и букмекер ≥85%)"]
+            for r, s in sure:
+                tm = r["kickoff"].strftime("%H:%M") if pd.notna(r["kickoff"]) else "--:--"
+                lines.append(f" • {tm} {_e(s[0])} · {s[1]:.0%}")
+        lines += ["", f"📅 Сегодня {len(t)} матч(ей) с прогнозом — все на сайте"]
+    else:
+        lines += ["", "📅 Сегодня матчей с прогнозом нет."]
 
     y = _day(engine, yesterday)
     if len(y):
         done = y[y["played"] & y["p_home"].notna() & y["hg"].notna()]
         if len(done):
             s = lambda k: f"{int(done[k].sum())}/{done[k].notna().sum()}"
-            lines += ["", f"📊 <b>Вчера ({yesterday:%d.%m})</b>: исход {s('ok_outcome')} · "
-                          f"тотал {s('ok_total')} · обе забьют {s('ok_btts')}"]
+            lines += ["", f"📊 <b>Вчера</b>: исход {s('ok_outcome')} · тотал {s('ok_total')} · "
+                          f"обе забьют {s('ok_btts')}"]
             try:
                 from .analysis import misses, scored_live
                 why = {m.match: m.reasons for m in misses(scored_live(), n=200).itertuples()}
             except Exception:
                 why = {}
-            for _, r in done.head(15).iterrows():
-                lines.append(f"{r['checks']}  {_e(r['home'])} <b>{int(r['hg'])}:{int(r['ag'])}"
-                             f"</b> {_e(r['away'])} — {_e(r['call_outcome'])}")
+            miss = done[done["ok_outcome"] == False].head(8)  # noqa: E712
+            if len(miss):
+                lines.append("<i>Промахи:</i>")
+            for _, r in miss.iterrows():
+                lines.append(f"❌ {_e(r['home'])} <b>{int(r['hg'])}:{int(r['ag'])}</b> "
+                             f"{_e(r['away'])} — {_e(r['call_outcome'])}")
                 reason = why.get(f"{r['home']} — {r['away']}")
-                if reason and not r["ok_outcome"]:
+                if reason:
                     lines.append(f"      ↳ <i>{_e(reason)}</i>")
-
-    t = _day(engine, today)
-    t = t[t["p_home"].notna()] if len(t) and "p_home" in t else t
-    if len(t):
-        lines += ["", f"📅 <b>Сегодня — {len(t)} матч(ей) с прогнозом</b>"
-                      + (f" (показаны {MAX_TODAY} главных)" if len(t) > MAX_TODAY else "")]
-        for comp, g in t.head(MAX_TODAY).groupby("comp_name", sort=False):
-            lines.append(f"\n<b>{_e(comp)}</b>")
-            for _, r in g.iterrows():
-                tm = r["kickoff"].strftime("%H:%M") if pd.notna(r["kickoff"]) else "--:--"
-                goals = f"{r['exp_goals']:.1f}" if pd.notna(r["exp_goals"]) else "—"
-                lines.append(f"{tm} {_e(r['home'])} — {_e(r['away'])}\n"
-                             f"   👉 {_e(r['call_outcome'])} | ⚽ ~{goals} | "
-                             f"{_e(r['call_total'])} | обе: {_e(r['call_btts'])}")
-    else:
-        lines += ["", "📅 Сегодня матчей с прогнозом нет."]
 
     try:
         from .news import notable
-        nn = sorted(notable(), key=lambda n: n["kickoff"])[:10]
+        nn = sorted(notable(), key=lambda n: n["kickoff"])[:6]
         if nn:
-            lines += ["", "📰 <b>Новости дня — что я учёл</b>"]
+            lines += ["", "📰 <b>Новости дня</b>"]
             for n in nn:
                 tag = " ⛔ <i>исключён из купонов</i>" if n["avoid"] else ""
                 lines.append(f"• <b>{_e(n['home'])} — {_e(n['away'])}</b>: {_e(n['summary'])}{tag}")
     except Exception:
         pass
-
-    if coupons:
-        try:
-            from .coupons import suggest
-            from .misli import events_with_model
-            ev = events_with_model(engine)
-            ev = ev[(ev["kickoff"] > pd.Timestamp.now(tz="UTC"))
-                    & (ev["kickoff"] < pd.Timestamp.now(tz="UTC") + pd.Timedelta(hours=36))]
-            cps = suggest(ev)
-            if cps:
-                lines += ["", "🎯 <b>Купоны (коэффициенты misli.az)</b>"]
-                for cp in cps:
-                    lines.append(f"\n<b>{_e(cp['title'])}</b> — коэф. <b>{cp['total_odds']:.2f}"
-                                 f"</b>, шанс {cp['prob']:.0%}")
-                    for _, pk in cp["picks"].iterrows():
-                        lines.append(f" • {_e(pk['match'])}: {_e(pk['label'])} @ {pk['odds']:.2f}")
-                        if pk.get("why"):
-                            lines.append(f"      ↳ <i>{_e(pk['why'])}</i>")
-                lines.append("\n<i>Шанс — по коэффициентам без маржи; это не гарантия.</i>")
-        except Exception as exc:  # coupons are optional
-            lines.append(f"\n(купоны недоступны: {_e(exc)})")
+    lines += ["", f"🌐 <a href=\"{SITE}\">Открыть сайт</a> · шансы — не гарантия, ставьте только то, "
+                  "что готовы потерять."]
     return "\n".join(lines)
 
 

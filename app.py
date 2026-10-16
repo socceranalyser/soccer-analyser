@@ -1452,13 +1452,18 @@ def render_suggestions(df: pd.DataFrame):
                      "mbs": int(pk["mbs"])} for _, pk in cp["picks"].iterrows()])
                 st.rerun()
     render_package(day_ev)
-    render_coupon_record()
+    render_coupon_record("cp")
     st.caption("Шанс купона — произведение шансов игр. Это не гарантия выигрыша — "
                "ставьте только то, что готовы потерять.")
 
 
+def _code_stamp() -> float:
+    import soccer
+    return getattr(soccer, "_src_stamp", 0.0)
+
+
 @st.cache_data(ttl=600, show_spinner="Проверяю, как сыграли прошлые купоны…")
-def _coupon_record(stamp: float) -> pd.DataFrame:
+def _coupon_record(stamp: tuple) -> pd.DataFrame:
     from soccer.coupons import journal_results
     return journal_results(lambda d: _scores_for(tuple(pd.Timestamp(d) + timedelta(days=k)
                                                        for k in (-1, 0, 1))))
@@ -1469,7 +1474,7 @@ def _record_strip():
     from soccer.coupons import JOURNAL
     if not JOURNAL.exists():
         return
-    res = _coupon_record(JOURNAL.stat().st_mtime)
+    res = _coupon_record((JOURNAL.stat().st_mtime, _code_stamp()))
     if res.empty:
         return
     won, lost = int((res["state"] == "won").sum()), int((res["state"] == "lost").sum())
@@ -1479,18 +1484,17 @@ def _record_strip():
             "Подробно — внизу страницы и в «🧾 Мои купоны».")
 
 
-def render_coupon_record():
-    """How the coupons we actually offered did - the honest live record."""
+def render_coupon_record(key: str = "rec"):
+    """How the coupons we actually offered did - and the owner's own money on them."""
     from soccer.coupons import JOURNAL
     st.markdown("### 📜 Как сыграли наши купоны")
     if not JOURNAL.exists():
         st.caption("Журнал начат 16.10.2026: каждое утро записываются купоны дня, а после матчей "
                    "здесь появится их реальный результат.")
         return
-    res = _coupon_record(JOURNAL.stat().st_mtime)
+    res = _coupon_record((JOURNAL.stat().st_mtime, _code_stamp()))
     if res.empty:
         return
-    done = res[res["state"] != "pending"]
     g = res.groupby("title", sort=False).agg(
         предложено=("state", "size"), выиграно=("state", lambda s: int((s == "won").sum())),
         проиграно=("state", lambda s: int((s == "lost").sum())),
@@ -1498,14 +1502,44 @@ def render_coupon_record():
         итог=("pl", lambda s: s.sum()))
     g["итог"] = g["итог"].map(lambda v: f"{v:+.2f} ₼ на 1 ₼")
     st.dataframe(g.rename_axis("купон"), width="stretch")
+    done = res[res["state"] != "pending"]
     if len(done):
         st.caption(f"Сыграно купонов: {len(done)} · выиграно {int((done['state'] == 'won').sum())} · "
                    f"по их шансам ожидалось ≈ {done['prob'].sum():.1f}.")
-    with st.expander("Все предложенные купоны"):
-        icon = {"won": "✅", "lost": "❌", "pending": "⏳"}
+    # the owner's own money on these coupons (private: stored with "My coupons", not published)
+    mine = storage.offer_stakes()
+    bets = res[res["key"].isin(mine)]
+    if len(bets):
+        stake = bets["key"].map(lambda k: mine[k]["stake"] or 0.0)
+        settled = bets["state"] != "pending"
+        back = (stake * bets["total_odds"]).where(bets["state"] == "won", 0.0)
+        net = (back - stake)[settled].sum()
+        c = st.columns(3)
+        c[0].metric("💰 Вы поставили", f"{stake.sum():.2f} ₼", f"{len(bets)} купонов", delta_color="off")
+        c[1].metric("Вернулось", f"{back[settled].sum():.2f} ₼")
+        c[2].metric("Ваш итог", f"{net:+.2f} ₼", f"ждём {int((~settled).sum())}" if (~settled).any() else None,
+                    delta_color="off")
+    icon = {"won": "✅", "lost": "❌", "pending": "⏳"}
+    with st.expander("Все предложенные купоны — впишите, сколько поставили", expanded=False):
         for r in res.sort_values("day", ascending=False).itertuples():
+            have = mine.get(r.key)
             st.markdown(f"{icon[r.state]} **{r.day}** · {r.title} · коэф. {r.total_odds:.2f}  \n"
                         f"<small>{r.legs}</small>", unsafe_allow_html=True)
+            c = st.columns([2, 1, 3])
+            val = c[0].number_input("Я поставил, ₼", min_value=0.0, step=1.0,
+                                    value=float(have["stake"] or 0) if have else 0.0,
+                                    key=f"{key}_stake_{r.key}", label_visibility="collapsed")
+            if c[1].button("💾", key=f"{key}_save_{r.key}", help="Сохранить сумму"):
+                if have and val == 0:
+                    storage.delete_coupon(have["id"])
+                elif val > 0:
+                    picks = [{**p, "offer": r.key} for p in r.picks]
+                    storage.save_coupon(picks, val, float(r.total_odds), float(r.prob),
+                                        coupon_id=have["id"] if have else None)
+                st.rerun()
+            c[2].caption(f"💰 поставлено {have['stake']:.2f} ₼" if have else
+                         "впишите сумму и нажмите 💾 (0 — удалить)")
+            st.divider()
 
 
 def render_package(upcoming: pd.DataFrame):
@@ -1704,7 +1738,7 @@ def _status_lines(picks: list[dict]) -> tuple[str, list[str]]:
 def page_my_coupons():
     page_header("🧾 Мои купоны", "Ваши купоны и их результаты — обновляются сами")
     with st.expander("📜 Как сыграли купоны, которые предлагал анализатор", expanded=True):
-        render_coupon_record()
+        render_coupon_record("my")
     st.caption("Результаты подтягиваются сами (livescore.com + misli.az), обновление раз в 2 минуты.")
     try:
         from soccer.backup import status

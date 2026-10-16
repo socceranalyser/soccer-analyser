@@ -373,3 +373,15 @@ def test_coupon_journal_keeps_first_offer_of_the_day(tmp_path, monkeypatch):
     n = coupons.log_offers(ev, day, "UTC", now=now)
     assert n >= 1 and coupons.log_offers(ev, day, "UTC", now=now) == 0  # no duplicates
     assert coupons.on_day(ev, pd.Timestamp("2030-01-02"), "UTC").empty
+
+
+def test_offer_stakes_are_private_coupons(tmp_path):
+    from soccer import storage
+    db = tmp_path / "p.db"
+    storage.init_db(db) if hasattr(storage, "init_db") else None
+    picks = [{"match": "A — B", "market": "o1", "odds": 1.5, "kickoff": "2030-01-01", "offer": "2030-01-01|double"}]
+    storage.save_coupon(picks, 5.0, 1.5, 0.6, path=db, backup=False)
+    storage.save_coupon([{"match": "C — D", "market": "o1", "odds": 2.0, "kickoff": "2030-01-01"}],
+                        3.0, 2.0, 0.5, path=db, backup=False)
+    m = storage.offer_stakes(db)
+    assert list(m) == ["2030-01-01|double"] and m["2030-01-01|double"]["stake"] == 5.0

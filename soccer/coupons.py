@@ -360,7 +360,8 @@ def journal_results(scores_for=None) -> pd.DataFrame:
         scores = scores_for(r.day) if scores_for else None
         st = coupon_status(picks, scores)
         out.append({"day": r.day, "style": r.style, "title": r.title, "total_odds": r.total_odds,
-                    "prob": r.prob, "state": st["state"],
+                    "prob": r.prob, "state": st["state"], "key": f"{r.day}|{r.style}",
+                    "picks": picks,
                     "legs": " · ".join(f"{p['match']}: {p['label']} @ {p['odds']:.2f}"
                                        + ("" if p["won"] is None else (" ✅" if p["won"] else " ❌"))
                                        for p in st["picks"])})

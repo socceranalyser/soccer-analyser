@@ -117,6 +117,18 @@ def load_coupons(path=DB_PATH) -> list[dict]:
              "model_prob": r[4], "picks": json.loads(r[5])} for r in rows]
 
 
+def offer_stakes(path=DB_PATH) -> dict:
+    """Money the owner put on coupons the analyser offered: {"<day>|<style>": coupon}.
+    Stored as ordinary personal coupons (private, backed up to Telegram), marked by the
+    offer key inside their picks - never in the public journal."""
+    out = {}
+    for c in load_coupons(path):
+        key = (c["picks"][0] if c["picks"] else {}).get("offer")
+        if key:
+            out[key] = c
+    return out
+
+
 def delete_coupon(coupon_id: int, path=DB_PATH) -> None:
     with closing(connect(path)) as con, con:
         con.execute("DELETE FROM coupons WHERE id = ?", (coupon_id,))

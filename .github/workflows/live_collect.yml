@@ -35,6 +35,9 @@ jobs:
       - name: Collect every 10 minutes for ~5h50m
         env:
           PYTHONPATH: ${{ github.workspace }}/code
+          # goal alerts for starred matches (stars are read from the private Telegram backup)
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           cd store
           git config user.name "soccer-analyser-bot"

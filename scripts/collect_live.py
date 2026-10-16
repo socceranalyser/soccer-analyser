@@ -47,6 +47,39 @@ def livescore_snapshot() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def goal_alerts(ls: pd.DataFrame, out: Path, now: pd.Timestamp) -> int:
+    """Telegram message when the score changes in a match the owner starred (⭐ on the site).
+    Stars come from the private Telegram backup; last seen scores live in <out>/goal_state.json.
+    Checked every 10 minutes, so an alert can come a few minutes after the goal."""
+    import json
+    from soccer.backup import fetch
+    from soccer.names import CLUB_ALIASES, similarity
+    from soccer.notify import configured, send
+    if ls.empty or not configured():
+        return 0
+    favs = [f for f in (fetch().get("favorites") or [])
+            if abs((pd.Timestamp(f[1]) - now.tz_localize(None).normalize()).days) <= 1]
+    if not favs:
+        return 0
+    state_f = out / "goal_state.json"
+    state = json.loads(state_f.read_text(encoding="utf-8")) if state_f.exists() else {}
+    alias = lambda n: CLUB_ALIASES.get(n, n)
+    sent = 0
+    for r in ls.itertuples():
+        fav = next((f for f in favs if min(similarity(alias(r.home_raw), f[2]),
+                                           similarity(alias(r.away_raw), f[3])) >= 0.75), None)
+        if fav is None or pd.isna(r.hg):
+            continue
+        score, old = f"{int(r.hg)}:{int(r.ag)}", state.get(str(r.ls_id))
+        state[str(r.ls_id)] = score
+        if old is not None and old != score:
+            minute = f", {int(r.minute)}'" if pd.notna(r.minute) else ""
+            who = fav[2] if int(r.hg) > int(old.split(":")[0]) else fav[3]
+            sent += send(f"⚽ <b>Гол!</b> {who}\n⭐ {fav[2]} <b>{score}</b> {fav[3]}{minute}")
+    state_f.write_text(json.dumps(state), encoding="utf-8")
+    return sent
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="data/live")
@@ -59,6 +92,10 @@ if __name__ == "__main__":
         ls = livescore_snapshot()
         if len(ls):
             parts.append(ls.assign(source="livescore"))
+            try:
+                print("goal alerts sent:", goal_alerts(ls, out, now))
+            except Exception as exc:
+                print("goal alerts failed:", exc, file=sys.stderr)
     except Exception as exc:
         print("livescore failed:", exc, file=sys.stderr)
     try:

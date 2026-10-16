@@ -385,3 +385,24 @@ def test_offer_stakes_are_private_coupons(tmp_path):
                         3.0, 2.0, 0.5, path=db, backup=False)
     m = storage.offer_stakes(db)
     assert list(m) == ["2030-01-01|double"] and m["2030-01-01|double"]["stake"] == 5.0
+
+
+def test_goal_alert_only_when_a_starred_score_changes(tmp_path, monkeypatch):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("collect_live", "scripts/collect_live.py")
+    cl = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cl)
+    import soccer.backup as bk
+    import soccer.notify as nt
+    sent = []
+    monkeypatch.setattr(bk, "fetch", lambda: {"favorites": [["E0", "2030-01-01", "Arsenal", "Chelsea"]]})
+    monkeypatch.setattr(nt, "configured", lambda: True)
+    monkeypatch.setattr(nt, "send", lambda text: sent.append(text) or True)
+    now = pd.Timestamp("2030-01-01 15:20", tz="UTC")
+    row = lambda h, a: pd.DataFrame([{"ls_id": "1", "home_raw": "Arsenal", "away_raw": "Chelsea",
+                                      "hg": h, "ag": a, "minute": 20}])
+    other = pd.DataFrame([{"ls_id": "2", "home_raw": "Leeds", "away_raw": "Fulham", "hg": 1, "ag": 0, "minute": 20}])
+    assert cl.goal_alerts(row(0, 0), tmp_path, now) == 0      # first sight: just remember
+    assert cl.goal_alerts(pd.concat([row(1, 0), other]), tmp_path, now) == 1
+    assert "Arsenal" in sent[0] and "1:0" in sent[0]
+    assert cl.goal_alerts(row(1, 0), tmp_path, now) == 0      # no change, no message

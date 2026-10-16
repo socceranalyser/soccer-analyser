@@ -88,6 +88,21 @@ def _safe(fn, *a):
         pass
 
 
+def fetch() -> dict:
+    """The pinned backup's content ({} when there is none) - also read by the live job for
+    goal alerts on starred matches."""
+    token, chat = _cfg()
+    if not token:
+        return {}
+    msg = _pinned(token, chat)
+    if not msg:
+        return {}
+    f = _api(token, "getFile", data={"file_id": msg["document"]["file_id"]}).get("result") or {}
+    if not f.get("file_path"):
+        return {}
+    return requests.get(f"https://api.telegram.org/file/bot{token}/{f['file_path']}", timeout=30).json()
+
+
 def restore() -> int:
     """Fill an empty database from the pinned backup; returns the number of coupons restored."""
     if not enabled():
@@ -95,17 +110,9 @@ def restore() -> int:
     from . import storage
     if storage.load_coupons() or storage.load_draft() or storage.load_favorites():
         return 0
-    token, chat = _cfg()
-    if not token:
+    data = fetch()
+    if not data:
         return 0
-    msg = _pinned(token, chat)
-    if not msg:
-        return 0
-    f = _api(token, "getFile", data={"file_id": msg["document"]["file_id"]}).get("result") or {}
-    if not f.get("file_path"):
-        return 0
-    raw = requests.get(f"https://api.telegram.org/file/bot{token}/{f['file_path']}", timeout=30)
-    data = raw.json()
     for c in reversed(data.get("coupons", [])):  # oldest first, keep the original ids
         storage.save_coupon(c["picks"], c["stake"], c["total_odds"], c["model_prob"],
                             created_at=c.get("created_at"), coupon_id=c.get("id"), backup=False)

@@ -5,8 +5,8 @@
   position: relative;
   overflow: hidden;
   border-radius: 18px;
-  padding: 22px 26px;
-  margin: 0 0 18px 0;
+  padding: 12px 20px;
+  margin: 0 0 12px 0;
   background:
     radial-gradient(circle at 92% -20%, rgba(74, 222, 128, .35), transparent 45%),
     radial-gradient(circle at 10% 130%, rgba(56, 189, 248, .25), transparent 50%),
@@ -24,13 +24,13 @@
 }
 .sa-hero h1 {
   margin: 0; padding: 0;
-  font-size: 2rem; font-weight: 800; letter-spacing: -.02em;
+  font-size: 1.55rem; font-weight: 800; letter-spacing: -.02em;
 }
 .sa-hero .sa-title {
   background: linear-gradient(90deg, #ffffff, #86efac);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.sa-hero p { margin: 6px 0 0 0; color: #a7b4cc; font-size: .98rem; }
+.sa-hero p { margin: 2px 0 0 0; color: #a7b4cc; font-size: .9rem; }
 
 /* metric cards */
 [data-testid="stMetric"] {

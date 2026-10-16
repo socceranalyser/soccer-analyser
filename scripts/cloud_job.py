@@ -24,6 +24,9 @@ if __name__ == "__main__":
             from soccer.misli import events_with_model, save_market_snapshot
             ev = events_with_model(eng)
             print("bookmaker odds stored:", save_market_snapshot(eng, ev))
+            from soccer.coupons import log_offers
+            baku = pd.Timestamp.now(tz="Asia/Baku").tz_localize(None).normalize()
+            print("coupons offered today:", log_offers(ev, baku, "Asia/Baku"))
             from soccer.health import link_check
             from soccer.notify import send as _send
             sus = link_check(ev)

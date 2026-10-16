@@ -326,3 +326,25 @@ def weekly_report() -> str:
     STATE.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(text, encoding="utf-8")
     return text
+
+
+def weekly_progress() -> pd.DataFrame:
+    """Live forecasts week by week: how often each kind of call came true (and was promised)."""
+    from .verdicts import sure_call
+    f = scored_live()
+    if f.empty:
+        return f
+    rows = []
+    for _, r in f.iterrows():
+        p = r[C].to_numpy(float)
+        sc = score_calls(p, r.get("p_over25"), r.get("p_btts"), int(r["hg"]), int(r["ag"]))
+        s = sure_call(r, "", "")
+        rows.append({"date": r["date"], "outcome": sc["outcome"], "promised": outcome_call(p, "", "")[2],
+                     "total": sc.get("total"), "btts": sc.get("btts"),
+                     "sure": None if s is None else int(r["y"]) in s[3]})
+    d = pd.DataFrame(rows)
+    d["week"] = pd.to_datetime(d["date"]).dt.to_period("W-SUN").dt.start_time
+    return d.groupby("week").agg(matches=("outcome", "size"), outcome=("outcome", "mean"),
+                                 promised=("promised", "mean"), total=("total", "mean"),
+                                 btts=("btts", "mean"), sure_n=("sure", "count"),
+                                 sure=("sure", "mean")).reset_index()

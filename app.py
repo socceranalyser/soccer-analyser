@@ -196,6 +196,16 @@ def _store_upcoming(day: pd.DataFrame):
         pass
 
 
+def _score_cell(r, now) -> str:
+    """'2:1  ✅ ❌ ✅' after the match, '🔴 1:0 67'' live, '⏱ ждём счёт' once started."""
+    if r.get("played") and pd.notna(r.get("hg")):
+        return f"{int(r['hg'])}:{int(r['ag'])}   {r.get('checks', '')}".rstrip()
+    lab = status_label(r, now)
+    if r.get("live_status") and pd.notna(r.get("hg")):
+        return f"{lab} · {int(r['hg'])}:{int(r['ag'])}"
+    return lab
+
+
 def status_label(r, now) -> str:
     if r.get("played"):
         return "✅ завершён"
@@ -404,7 +414,7 @@ def page_today():
     with st.container(border=True):
         live_panel(today_day)
     favorites_panel(today, eng.built_at)
-    c = st.columns([2, 3, 3])
+    c = st.columns([4, 3, 3])
     choice = c[0].segmented_control("📅 День", ["Вчера", "Сегодня", "Завтра", "Дата…"],
                                     default="Сегодня")
     if choice == "Дата…":
@@ -449,11 +459,14 @@ def page_today():
         s_ = played[key].dropna() if len(played) else pd.Series(dtype=float)
         col.metric(label, f"{int(s_.sum())}/{len(s_)}" if len(s_) else "—",
                    f"{s_.mean():.0%}" if len(s_) else None, delta_color="off", delta_arrow="off")
-    st.caption(f"Часовой пояс: {st.session_state.get('tz_label', 'Время компьютера')} "
-               "(меняется в меню слева). Нажмите на строку — откроется подробный разбор. "
-               "Для начавшихся и сыгранных матчей показан прогноз, сделанный до начала. "
-               "⚠️ букмекер X% — букмекер оценивает этот исход иначе (на 10+ пунктов): "
-               "в таких матчах модель ошибается чаще, лучше не брать их в купон.")
+    with st.expander("ℹ️ Как читать таблицу"):
+        st.markdown(
+            "- **🏆 Победа X** — модель даёт команде 50%+; **🛡️ X не проиграет** — победа или ничья.\n"
+            "- **⚠️ букмекер X%** — букмекер оценивает этот исход иначе (на 10+ пунктов): в таких "
+            "матчах модель ошибается чаще, лучше не брать их в купон.\n"
+            "- **⚖️** — почти 50 на 50. **Счёт**: ✅/❌ — сбылись ли исход · тотал · «обе забьют».\n"
+            "- Для начавшихся и сыгранных матчей показан прогноз, сделанный **до начала**.\n"
+            f"- Время — {st.session_state.get('tz_label', 'время компьютера')} (меняется в меню слева).")
 
     if view.empty:
         st.warning("Ничего не найдено.")
@@ -486,23 +499,21 @@ def page_today():
         "Время": [("вчера " if y is True else "") + (k.strftime("%H:%M") if pd.notna(k) else "")
                   for k, y in zip(view["kickoff"], view.get("from_yesterday",
                                                             pd.Series(False, index=view.index)))],
-        "Турнир": view["comp_name"],
         "Матч": view["home"] + " — " + view["away"],
-        "Кто выиграет (прогноз)": view["call_outcome"],
-        "Голов ожидается": view["exp_goals"],
-        "Тотал 2.5 (прогноз)": view["call_total"],
-        "Обе забьют (прогноз)": view["call_btts"],
-        "Статус": [status_label(r, now) for _, r in view.iterrows()],
-        "Реальный счёт": [f"{int(h)}:{int(a)}" if pd.notna(h) else "" for h, a in
-                          zip(view["hg"], view["ag"])],
-        "Сбылось (исход · тотал · обе)": view["checks"],
+        "Кто выиграет": view["call_outcome"],
+        "Тотал 2.5": view["call_total"],
+        "Обе забьют": view["call_btts"],
+        "Голов": view["exp_goals"],
+        "Счёт": [_score_cell(r, now) for _, r in view.iterrows()],
+        "Турнир": view["comp_name"],
     })
-    cfg = {"Голов ожидается": st.column_config.NumberColumn(format="%.1f")}
+    cfg = {"Голов": st.column_config.NumberColumn("Голов", format="%.1f", width="small",
+                                                  help="Сколько голов ожидает модель")}
     if show_probs:
         pct_col = lambda label: st.column_config.ProgressColumn(label, format="percent",
                                                                 min_value=0, max_value=1)
         for k, c in (("П1", "p_home"), ("Х", "p_draw"), ("П2", "p_away")):
-            table.insert(table.columns.get_loc("Кто выиграет (прогноз)"), k, view.get(c).to_numpy())
+            table.insert(table.columns.get_loc("Кто выиграет"), k, view.get(c).to_numpy())
             cfg[k] = pct_col(k)
     favs = storage.load_favorites()
     keys = [(r["competition"], pd.Timestamp(r.get("sched_date", r.get("date"))).strftime("%Y-%m-%d"),
@@ -512,7 +523,7 @@ def page_today():
     st.caption("👆 Нажмите на матч — ниже откроется меню: анализ, история встреч, ставки, новости, ⭐.")
     event = st.dataframe(table, hide_index=True, width="stretch", on_select="rerun",
                          selection_mode="single-cell", key=f"tbl_{date:%Y%m%d}",
-                         height=min(38 * (len(table) + 1), 460), column_config=cfg)
+                         height=min(36 * (len(table) + 1) + 4, 900), column_config=cfg)
     sel = event.selection if event else None
     cells = (sel.get("cells") if isinstance(sel, dict) else getattr(sel, "cells", None)) or []
     rows = [int(cells[0][0])] if cells else []  # a click on any cell (e.g. the team) opens it
@@ -1004,8 +1015,49 @@ def render_auto_analysis():
                 hide_index=True, width="stretch")
 
 
+@st.cache_data(ttl=1800, show_spinner=False)
+def _weekly_progress(stamp: str) -> pd.DataFrame:
+    from soccer import analysis
+    return analysis.weekly_progress()
+
+
+def render_progress():
+    """'How we develop': live calls week by week."""
+    w = _weekly_progress(now_in_tz().strftime("%Y-%m-%d %H"))
+    if w.empty:
+        return
+    st.markdown("### 📈 Как мы развиваемся — реальные прогнозы по неделям")
+    last = w.iloc[-1]
+    tot = (w["outcome"] * w["matches"]).sum() / w["matches"].sum()
+    sure_n = int(w["sure_n"].sum())
+    sure_ok = (w["sure"].fillna(0) * w["sure_n"]).sum()
+    c = st.columns(4)
+    c[0].metric("Прогнозов сыграно", f"{int(w['matches'].sum())}")
+    c[1].metric("Исход угадан", f"{tot:.0%}", f"обещали {((w['promised'] * w['matches']).sum() / w['matches'].sum()):.0%}",
+                delta_color="off", delta_arrow="off")
+    c[2].metric("Тотал 2.5 (эта неделя)", f"{last['total']:.0%}",
+                f"{(last['total'] - w['total'].iloc[0]) * 100:+.0f} п. с первой недели")
+    c[3].metric("🔒 Почти наверняка", f"{int(round(sure_ok))}/{sure_n}" if sure_n else "—")
+    fig = go.Figure()
+    for col, name, color in (("outcome", "Исход", "#4ade80"), ("total", "Тотал 2.5", "#38bdf8"),
+                             ("btts", "Обе забьют", "#fbbf24")):
+        fig.add_trace(go.Scatter(x=w["week"], y=w[col], name=name, mode="lines+markers",
+                                 line=dict(color=color, width=3),
+                                 hovertemplate="%{y:.0%}<extra>" + name + "</extra>"))
+    fig.add_hline(y=0.5, line=dict(color="#64748b", dash="dot"))
+    fig.update_layout(height=260, margin=dict(l=10, r=10, t=10, b=10), yaxis_tickformat=".0%",
+                      yaxis_range=[0.3, 1], legend=dict(orientation="h", y=1.15),
+                      paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                      xaxis=dict(tickformat="%d.%m"))
+    st.plotly_chart(fig, width="stretch")
+    st.caption("Доля сбывшихся прогнозов «Матчей дня» по неделям (неделя начинается в понедельник). "
+               "Пунктир — 50%. Тотал растёт, потому что модель каждый день сама поправляет "
+               "уровень голов по своим ошибкам.")
+
+
 def page_accuracy():
     page_header("🎯 Точность прогнозов", "Как часто сбываются прогнозы — живые и на истории, в сравнении с букмекером")
+    render_progress()
     render_auto_analysis()
     runs = storage.load_runs()
     if runs.empty:
@@ -1309,8 +1361,6 @@ def render_news():
     from soccer import news
     items = sorted(news.notable(min_abs=0.0), key=lambda n: n["kickoff"])
     if not items:
-        if not news.available():
-            st.caption("📰 Анализ новостей включится, когда будет добавлен ключ ANTHROPIC_API_KEY.")
         return
     W, G, n = news.weights()
     with st.expander(f"📰 Новости дня — проанализировано {len(items)} матч(ей)", expanded=False):
@@ -1335,61 +1385,60 @@ def render_news():
 
 
 def render_suggestions(df: pd.DataFrame):
-    """Ready-made coupons (1, 2 and 3 matches) from upcoming matches."""
-    from soccer.coupons import suggest
+    """Ready-made coupons for ONE day (a coupon never mixes days) + their real record."""
+    from soccer.coupons import HISTORY, STYLES, on_day, suggest
+    tz = user_tz() or local_tz()
     upcoming = df[df["kickoff"] > pd.Timestamp.now(tz="UTC")]
     st.markdown("### 🎯 Готовые купоны")
-    c0 = st.columns([3, 2])
-    c0[0].radio("Как отбирать", ["Мой анализ (рекомендую)", "Только модель", "Только букмекер"],
-                horizontal=True, key="chance_source",
-                help="Мой анализ: в купон попадают только исходы, которые уверенно подтверждают и "
-                     "моя модель (сила команд, xG, травмы, новости), и рынок. Шанс указан честный: "
-                     "на истории 2023–25 обещанные проценты совпали с реальностью.")
-    c0[1].toggle("Показывать мнение букмекера для сравнения", value=True, key="show_book")
+    days = sorted(upcoming["kickoff"].dt.tz_convert(tz).dt.tz_localize(None).dt.normalize().unique())[:4]
+    if not days:
+        st.info("Нет предстоящих матчей с прогнозом модели.")
+        return
+    today = now_in_tz().tz_localize(None).normalize()
+    name = lambda d: ("Сегодня" if d == today else "Завтра" if d == today + timedelta(days=1)
+                      else f"{d:%d.%m}")
+    c0 = st.columns([3, 2, 2])
+    pick = c0[0].segmented_control("Купоны на день", [name(d) for d in days],
+                                   default=name(days[0]), key="sugg_day")
+    day = next((d for d in days if name(d) == pick), days[0])
+    stake = c0[1].number_input("Ставка, ₼", min_value=1.0, value=10.0, step=1.0, key="sugg_stake")
+    with c0[2].popover("⚙️ Как отбирать"):
+        st.radio("Источник шансов", ["Мой анализ (рекомендую)", "Только модель", "Только букмекер"],
+                 key="chance_source",
+                 help="Мой анализ: только исходы, в которых уверены и модель, и букмекер.")
     source = {"Мой анализ (рекомендую)": "combined", "Только модель": "model",
               "Только букмекер": "market"}[st.session_state.get("chance_source",
                                                                  "Мой анализ (рекомендую)")]
-    coupons = suggest(upcoming, source)
+    day_ev = on_day(upcoming, day, tz)
+    coupons = suggest(day_ev, source)
     if not coupons:
-        st.info("Для выбранного периода не хватает матчей с прогнозом модели, чтобы собрать "
-                "купоны. Попробуйте «Все» вместо «Сегодня».")
-        return
-    from soccer.coupons import STYLES
-    missing = [STYLES[k]["title"] for k in STYLES if k not in {cp["style"] for cp in coupons}]
-    if missing:
-        st.info("Сейчас нет достаточно надёжных исходов для: " + ", ".join(missing)
-                + ". Честнее пропустить, чем ставить на сомнительное — проверьте позже, "
-                  "когда появятся новые коэффициенты и новости.")
-    stake = st.number_input("Пример ставки для расчёта, ₼", min_value=1.0, value=10.0,
-                            step=1.0, key="sugg_stake")
-    singles, others = [], coupons
-    grid = [c for i in range(0, len(others), 2) for c in st.columns(2)][:len(others)]
-    slots = ([st.container()] if singles else []) + grid
-    for col, cp in zip(slots, singles + others):
+        st.info(f"На {day:%d.%m} нет надёжных исходов для купонов. Посмотрите другой день.")
+    missing = [STYLES[k]["title"].split(" — ")[0] for k in STYLES
+               if k not in {cp["style"] for cp in coupons}]
+    if coupons and missing:
+        st.caption("Сегодня не собраны: " + ", ".join(missing)
+                   + " — не хватает надёжных матчей (каждый матч используется только в одном купоне).")
+    grid = [c for i in range(0, len(coupons), 2) for c in st.columns(2)][:len(coupons)]
+    for col, cp in zip(grid, coupons):
         with col.container(border=True):
             st.markdown(f"**{cp['title']}**")
             for _, pk in cp["picks"].iterrows():
-                t = pd.Timestamp(pk["kickoff"]).tz_convert(user_tz() or local_tz())
-                st.markdown(f"{t:%d.%m %H:%M} · {pk['match']}  \n"
-                            f"**{pk['label']}** @ **{pk['odds']:.2f}** · шанс {pct(pk['p'])}"
-                            + (f" · букмекер {pct(pk['p_market'])}"
-                               if st.session_state.get("show_book", True) else "")
-                            + f"  \n<small>💡 {pk['why']}</small>", unsafe_allow_html=True)
-            st.divider()
-            c = st.columns(2)
-            c[0].metric("Общий коэф.", f"{cp['total_odds']:.2f}")
-            c[1].metric("Шанс купона", pct(cp["prob"]), _in_ten(cp["prob"]) + " раз",
-                        delta_color="off")
-            from soccer.coupons import HISTORY
+                t = pd.Timestamp(pk["kickoff"]).tz_convert(tz)
+                book = (f" · букмекер {pct(pk['p_market'])}"
+                        if abs(float(pk["p"]) - float(pk["p_market"])) >= 0.03 else "")
+                st.markdown(f"🕘 {t:%H:%M} · {pk['match']}  \n**{pk['label']}** @ **{pk['odds']:.2f}**"
+                            f" · шанс {pct(pk['p'])}{book}")
+            c = st.columns(3)
+            c[0].metric("Коэф.", f"{cp['total_odds']:.2f}")
+            c[1].metric("Шанс", pct(cp["prob"]))
+            c[2].metric(f"{stake:.0f} ₼ →", f"{stake * cp['total_odds']:.0f} ₼")
             h = HISTORY.get(cp["style"])
             if h:
-                st.caption(f"📜 Такие купоны в 2023–25: сбылись в {h['hit']:.0%} дней, самая длинная "
-                           f"серия проигрышей — {h['streak']} дн. подряд, итог {h['ret']:+.0%} на ставку."
-                           + (f" Но таких дней было мало ({h['days']}) — плюс скорее удача, рассчитывайте "
-                              f"на шанс купона выше." if h.get("days") else ""))
-            st.caption(f"Ставка {stake:.0f} ₼ → если зайдёт, {stake * cp['total_odds']:.2f} ₼. "
-                       f"Если ставить так 100 раз по 1 ₼, вернётся ≈ "
-                       f"{(cp['ev'] + 1) * 100:.0f} ₼ (маржа букмекера).")
+                st.caption(f"📜 2023–25: заходил в {h['hit']:.0%} дней, худшая серия — "
+                           f"{h['streak']} дн. подряд")
+            with st.expander("💡 почему эти игры"):
+                for _, pk in cp["picks"].iterrows():
+                    st.caption(f"{pk['match']}: {pk['why']}")
             if st.button("➕ Загрузить в мой купон", key=f"load_{cp['style']}",
                          width="stretch"):
                 _set_coupon([
@@ -1401,10 +1450,46 @@ def render_suggestions(df: pd.DataFrame):
                      "home": pk["home"], "away": pk["away"], "line": pk["line"],
                      "mbs": int(pk["mbs"])} for _, pk in cp["picks"].iterrows()])
                 st.rerun()
-    render_package(upcoming)
-    st.caption("Шанс каждого исхода — по выбранному источнику (по умолчанию наша модель); "
-               "коэффициент misli.az — это только цена ставки. Шанс купона — произведение "
-               "шансов. Это не гарантия выигрыша — ставьте только то, что готовы потерять.")
+    render_package(day_ev)
+    render_coupon_record()
+    st.caption("Шанс купона — произведение шансов игр. Это не гарантия выигрыша — "
+               "ставьте только то, что готовы потерять.")
+
+
+@st.cache_data(ttl=600, show_spinner="Проверяю, как сыграли прошлые купоны…")
+def _coupon_record(stamp: float) -> pd.DataFrame:
+    from soccer.coupons import journal_results
+    return journal_results(lambda d: _scores_for(tuple(pd.Timestamp(d) + timedelta(days=k)
+                                                       for k in (-1, 0, 1))))
+
+
+def render_coupon_record():
+    """How the coupons we actually offered did - the honest live record."""
+    from soccer.coupons import JOURNAL
+    st.markdown("### 📜 Как сыграли наши купоны")
+    if not JOURNAL.exists():
+        st.caption("Журнал начат 16.10.2026: каждое утро записываются купоны дня, а после матчей "
+                   "здесь появится их реальный результат.")
+        return
+    res = _coupon_record(JOURNAL.stat().st_mtime)
+    if res.empty:
+        return
+    done = res[res["state"] != "pending"]
+    g = res.groupby("title", sort=False).agg(
+        предложено=("state", "size"), выиграно=("state", lambda s: int((s == "won").sum())),
+        проиграно=("state", lambda s: int((s == "lost").sum())),
+        ждём=("state", lambda s: int((s == "pending").sum())),
+        итог=("pl", lambda s: s.sum()))
+    g["итог"] = g["итог"].map(lambda v: f"{v:+.2f} ₼ на 1 ₼")
+    st.dataframe(g.rename_axis("купон"), width="stretch")
+    if len(done):
+        st.caption(f"Сыграно купонов: {len(done)} · выиграно {int((done['state'] == 'won').sum())} · "
+                   f"по их шансам ожидалось ≈ {done['prob'].sum():.1f}.")
+    with st.expander("Все предложенные купоны"):
+        icon = {"won": "✅", "lost": "❌", "pending": "⏳"}
+        for r in res.sort_values("day", ascending=False).itertuples():
+            st.markdown(f"{icon[r.state]} **{r.day}** · {r.title} · коэф. {r.total_odds:.2f}  \n"
+                        f"<small>{r.legs}</small>", unsafe_allow_html=True)
 
 
 def render_package(upcoming: pd.DataFrame):
@@ -1457,7 +1542,7 @@ def page_coupon():
     from soccer.misli import outcome_won
     eng = get_engine()
     page_header("🎟️ Купоны", "Коэффициенты misli.az, оценка модели и готовые купоны дня")
-    c = st.columns([2, 3, 2, 2])
+    c = st.columns([3, 3, 2, 2])
     day = c[0].segmented_control("🗓️ Когда", ["Сегодня", "Завтра", "Все"], default="Все")
     query = c[1].text_input("🔎 Поиск команды или турнира", key="coupon_q")
     only_model = c[2].toggle("🧠 Только с прогнозом модели", value=True)

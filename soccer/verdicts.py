@@ -14,7 +14,7 @@ TOSS_UP = 0.58          # totals / BTTS below this are flagged "почти 50/50
 
 
 def _toss(p: float) -> str:
-    return " · ⚖️ почти 50/50" if p < TOSS_UP else ""
+    return " ⚖️" if p < TOSS_UP else ""  # almost 50/50 (explained under the table)
 
 
 def outcome_call(p, home: str, away: str) -> tuple[str, frozenset, float]:

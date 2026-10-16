@@ -304,3 +304,67 @@ def coupon_status(picks: list[dict], scores: pd.DataFrame | None = None) -> dict
     else:
         state = "pending"
     return {"picks": rows, "state": state}
+
+
+# ------------------------------------------------------------ journal of offered coupons
+# Every day the coupons we offer are written down BEFORE the games (first offer of the day per
+# style wins), so their real record can be shown honestly - not only the 2023-25 backtest.
+from .config import DATA_DIR  # noqa: E402
+
+JOURNAL = DATA_DIR / "state" / "suggested_coupons.csv"
+
+
+def on_day(events: pd.DataFrame, day, tz) -> pd.DataFrame:
+    """Events kicking off on one local calendar day (a coupon never mixes days)."""
+    if events.empty:
+        return events
+    local = pd.to_datetime(events["kickoff"], utc=True).dt.tz_convert(tz).dt.tz_localize(None)
+    return events[local.dt.normalize() == pd.Timestamp(day).normalize()]
+
+
+def log_offers(events: pd.DataFrame, day, tz, now=None) -> int:
+    """Write today's offered coupons (only matches not yet started) into the journal."""
+    import json
+    now = now or pd.Timestamp.now(tz="UTC")
+    ev = on_day(events, day, tz)
+    ev = ev[pd.to_datetime(ev["kickoff"], utc=True) > now]
+    old = pd.read_csv(JOURNAL) if JOURNAL.exists() else pd.DataFrame(columns=["day", "style"])
+    have = set(zip(old["day"].astype(str), old["style"]))
+    d = f"{pd.Timestamp(day):%Y-%m-%d}"
+    rows = []
+    for cp in suggest(ev):
+        if (d, cp["style"]) in have:
+            continue
+        picks = [{"event_id": int(p.event_id), "kickoff": str(p.kickoff), "match": p.match,
+                  "market": p.market, "label": p.label, "odds": float(p.odds), "p": float(p.p),
+                  "home": p.home, "away": p.away, "line": p.line}
+                 for p in cp["picks"].itertuples()]
+        rows.append({"day": d, "style": cp["style"], "title": cp["title"],
+                     "total_odds": round(cp["total_odds"], 3), "prob": round(cp["prob"], 4),
+                     "created_at": f"{now:%Y-%m-%d %H:%M}", "picks": json.dumps(picks, ensure_ascii=False)})
+    if rows:
+        JOURNAL.parent.mkdir(parents=True, exist_ok=True)
+        pd.concat([old, pd.DataFrame(rows)], ignore_index=True).to_csv(JOURNAL, index=False)
+    return len(rows)
+
+
+def journal_results(scores_for=None) -> pd.DataFrame:
+    """Every offered coupon with its state (won / lost / pending) and money per 1 staked."""
+    import json
+    if not JOURNAL.exists():
+        return pd.DataFrame()
+    j = pd.read_csv(JOURNAL)
+    out = []
+    for r in j.itertuples():
+        picks = json.loads(r.picks)
+        scores = scores_for(r.day) if scores_for else None
+        st = coupon_status(picks, scores)
+        out.append({"day": r.day, "style": r.style, "title": r.title, "total_odds": r.total_odds,
+                    "prob": r.prob, "state": st["state"],
+                    "legs": " · ".join(f"{p['match']}: {p['label']} @ {p['odds']:.2f}"
+                                       + ("" if p["won"] is None else (" ✅" if p["won"] else " ❌"))
+                                       for p in st["picks"])})
+    res = pd.DataFrame(out)
+    res["pl"] = np.where(res["state"] == "won", res["total_odds"] - 1,
+                         np.where(res["state"] == "lost", -1.0, np.nan))
+    return res

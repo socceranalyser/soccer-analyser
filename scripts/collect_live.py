@@ -2,7 +2,9 @@ r"""Snapshot of every football match in play: minute, score, red cards, misli.az
 livescore.com statistics (shots, shots on target, possession, corners, attacks...).
 
 Run every 15 minutes by .github/workflows/live_collect.yml; rows are appended to
-<out>/live_snapshots_YYYY-MM.csv (branch 'livedata', so the dashboard is not redeployed).
+<out>/live_snapshots_YYYY-MM.jsonl (branch 'livedata', so the dashboard is not redeployed).
+One JSON object per row: livescore and misli rows carry different columns, and appending
+them to one CSV under the first header made the 2026-10 CSV unreadable.
 Purpose: after a few hundred finished matches, test whether in-match statistics (and the
 live market) improve our in-play model (soccer/inplay.py) - only then use them.
 
@@ -69,6 +71,7 @@ if __name__ == "__main__":
         print("nothing live")
         sys.exit(0)
     snap = pd.concat(parts, ignore_index=True).assign(taken_at=now)
-    f = out / f"live_snapshots_{now:%Y-%m}.csv"
-    snap.to_csv(f, mode="a", header=not f.exists(), index=False)
+    f = out / f"live_snapshots_{now:%Y-%m}.jsonl"
+    with open(f, "a", encoding="utf-8") as fh:
+        fh.write(snap.to_json(orient="records", lines=True, force_ascii=False, date_format="iso"))
     print(f"{len(snap)} rows -> {f}")

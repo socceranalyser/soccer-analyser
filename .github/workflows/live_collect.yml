@@ -51,5 +51,10 @@ jobs:
               git pull -q --rebase || true
               git push -q || true
             fi
-            sleep 600
+            # between snapshots: a quick score check every minute for goal alerts
+            for i in 1 2 3 4 5 6 7 8 9; do
+              sleep 60
+              python ../code/scripts/collect_live.py --out live --goals-only || true
+            done
+            sleep 50
           done

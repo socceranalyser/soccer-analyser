@@ -24,7 +24,7 @@ STAT_KEYS = ["Shon", "Shof", "Shbl", "Shwd", "Pss", "Cos", "Att", "Dat", "Fls", 
              "Crs", "Ycs", "Rcs", "Gks", "Ths"]
 
 
-def livescore_snapshot() -> pd.DataFrame:
+def livescore_snapshot(stats: bool = True) -> pd.DataFrame:
     rows = []
     data = _get("live/soccer/0?MD=1")
     for r in _events(data):
@@ -34,6 +34,9 @@ def livescore_snapshot() -> pd.DataFrame:
         row = {k: r[k] for k in ("home_raw", "away_raw", "kickoff", "minute", "hg", "ag",
                                  "red_h", "red_a", "competition")}
         row["ls_id"] = eid
+        if not stats:  # quick score check for goal alerts
+            rows.append(row)
+            continue
         try:
             st = requests.get(f"{LS_API}/statistics/soccer/{eid}", headers=LS_HEADERS,
                               timeout=20).json().get("Stat") or []
@@ -50,7 +53,7 @@ def livescore_snapshot() -> pd.DataFrame:
 def goal_alerts(ls: pd.DataFrame, out: Path, now: pd.Timestamp) -> int:
     """Telegram message when the score changes in a match the owner starred (⭐ on the site).
     Stars come from the private Telegram backup; last seen scores live in <out>/goal_state.json.
-    Checked every 10 minutes, so an alert can come a few minutes after the goal."""
+    Checked every minute (--goals-only), so an alert comes within about a minute of the goal."""
     import json
     from soccer.backup import fetch
     from soccer.names import CLUB_ALIASES, similarity
@@ -83,10 +86,15 @@ def goal_alerts(ls: pd.DataFrame, out: Path, now: pd.Timestamp) -> int:
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="data/live")
+    ap.add_argument("--goals-only", action="store_true",
+                    help="only check scores of starred matches (run every minute)")
     args = ap.parse_args()
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     now = pd.Timestamp.now(tz="UTC").floor("min")
+    if args.goals_only:
+        print("goal alerts sent:", goal_alerts(livescore_snapshot(stats=False), out, now))
+        sys.exit(0)
     parts = []
     try:
         ls = livescore_snapshot()

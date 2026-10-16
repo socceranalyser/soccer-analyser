@@ -1827,6 +1827,50 @@ def _send_login_code() -> bool:
                 "Если это не вы — кто-то знает ваш пароль: смените APP_PASSWORD в Streamlit.")
 
 
+REMEMBER_HOURS = 12  # survives page refreshes; closing the browser asks again
+AUTH_COOKIE = "sa_auth"
+
+
+def _auth_token(password: str, expires: int) -> str:
+    """'<expiry>.<signature>': proves a past login without storing the password anywhere;
+    changing APP_PASSWORD invalidates every remembered device."""
+    import hashlib
+    import hmac
+    sig = hmac.new(password.encode(), f"sa-login|{expires}".encode(), hashlib.sha256).hexdigest()
+    return f"{expires}.{sig}"
+
+
+def _remembered(password: str) -> bool:
+    import hmac
+    import time
+    try:
+        tok = st.context.cookies.get(AUTH_COOKIE) or ""
+        exp = int(tok.split(".", 1)[0])
+    except Exception:
+        return False
+    return exp > time.time() and hmac.compare_digest(tok, _auth_token(password, exp))
+
+
+def _set_cookie(value: str):
+    """Session cookie (gone when the browser closes) written by a tiny script - Streamlit
+    itself can only read cookies."""
+    import streamlit.components.v1 as components
+    components.html(f"""<script>
+      const c = "{AUTH_COOKIE}={value}; path=/; SameSite=Lax"
+                + (location.protocol === "https:" ? "; Secure" : "");
+      document.cookie = c;
+      try {{ window.parent.document.cookie = c; }} catch (e) {{}}
+    </script>""", height=0)
+
+
+def _login_done():
+    """Mark the session as signed in; a page refresh keeps it (up to 12 h, until the browser closes)."""
+    import time
+    st.session_state["authenticated"] = True
+    st.session_state["remember_cookie"] = _auth_token(
+        _app_password(), int(time.time()) + REMEMBER_HOURS * 3600)
+
+
 def require_login():
     """Password, then (when the Telegram bot is configured) a one-time code sent to Telegram."""
     import hashlib
@@ -1834,7 +1878,15 @@ def require_login():
     import time
     from soccer.notify import configured as telegram_ready
     password = _app_password()
-    if not password or st.session_state.get("authenticated"):
+    if not password:
+        return
+    if st.session_state.get("authenticated"):
+        tok = st.session_state.pop("remember_cookie", None)
+        if tok:
+            _set_cookie(tok)
+        return
+    if _remembered(password):  # signed in earlier in this browser session (page refresh)
+        st.session_state["authenticated"] = True
         return
     _inject_css()
     page_header("⚽ Soccer Analyser", "Вход только для владельца")
@@ -1851,7 +1903,7 @@ def require_login():
                         st.error("Не удалось отправить код в Telegram — попробуйте ещё раз.")
                         st.stop()
                     st.rerun()
-                st.session_state["authenticated"] = True  # no bot configured: password only
+                _login_done()  # no bot configured: password only
                 st.rerun()
             time.sleep(1.5)  # slows down password guessing
             st.error("Неверный пароль")
@@ -1883,7 +1935,7 @@ def require_login():
             st.error("Слишком много попыток. Введите пароль заново.")
         elif hmac.compare_digest(hashlib.sha256(code.strip().encode()).hexdigest(),
                                  tf.get("hash", "")):
-            st.session_state["authenticated"] = True
+            _login_done()
             st.session_state.pop("2fa", None)
             st.rerun()
         else:

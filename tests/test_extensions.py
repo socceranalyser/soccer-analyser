@@ -406,3 +406,19 @@ def test_goal_alert_only_when_a_starred_score_changes(tmp_path, monkeypatch):
     assert cl.goal_alerts(pd.concat([row(1, 0), other]), tmp_path, now) == 1
     assert "Arsenal" in sent[0] and "1:0" in sent[0]
     assert cl.goal_alerts(row(1, 0), tmp_path, now) == 0      # no change, no message
+
+
+def test_lineups_missing_regulars_tilts_forecast():
+    from soccer import lineups
+    core = [str(i) for i in range(11)]
+    past = [set(core) for _ in range(8)]
+    assert lineups.missing(past, set(core)) == 0.0
+    assert lineups.missing(past, set(core[:8] + ["x", "y", "z"])) == 3.0
+    assert lineups.missing(past[:3], set(core)) is None  # too little history
+    h, d, a = lineups.tilt(0.4, 0.3, 0.3, lineups.BETA * (3.0 - 0.0))  # away side is missing more
+    assert h > 0.4 and a < 0.3 and abs(h + d + a - 1) < 1e-9
+    hist = {}
+    for k in range(20):
+        lineups.add_game(hist, "A", pd.Timestamp("2030-01-01") + pd.Timedelta(days=7 * k), {c: c for c in core})
+    assert len(hist["A"]) == lineups.K + 5
+    assert len(lineups.past_xis(hist, "A", "2030-02-15")) == 2  # oldest kept: 05.02, 12.02

@@ -123,9 +123,21 @@ def get_scores(date: pd.Timestamp) -> pd.DataFrame:
         return pd.DataFrame()
 
 
+@st.cache_data(ttl=600, show_spinner=False)
+def _with_lineups(day: pd.DataFrame, slot: str) -> pd.DataFrame:
+    """Line-ups published ~1 h before kick-off: tilt the forecast by missing regulars."""
+    try:
+        from soccer.lineups import adjust
+        return adjust(day)
+    except Exception:
+        return day.assign(lineup_note=None)
+
+
 def with_scores(day: pd.DataFrame, date: pd.Timestamp) -> pd.DataFrame:
     """Overlay scores on a day's fixtures, show pre-match forecasts, store results."""
     from soccer.misli import attach_results
+    if abs((date - now_in_tz().tz_localize(None).normalize()).days) <= 1:
+        day = _with_lineups(day, now_in_tz().strftime("%Y-%m-%d %H:%M")[:-1])  # 10-min slots
     _store_upcoming(day)
     day = attach_results(day, get_scores(date))
     now = now_in_tz()
@@ -575,6 +587,9 @@ def match_menu(eng: Engine, r, fav_key=None, is_fav: bool = False):
                                                key=f"fav_{'_'.join(map(str, fav_key))}", width="stretch"):
             storage.set_favorite(*fav_key, on=not is_fav)
             st.rerun()
+        note = r.get("lineup_note")
+        if isinstance(note, str) and note:
+            st.info(note)
         _match_tabs(eng, r)
 
 

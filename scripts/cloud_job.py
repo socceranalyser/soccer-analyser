@@ -16,6 +16,11 @@ if __name__ == "__main__":
         from soccer.engine import Engine
         eng = Engine(refresh=True, verbose=True)
         print("results stored:", eng.save_results())
+        try:  # starting XIs of the last days -> each team's regulars (soccer/lineups.py)
+            from soccer.lineups import update_history
+            print("line-ups added:", update_history(eng.matches))
+        except Exception:
+            traceback.print_exc()
         from soccer import analysis
         print("daily learning:", analysis.daily_learning())  # before today's forecasts
         today = pd.Timestamp.now().normalize()

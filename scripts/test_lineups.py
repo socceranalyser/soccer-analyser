@@ -1,6 +1,7 @@
 r"""Do starting line-ups make the forecast better? (data: scripts/collect_lineups.py)
 
-For each team its "regular XI" is learnt from its previous K league games with a known line-up:
+Accepted variant (2026-10-16): "core" (started >= 80% of the last 10 games within 120 days),
+beta 0.03 -> soccer/lineups.py. For each team its "regular XI" is learnt from its previous K league games with a known line-up:
 w_p = share of those games player p started. Before a game: missing = sum of w_p of regulars
 (w_p >= W_MIN) who are NOT in today's starting XI. The forecast is tilted towards the side
 missing less: p_home * e^s, p_away * e^-s, s = beta * (missing_away - missing_home).
@@ -22,7 +23,28 @@ from soccer.engine import Engine
 from soccer.names import CLUB_ALIASES, similarity
 
 K, W_MIN, MIN_GAMES = 10, 0.5, 5
+MAX_AGE = int(__import__('os').environ.get('LU_MAX_AGE', 120))  # days
 COUNTRY = {v: k for k, v in Engine.LS_COUNTRY.items()}  # English -> Russian
+
+
+def from_cache() -> pd.DataFrame:
+    """Line-ups already downloaded by a collector that is still running."""
+    import json
+    raw = storage.DB_PATH.parent / "raw"
+    rows = []
+    for day in sorted((raw / "livescore_days").glob("*.json")):
+        for e in json.loads(day.read_text(encoding="utf-8")):
+            f = raw / "ls_lineups" / f"{str(e['id']).removeprefix('ls')}.json"
+            if not f.exists():
+                continue
+            for t in (json.loads(f.read_text(encoding="utf-8")) or {}).get("Lu", []):
+                for p in t.get("Ps", []):
+                    if p.get("Pos") in (1, 2, 3, 4, 5):
+                        rows.append({"eid": f.stem, "date": pd.Timestamp(day.stem), "competition": e["competition"],
+                                     "home_raw": e["home_raw"], "away_raw": e["away_raw"],
+                                     "side": t.get("Tnb"), "pid": str(p.get("Pid")), "pos": p.get("Pos"),
+                                     "name": f"{p.get('Fn', '')} {p.get('Ln', '')}".strip()})
+    return pd.DataFrame(rows)
 
 
 def link(lu: pd.DataFrame, m: pd.DataFrame) -> pd.DataFrame:
@@ -53,24 +75,32 @@ def link(lu: pd.DataFrame, m: pd.DataFrame) -> pd.DataFrame:
 
 def missing(lu: pd.DataFrame, links: pd.DataFrame) -> pd.DataFrame:
     """Per linked game: weighted number of regulars missing from each side's starting XI."""
-    st = lu[lu["pos"].between(1, 4)].merge(links, on="eid")
+    st = lu[lu["pos"].between(1, 4)].drop(columns=["date"]).merge(links, on="eid")
     st["team"] = np.where(st["side"] == 1, st["home"], st["away"])
     st["team"] = st["league"] + "|" + st["team"]
     games = st.drop_duplicates(["eid", "team"])[["eid", "team", "date"]].sort_values("date")
     xi = st.groupby(["eid", "team"])["pid"].apply(set).to_dict()
     hist: dict[str, list] = {}
+    seen: dict[str, list] = {}  # the team's earlier "missing" values: its normal rotation
     rows = []
     for g in games.itertuples():
-        past = hist.setdefault(g.team, [])
+        allpast = hist.setdefault(g.team, [])
         today = xi[(g.eid, g.team)]
+        # only recent games: last season's XI says little after the summer transfers
+        past = [s for d, s in allpast if (g.date - d).days <= MAX_AGE]
         if len(past) >= MIN_GAMES:
             last = past[-K:]
             cnt = pd.Series([p for s in last for p in s]).value_counts() / len(last)
             reg = cnt[cnt >= W_MIN]
-            rows.append({"eid": g.eid, "team": g.team, "miss": float(reg[~reg.index.isin(today)].sum()),
-                         "n_reg": len(reg)})
+            core = cnt[cnt >= 0.8]
+            miss = float(reg[~reg.index.isin(today)].sum())
+            prev = seen.setdefault(g.team, [])
+            rows.append({"eid": g.eid, "team": g.team, "miss": miss, "n_reg": len(reg),
+                         "core": float(core[~core.index.isin(today)].sum()),
+                         "rel": miss - (np.mean(prev[-10:]) if len(prev) >= 3 else 2.4)})
+            prev.append(miss)
         if len(today) >= 9:  # a real line-up (some feeds list only a few players)
-            past.append(today)
+            allpast.append((g.date, today))
     return pd.DataFrame(rows)
 
 
@@ -85,15 +115,28 @@ def ll(P, y):
 
 if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8")
-    lu = pd.read_csv(storage.DB_PATH.parent / "raw" / "lineups.csv", dtype={"eid": str, "pid": str})
+    f = storage.DB_PATH.parent / "raw" / "lineups.csv"
+    lu = pd.read_csv(f, dtype={"eid": str, "pid": str}) if f.exists() else from_cache()
     lu["date"] = pd.to_datetime(lu["date"])
     m = load_matches(seasons=[2025, 2026])
     links = link(lu, m)
     print(f"livescore games: {lu['eid'].nunique():,} | linked to our matches: {len(links):,}")
     ms = missing(lu, links)
+    if "--save-history" in sys.argv:  # seed data/state/lineup_xi.json for the live site
+        from soccer import lineups
+        st = lu[lu["pos"].between(1, 4)].drop(columns=["date"]).merge(links, on="eid")
+        hist = {}
+        for (eid, side), g in st.sort_values("date").groupby(["eid", "side"], sort=False):
+            r = g.iloc[0]
+            lineups.add_game(hist, r["home"] if side == 1 else r["away"], r["date"],
+                             dict(zip(g["pid"].astype(str), g["name"].fillna(""))))
+        lineups.save_history(hist)
+        print("history saved:", len(hist), "teams ->", lineups.XI_FILE)
     side = links.assign(hk=links["league"] + "|" + links["home"], ak=links["league"] + "|" + links["away"])
-    side = side.merge(ms.rename(columns={"team": "hk", "miss": "miss_h", "n_reg": "reg_h"}), on=["eid", "hk"]) \
-               .merge(ms.rename(columns={"team": "ak", "miss": "miss_a", "n_reg": "reg_a"}), on=["eid", "ak"])
+    ren = lambda s: {"team": f"{s}k", "miss": f"miss_{s}", "n_reg": f"reg_{s}", "core": f"core_{s}",
+                     "rel": f"rel_{s}"}
+    side = side.merge(ms.rename(columns=ren("h")), on=["eid", "hk"]) \
+               .merge(ms.rename(columns=ren("a")), on=["eid", "ak"])
     print(f"games with both sides' history: {len(side):,} | avg regulars missing: home "
           f"{side['miss_h'].mean():.2f}, away {side['miss_a'].mean():.2f}")
     # our forecasts made BEFORE these games: backtest (2025/26) + live (2026/27)
@@ -106,8 +149,15 @@ if __name__ == "__main__":
     d = d.merge(mm, on=key, how="left").sort_values("date").reset_index(drop=True)
     y = d["result"].map({"H": 0, "D": 1, "A": 2}).to_numpy()
     P = d[["p_home", "p_draw", "p_away"]].to_numpy(float)
-    x = (d["miss_a"] - d["miss_h"]).to_numpy(float)
     cut = int(len(d) * 0.6)
+    for feat in ("miss", "core", "rel"):
+        xf = (d[f"{feat}_a"] - d[f"{feat}_h"]).to_numpy(float)
+        b = minimize_scalar(lambda b: ll(tilt(P[:cut], b * xf[:cut]), y[:cut]), bounds=(-1, 1),
+                            method="bounded").x
+        print(f"вариант {feat:5}: подбор {ll(tilt(P[:cut], b * xf[:cut]), y[:cut]):.4f} "
+              f"(без {ll(P[:cut], y[:cut]):.4f}) | тест {ll(P[cut:], y[cut:]):.4f} → "
+              f"{ll(tilt(P[cut:], b * xf[cut:]), y[cut:]):.4f} | beta {b:+.3f}")
+    x = (d["miss_a"] - d["miss_h"]).to_numpy(float)
     print(f"games with our forecast: {len(d):,} (fit on {cut:,} up to {d['date'].iloc[cut]:%d.%m.%Y}, "
           f"test on {len(d) - cut:,})")
     for name, M in (("наша модель", P), ("ранние коэф.", None), ("закрывающие коэф.", None)):
@@ -126,3 +176,20 @@ if __name__ == "__main__":
                             method="bounded").x
         print(f"матчи, где у одной команды нет 2+ основных (тест, {big.sum()}): "
               f"{ll(P[cut:][big], y[cut:][big]):.4f} → {ll(tilt(P[cut:][big], b * x[cut:][big]), y[cut:][big]):.4f}")
+
+    # the same check on ALL linked games that have the bookmaker's opening odds (no need for
+    # our backtest forecast, which ends with the 2025/26 season)
+    mo = side.merge(mm, on=key).dropna(subset=["open_h", "open_d", "open_a"]).sort_values("date")
+    mo = mo[(mo[["open_h", "open_d", "open_a"]] > 1).all(1)].reset_index(drop=True)
+    yo = mo["result"].map({"H": 0, "D": 1, "A": 2}).to_numpy()
+    Mo = 1 / mo[["open_h", "open_d", "open_a"]].to_numpy(float)
+    Mo = Mo / Mo.sum(1, keepdims=True)
+    xo = (mo["miss_a"] - mo["miss_h"]).to_numpy(float)
+    co = int(len(mo) * 0.6)
+    bo = minimize_scalar(lambda b: ll(tilt(Mo[:co], b * xo[:co]), yo[:co]), bounds=(-1, 1), method="bounded").x
+    print(f"ВСЕ матчи с ранними коэф. ({len(mo):,}, тест {len(mo) - co:,} с {mo['date'].iloc[co]:%d.%m.%Y}): "
+          f"beta={bo:+.3f} | {ll(Mo[co:], yo[co:]):.4f} → {ll(tilt(Mo[co:], bo * xo[co:]), yo[co:]):.4f}")
+    for lo, hi in ((0, 0.5), (0.5, 1.5), (1.5, 99)):
+        s = (np.abs(xo[co:]) >= lo) & (np.abs(xo[co:]) < hi)
+        print(f"   разница в отсутствующих {lo}–{hi}: {s.sum()} матчей, "
+              f"{ll(Mo[co:][s], yo[co:][s]):.4f} → {ll(tilt(Mo[co:][s], bo * xo[co:][s]), yo[co:][s]):.4f}")

@@ -96,7 +96,8 @@ def calls_columns(view: pd.DataFrame) -> dict:
             qr = sum(q[i] for i in cov)
             if abs(qr - pr) >= DISAGREE:
                 warn = f" ⚠️ букмекер {qr:.0%}"
-        cols["call_outcome"].append(f"{'🏆' if len(cov) == 1 else '🛡️'} {lab} · {pr:.0%}{warn}")
+        lu = " 📋" if "учтены" in str(r.get("lineup_note") or "") else ""  # line-ups counted
+        cols["call_outcome"].append(f"{'🏆' if len(cov) == 1 else '🛡️'} {lab} · {pr:.0%}{warn}{lu}")
         po, pb = r.get("p_over25"), r.get("p_btts")
         if pd.isna(po):
             cols["call_total"].append("—")

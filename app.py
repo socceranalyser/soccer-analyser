@@ -1390,6 +1390,7 @@ def render_suggestions(df: pd.DataFrame):
     tz = user_tz() or local_tz()
     upcoming = df[df["kickoff"] > pd.Timestamp.now(tz="UTC")]
     st.markdown("### 🎯 Готовые купоны")
+    _record_strip()
     days = sorted(upcoming["kickoff"].dt.tz_convert(tz).dt.tz_localize(None).dt.normalize().unique())[:4]
     if not days:
         st.info("Нет предстоящих матчей с прогнозом модели.")
@@ -1461,6 +1462,21 @@ def _coupon_record(stamp: float) -> pd.DataFrame:
     from soccer.coupons import journal_results
     return journal_results(lambda d: _scores_for(tuple(pd.Timestamp(d) + timedelta(days=k)
                                                        for k in (-1, 0, 1))))
+
+
+def _record_strip():
+    """One line under the coupon header: how our offered coupons did so far."""
+    from soccer.coupons import JOURNAL
+    if not JOURNAL.exists():
+        return
+    res = _coupon_record(JOURNAL.stat().st_mtime)
+    if res.empty:
+        return
+    won, lost = int((res["state"] == "won").sum()), int((res["state"] == "lost").sum())
+    wait = int((res["state"] == "pending").sum())
+    st.info(f"📜 **Наши купоны с 16.10:** предложено {len(res)} · ✅ выиграно {won} · "
+            f"❌ проиграно {lost} · ⏳ ждём {wait} · итог {res['pl'].sum():+.2f} ₼ на 1 ₼. "
+            "Подробно — внизу страницы и в «🧾 Мои купоны».")
 
 
 def render_coupon_record():
@@ -1687,6 +1703,8 @@ def _status_lines(picks: list[dict]) -> tuple[str, list[str]]:
 
 def page_my_coupons():
     page_header("🧾 Мои купоны", "Ваши купоны и их результаты — обновляются сами")
+    with st.expander("📜 Как сыграли купоны, которые предлагал анализатор", expanded=True):
+        render_coupon_record()
     st.caption("Результаты подтягиваются сами (livescore.com + misli.az), обновление раз в 2 минуты.")
     try:
         from soccer.backup import status

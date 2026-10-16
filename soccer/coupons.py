@@ -250,7 +250,9 @@ def suggest(events: pd.DataFrame, source: str = "combined") -> list[dict]:
     agree = source == "combined"
     out, used = [], set()
     for style in STYLES:
-        cp = build(cands, style, frozenset(used), agree) or build(cands, style, agree=agree)
+        # never reuse a match: two coupons on the same game lose together (15.10: Copenhagen
+        # and Dinamo Zagreb sat in both "medium" and "big") - fewer coupons beat fake variety
+        cp = build(cands, style, frozenset(used), agree)
         if cp:
             out.append(cp)
             used |= set(cp["picks"]["event_id"])

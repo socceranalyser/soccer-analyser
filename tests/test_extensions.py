@@ -348,3 +348,14 @@ def test_link_check_flags_lookalike_clubs():
                         "o1": 2.5, "ox": 3.4, "o2": 2.8, "p_o1": 0.41}])
     w = link_check(ev)
     assert len(w) == 1 and "Paris SG" in w[0]
+
+
+def test_coupons_never_share_a_match():
+    from soccer.coupons import suggest
+    rows = [{"event_id": i, "kickoff": pd.Timestamp("2030-01-01", tz="UTC"), "home_raw": f"H{i}",
+             "away_raw": f"A{i}", "competition_az": "X", "mbs": 1, "o1": 1.35 + 0.05 * i, "ox": 4.5,
+             "o2": 7.0, "ou_line": 2.5, "o_over": 1.7, "o_under": 2.1,
+             "p_o1": 0.75, "p_ox": 0.15, "p_o2": 0.10, "p_o_over": 0.6, "p_o_under": 0.4}
+            for i in range(12)]
+    used = [e for cp in suggest(pd.DataFrame(rows)) for e in cp["picks"]["event_id"]]
+    assert len(used) == len(set(used))

@@ -472,7 +472,9 @@ def page_today():
         st.warning("Ничего не найдено.")
         return
     now = now_in_tz()
-    tg = st.columns(2)
+    tg = st.columns(3)
+    cards = tg[2].toggle("📱 Карточками", value=_is_phone(),
+                         help="Удобно на телефоне: каждый матч — отдельная карточка вместо широкой таблицы.")
     show_probs = tg[0].toggle("📊 Показать вероятности П1 / Х / П2", value=False)
     only_sure = tg[1].toggle("🔒 Только «почти наверняка»", value=False,
                              help="Матчи, где и моя модель, и букмекер дают исходу 85% и больше. "
@@ -518,6 +520,9 @@ def page_today():
     favs = storage.load_favorites()
     keys = [(r["competition"], pd.Timestamp(r.get("sched_date", r.get("date"))).strftime("%Y-%m-%d"),
              r["home"], r["away"]) for _, r in view.iterrows()]
+    if cards:
+        _match_cards(eng, view, table, keys, favs, date)
+        return
     table.insert(0, "⭐", ["⭐" if k in favs else "" for k in keys])
     cfg["⭐"] = st.column_config.TextColumn("⭐", width="small")
     st.caption("👆 Нажмите на матч — ниже откроется меню: анализ, история встреч, ставки, новости, ⭐.")
@@ -529,6 +534,36 @@ def page_today():
     rows = [int(cells[0][0])] if cells else []  # a click on any cell (e.g. the team) opens it
     if rows:
         match_menu(eng, view.iloc[rows[0]], keys[rows[0]], keys[rows[0]] in favs)
+
+
+def _is_phone() -> bool:
+    try:
+        ua = (st.context.headers.get("User-Agent") or "").lower()
+    except Exception:
+        return False
+    return any(k in ua for k in ("iphone", "android", "mobile"))
+
+
+def _match_cards(eng, view, table, keys, favs, date):
+    """Phone layout: one compact card per match, details via a picker below."""
+    import html as _h
+    css = ("background:#111a2e;border:1px solid #24324d;border-radius:12px;padding:8px 12px;"
+           "margin:0 0 8px 0;line-height:1.35")
+    for i, (_, r) in enumerate(table.iterrows()):
+        star = "⭐ " if keys[i] in favs else ""
+        score = r["Счёт"] or ""
+        st.markdown(
+            f'<div style="{css}"><div style="font-size:.8rem;color:#94a3b8">{_h.escape(str(r["Время"]))} · '
+            f'{_h.escape(str(r["Турнир"]))}</div><div style="font-weight:700">{star}'
+            f'{_h.escape(str(r["Матч"]))}<span style="float:right">{_h.escape(score)}</span></div>'
+            f'<div>{_h.escape(str(r["Кто выиграет"]))}</div><div style="font-size:.85rem;color:#cbd5e1">'
+            f'{_h.escape(str(r["Тотал 2.5"]))} · обе: {_h.escape(str(r["Обе забьют"]))}</div></div>',
+            unsafe_allow_html=True)
+    names = ["—"] + [f"{r['Время']} · {r['Матч']}" for _, r in table.iterrows()]
+    pick = st.selectbox("🔍 Подробный разбор матча", names, key=f"card_{date:%Y%m%d}")
+    if pick != "—":
+        i = names.index(pick) - 1
+        match_menu(eng, view.iloc[i], keys[i], keys[i] in favs)
 
 
 def match_menu(eng: Engine, r, fav_key=None, is_fav: bool = False):

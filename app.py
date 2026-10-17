@@ -1927,11 +1927,15 @@ def _send_login_code() -> bool:
               "Если это не вы — кто-то знает ваш пароль: смените APP_PASSWORD в Streamlit.")
     # friends allowed in: their own Telegram chat ids (secret LOGIN_CODE_CHATS, comma separated);
     # they get only the login code - digests, goal alerts and the backup stay with the owner
-    for extra in _secret("LOGIN_CODE_CHATS").replace(" ", "").split(","):
+    chats = _secret("LOGIN_CODE_CHATS") or LOGIN_CODE_CHATS
+    for extra in chats.replace(" ", "").split(","):
         if extra:
             ok |= send(f"🔐 Код для входа на сайт Soccer Analyser: <b>{code}</b>\n"
                        f"Действует 5 минут ({when}).", chat=extra)
     return ok
+
+
+LOGIN_CODE_CHATS = "7461023962"  # the owner's friend (added at the owner's request, 2026-10-17)
 
 
 def _secret(name: str) -> str:

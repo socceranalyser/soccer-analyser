@@ -540,7 +540,7 @@ def page_today():
     st.caption("👆 Нажмите на матч — ниже откроется меню: анализ, история встреч, ставки, новости, ⭐.")
     event = st.dataframe(table, hide_index=True, width="stretch", on_select="rerun",
                          selection_mode="single-cell", key=f"tbl_{date:%Y%m%d}",
-                         height=min(36 * (len(table) + 1) + 4, 900), column_config=cfg)
+                         height=36 * (len(table) + 1) + 4, column_config=cfg)  # whole table: the page scrolls, no inner scrollbar
     sel = event.selection if event else None
     cells = (sel.get("cells") if isinstance(sel, dict) else getattr(sel, "cells", None)) or []
     rows = [int(cells[0][0])] if cells else []  # a click on any cell (e.g. the team) opens it

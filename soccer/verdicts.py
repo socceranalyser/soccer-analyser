@@ -9,7 +9,12 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-CLEAR_FAVOURITE = 0.50  # below this a single outcome is a coin-flip -> double chance
+# "Win X" only for a clear favourite, otherwise the double chance "X won't lose".
+# bt_all 2023-25 (17 292 calls): a 50-55% "win" came true 51.1% (a coin flip; the double chance
+# 77.6%), 55-60% 57.7% (82.0%), 60-65% 64.3%. Raising 0.50 -> 0.60: calls that come true
+# 67.0% -> 72.8% on history, 69.2% -> 74.1% on live games (2026-10-17, after a 15:30 block
+# where 52-53% "wins" like Millwall and Luton failed).
+CLEAR_FAVOURITE = 0.60
 TOSS_UP = 0.58          # totals / BTTS below this are flagged "почти 50/50" (weak lean only)
 
 

@@ -221,6 +221,9 @@ def package(events: pd.DataFrame, tz=None) -> dict | None:
             "ev": float((p * o).mean() - 1)}
 
 
+BLIND_GAP = 0.20
+
+
 def _prepared(events: pd.DataFrame) -> pd.DataFrame:
     try:  # today's news analysis corrects the model and vetoes unpredictable matches
         from .news import apply
@@ -231,6 +234,13 @@ def _prepared(events: pd.DataFrame) -> pd.DataFrame:
     if cands.empty:
         return cands
     cands = cands[~against_model(cands)]
+    # a match where model and bookmaker see the 1X2 very differently (20+ points) is a blind
+    # spot or a wrong team link -> no market of it goes into a coupon (17.10: Qingdao - Liaoning,
+    # model 45% vs bookmaker 18% for the home win, a BTTS leg of it lost 0:4)
+    h = cands[cands["market"] == "o1"].set_index("event_id")
+    gap = (h["p_model"].astype(float) - h["p"]).abs()
+    blind = set(gap[gap >= BLIND_GAP].index)
+    cands = cands[~cands["event_id"].isin(blind)]
     return cands.assign(p_market=cands["p"])
 
 

@@ -422,3 +422,12 @@ def test_lineups_missing_regulars_tilts_forecast():
         lineups.add_game(hist, "A", pd.Timestamp("2030-01-01") + pd.Timedelta(days=7 * k), {c: c for c in core})
     assert len(hist["A"]) == lineups.K + 5
     assert len(lineups.past_xis(hist, "A", "2030-02-15")) == 2  # oldest kept: 05.02, 12.02
+
+
+def test_coupons_skip_matches_with_big_model_market_gap():
+    from soccer.coupons import _prepared
+    ev = pd.DataFrame([{"event_id": 1, "kickoff": pd.Timestamp("2030-01-01", tz="UTC"),
+                        "home_raw": "Qingdao", "away_raw": "Liaoning", "competition_az": "X", "mbs": 1,
+                        "o1": 4.8, "ox": 4.2, "o2": 1.55, "o_btts_yes": 1.65, "o_btts_no": 2.1,
+                        "p_o1": 0.45, "p_ox": 0.25, "p_o2": 0.30, "p_o_btts_yes": 0.62, "p_o_btts_no": 0.38}])
+    assert _prepared(ev).empty

@@ -1312,6 +1312,13 @@ def get_misli(built_at, refresh_token: int) -> pd.DataFrame:
         save_market_snapshot(get_engine(), ev)
     except Exception:
         pass
+    try:  # the same matches at Topaz (etopaz.az): show where its price is better
+        from soccer import topaz
+        mine = ev["p_o1"].notna() if "p_o1" in ev else pd.Series(False, index=ev.index)
+        linked = topaz.link(ev[mine], topaz.fetch_events(4))
+        ev = ev.join(linked[[c for c in linked.columns if c.startswith("tz_")]])
+    except Exception:
+        pass
     return ev
 
 
@@ -1504,6 +1511,8 @@ def render_suggestions(df: pd.DataFrame):
                                                                  "Мой анализ (рекомендую)")]
     day_ev = on_day(upcoming, day, tz)
     coupons = suggest(day_ev, source)
+    topaz_odds = {(int(r["event_id"]), c[3:]): float(r[c]) for _, r in day_ev.iterrows()
+                  for c in day_ev.columns if c.startswith("tz_") and pd.notna(r[c])}
     if not coupons:
         st.info(f"На {day:%d.%m} нет надёжных исходов для купонов. Посмотрите другой день.")
     missing = [STYLES[k]["title"].split(" — ")[0] for k in STYLES
@@ -1519,6 +1528,9 @@ def render_suggestions(df: pd.DataFrame):
                 t = pd.Timestamp(pk["kickoff"]).tz_convert(tz)
                 book = (f" · букмекер {pct(pk['p_market'])}"
                         if abs(float(pk["p"]) - float(pk["p_market"])) >= 0.03 else "")
+                tzo = topaz_odds.get((int(pk["event_id"]), pk["market"]))
+                if tzo and tzo >= float(pk["odds"]) * 1.02:  # Topaz pays noticeably more
+                    book += f" · 💡 у Topaz {tzo:.2f}"
                 st.markdown(f"🕘 {t:%H:%M} · {pk['match']}  \n**{pk['label']}** @ **{pk['odds']:.2f}**"
                             f" · шанс {pct(pk['p'])}{book}")
             c = st.columns(3)

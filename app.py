@@ -86,7 +86,7 @@ def get_engine() -> Engine:
     return _engine(st.session_state.get("refresh_token", 0))
 
 
-@st.cache_resource(ttl=3 * 3600, show_spinner="Загружаю данные и обучаю модели (≈1 мин)…")
+@st.cache_resource(ttl=3 * 3600, show_spinner="⏳ Обновляю модели — около минуты, страница откроется сама…")
 def _engine(refresh_token: int) -> Engine:
     import gc
     import threading
@@ -544,8 +544,7 @@ def page_today():
     sel = event.selection if event else None
     cells = (sel.get("cells") if isinstance(sel, dict) else getattr(sel, "cells", None)) or []
     rows = [int(cells[0][0])] if cells else []  # a click on any cell (e.g. the team) opens it
-    if rows:
-        match_menu(eng, view.iloc[rows[0]], keys[rows[0]], keys[rows[0]] in favs)
+    _open_match(eng, view, keys, favs, rows[0] if rows else None, f"tbl_{date:%Y%m%d}")
 
 
 def _is_phone() -> bool:
@@ -573,9 +572,26 @@ def _match_cards(eng, view, table, keys, favs, date):
             unsafe_allow_html=True)
     names = ["—"] + [f"{r['Время']} · {r['Матч']}" for _, r in table.iterrows()]
     pick = st.selectbox("🔍 Подробный разбор матча", names, key=f"card_{date:%Y%m%d}")
-    if pick != "—":
-        i = names.index(pick) - 1
-        match_menu(eng, view.iloc[i], keys[i], keys[i] in favs)
+    _open_match(eng, view, keys, favs, names.index(pick) - 1 if pick != "—" else None,
+                f"card_{date:%Y%m%d}")
+
+
+@st.dialog("Разбор матча", width="large")
+def _match_dialog(eng: Engine, r, fav_key, is_fav: bool):
+    match_menu(eng, r, fav_key, is_fav)
+
+
+def _open_match(eng, view, keys, favs, i, slot: str):
+    """Open the match analysis as a pop-up window over the page (under a tall table the
+    menu was off-screen and looked as if nothing happened). Opens once per new selection."""
+    state = f"open_{slot}"
+    if i is None:
+        st.session_state.pop(state, None)
+        return
+    if st.session_state.get(state) == keys[i]:
+        return  # already shown for this selection (closed by the user)
+    st.session_state[state] = keys[i]
+    _match_dialog(eng, view.iloc[i], keys[i], keys[i] in favs)
 
 
 def match_menu(eng: Engine, r, fav_key=None, is_fav: bool = False):
@@ -2044,10 +2060,15 @@ pages = st.navigation([
     st.Page(page_accuracy, title="Точность", icon="🎯", url_path="accuracy"),
     st.Page(page_about, title="Как это работает", icon="ℹ️", url_path="about"),
 ])
+# build (or rebuild after an update / every 3 h) with the message in the MAIN area: on a phone
+# the sidebar is hidden, and a silent minute of loading looked like "matches do not open"
+_wait = st.empty()
+with _wait.container():
+    eng = get_engine()  # its own spinner text appears here
+_wait.empty()
 with st.sidebar:
     st.selectbox("🕒 Часовой пояс", list(TIMEZONES), key="tz_label",
                  help=f"Часы компьютера: {local_tz()}")
-    eng = get_engine()
     st.caption(f"Модели обновлены: {eng.built_at:%d.%m %H:%M}  \n"
                f"Матчей в базе: {len(eng.matches) + len(eng.intl) + len(eng.euro):,}")
     if st.button("🔄 Обновить данные", help="скачать свежие результаты и расписание"):

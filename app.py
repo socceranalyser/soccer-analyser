@@ -541,13 +541,23 @@ def page_today():
         return
     table.insert(0, "⭐", ["⭐" if k in favs else "" for k in keys])
     cfg["⭐"] = st.column_config.TextColumn("⭐", width=34)
-    st.caption("👆 Нажмите на матч — ниже откроется меню: анализ, история встреч, ставки, новости, ⭐.")
+    st.caption("👆 Нажмите на матч — откроется разбор (анализ, история встреч, ставки, новости). "
+               "Нажмите на клетку в колонке ⭐ — матч добавится в избранное (ещё раз — уберётся).")
     event = st.dataframe(table, hide_index=True, width="stretch", on_select="rerun",
                          selection_mode="single-cell", key=f"tbl_{date:%Y%m%d}",
                          height=36 * (len(table) + 1) + 4, column_config=cfg)  # whole table: the page scrolls, no inner scrollbar
     sel = event.selection if event else None
     cells = (sel.get("cells") if isinstance(sel, dict) else getattr(sel, "cells", None)) or []
     rows = [int(cells[0][0])] if cells else []  # a click on any cell (e.g. the team) opens it
+    if cells and str(cells[0][1]) in ("⭐", "0"):  # the star column: toggle the favourite
+        k = keys[rows[0]]
+        if st.session_state.get(f"star_{date:%Y%m%d}") != k:
+            st.session_state[f"star_{date:%Y%m%d}"] = k
+            storage.set_favorite(*k, on=k not in favs)
+            st.toast("⭐ Добавлено в избранное" if k not in favs else "Убрано из избранного")
+            st.rerun()
+        return
+    st.session_state.pop(f"star_{date:%Y%m%d}", None)
     _open_match(eng, view, keys, favs, rows[0] if rows else None, f"tbl_{date:%Y%m%d}")
 
 

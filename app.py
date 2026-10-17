@@ -521,8 +521,12 @@ def page_today():
         "Счёт": [_score_cell(r, now) for _, r in view.iterrows()],
         "Турнир": view["comp_name"],
     })
-    cfg = {"Голов": st.column_config.NumberColumn("Голов", format="%.1f", width="small",
-                                                  help="Сколько голов ожидает модель")}
+    # fixed compact widths: the whole table fits the screen, no left-right scrolling
+    tc = lambda w: st.column_config.TextColumn(width=w)
+    cfg = {"Голов": st.column_config.NumberColumn("Голов", format="%.1f", width=50,
+                                                  help="Сколько голов ожидает модель"),
+           "Время": tc(82), "Матч": tc(195), "Кто выиграет": tc(220), "Тотал 2.5": tc(132),
+           "Обе забьют": tc(112), "Счёт": tc(100), "Турнир": tc(120)}
     if show_probs:
         pct_col = lambda label: st.column_config.ProgressColumn(label, format="percent",
                                                                 min_value=0, max_value=1)
@@ -536,7 +540,7 @@ def page_today():
         _match_cards(eng, view, table, keys, favs, date)
         return
     table.insert(0, "⭐", ["⭐" if k in favs else "" for k in keys])
-    cfg["⭐"] = st.column_config.TextColumn("⭐", width="small")
+    cfg["⭐"] = st.column_config.TextColumn("⭐", width=34)
     st.caption("👆 Нажмите на матч — ниже откроется меню: анализ, история встреч, ставки, новости, ⭐.")
     event = st.dataframe(table, hide_index=True, width="stretch", on_select="rerun",
                          selection_mode="single-cell", key=f"tbl_{date:%Y%m%d}",

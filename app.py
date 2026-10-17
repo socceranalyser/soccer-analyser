@@ -545,7 +545,7 @@ def page_today():
                "Нажмите на клетку в колонке ⭐ — матч добавится в избранное (ещё раз — уберётся).")
     event = st.dataframe(table, hide_index=True, width="stretch", on_select="rerun",
                          selection_mode="single-cell", key=f"tbl_{date:%Y%m%d}",
-                         height=36 * (len(table) + 1) + 4, column_config=cfg)  # whole table: the page scrolls, no inner scrollbar
+                         height=min(36 * (len(table) + 1) + 4, 620), column_config=cfg)  # own scrollbar, fits the screen
     sel = event.selection if event else None
     cells = (sel.get("cells") if isinstance(sel, dict) else getattr(sel, "cells", None)) or []
     rows = [int(cells[0][0])] if cells else []  # a click on any cell (e.g. the team) opens it

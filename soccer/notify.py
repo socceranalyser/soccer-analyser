@@ -75,9 +75,9 @@ def configured() -> bool:
     return bool(load_config().get("TELEGRAM_BOT_TOKEN") and chat_id())
 
 
-def send(text: str) -> bool:
-    """Send an HTML message (split into Telegram-sized chunks)."""
-    token, chat = load_config().get("TELEGRAM_BOT_TOKEN"), chat_id()
+def send(text: str, chat: str | None = None) -> bool:
+    """Send an HTML message (split into Telegram-sized chunks) to the owner, or to `chat`."""
+    token, chat = load_config().get("TELEGRAM_BOT_TOKEN"), chat or chat_id()
     if not token or not chat:
         return False
     chunks, cur = [], ""

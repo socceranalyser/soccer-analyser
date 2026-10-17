@@ -1922,9 +1922,26 @@ def _send_login_code() -> bool:
     st.session_state["2fa"] = {"hash": hashlib.sha256(code.encode()).hexdigest(),
                                "expires": time.time() + 300, "tries": 0, "sent": time.time()}
     when = now_in_tz().strftime("%d.%m %H:%M")
-    return send(f"🔐 Код для входа на сайт Soccer Analyser: <b>{code}</b>\n"
-                f"Действует 5 минут ({when}).\n"
-                "Если это не вы — кто-то знает ваш пароль: смените APP_PASSWORD в Streamlit.")
+    ok = send(f"🔐 Код для входа на сайт Soccer Analyser: <b>{code}</b>\n"
+              f"Действует 5 минут ({when}).\n"
+              "Если это не вы — кто-то знает ваш пароль: смените APP_PASSWORD в Streamlit.")
+    # friends allowed in: their own Telegram chat ids (secret LOGIN_CODE_CHATS, comma separated);
+    # they get only the login code - digests, goal alerts and the backup stay with the owner
+    for extra in _secret("LOGIN_CODE_CHATS").replace(" ", "").split(","):
+        if extra:
+            ok |= send(f"🔐 Код для входа на сайт Soccer Analyser: <b>{code}</b>\n"
+                       f"Действует 5 минут ({when}).", chat=extra)
+    return ok
+
+
+def _secret(name: str) -> str:
+    import os
+    try:
+        if name in st.secrets:
+            return str(st.secrets[name])
+    except Exception:
+        pass
+    return os.environ.get(name, "")
 
 
 REMEMBER_HOURS = 12  # survives page refreshes; closing the browser asks again

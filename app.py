@@ -742,6 +742,10 @@ def favorites_panel(today: pd.Timestamp, built_at):
     favs = storage.load_favorites()
     if not favs:
         return
+    # stars of days already gone are not needed any more
+    for k in [k for k in favs if k[1] < f"{today - timedelta(days=1):%Y-%m-%d}"]:
+        storage.set_favorite(*k, on=False)
+        favs.discard(k)
     rows = []
     for d in (today - timedelta(days=1), today, today + timedelta(days=1)):
         day = get_day(d, built_at, user_tz())
@@ -756,6 +760,14 @@ def favorites_panel(today: pd.Timestamp, built_at):
     if not rows:
         return
     fav = pd.concat(rows, ignore_index=True).sort_values("kickoff")
+    # a finished match leaves the favourites by itself (the star is gone from the table too)
+    done = fav["played"].astype(bool) & fav["hg"].notna()
+    for _, r in fav[done].iterrows():
+        storage.set_favorite(r["competition"], r.get("sched_date", r["date"]), r["home"], r["away"],
+                             on=False)
+    fav = fav[~done].reset_index(drop=True)
+    if fav.empty:
+        return
     now = now_in_tz()
     live = get_live()
     if not live.empty:
@@ -778,7 +790,7 @@ def favorites_panel(today: pd.Timestamp, built_at):
                     f"{_h.escape(str(r['call_total']).split(' · ⚖️')[0])}</span></div>")
     with st.container(border=True):
         st.markdown(f"**⭐ Мои матчи: {len(fav)}** · обновляется каждые 30 с · "
-                    "убрать — нажмите на матч в таблице → «★ Убрать»")
+                    "после окончания матч уберётся сам")
         st.markdown("".join(html), unsafe_allow_html=True)
 
 

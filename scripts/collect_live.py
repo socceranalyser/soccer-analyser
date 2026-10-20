@@ -68,7 +68,10 @@ def goal_alerts(ls: pd.DataFrame, out: Path, now: pd.Timestamp) -> int:
     state = json.loads(state_f.read_text(encoding="utf-8")) if state_f.exists() else {}
     alias = lambda n: CLUB_ALIASES.get(n, n)
     sent = 0
+    from soccer.engine import Engine
     for r in ls.itertuples():
+        if any(Engine.LS_NOT_MEN_TEAM.search(str(x)) for x in (r.home_raw, r.away_raw))                 or Engine.LS_NOT_MEN.search(str(getattr(r, "competition", "") or "")):
+            continue  # youth / women's game of the same clubs
         fav = next((f for f in favs if min(similarity(alias(r.home_raw), f[2]),
                                            similarity(alias(r.away_raw), f[3])) >= 0.75), None)
         if fav is None or pd.isna(r.hg):

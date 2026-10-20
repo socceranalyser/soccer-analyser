@@ -431,3 +431,15 @@ def test_coupons_skip_matches_with_big_model_market_gap():
                         "o1": 4.8, "ox": 4.2, "o2": 1.55, "o_btts_yes": 1.65, "o_btts_no": 2.1,
                         "p_o1": 0.45, "p_ox": 0.25, "p_o2": 0.30, "p_o_btts_yes": 0.62, "p_o_btts_no": 0.38}])
     assert _prepared(ev).empty
+
+
+def test_live_youth_game_is_not_linked_to_the_senior_fixture():
+    from soccer.misli import link_live
+    day = pd.DataFrame([{"home": "Liverpool", "away": "Villarreal", "home_src": None, "away_src": None,
+                         "kickoff": pd.Timestamp("2026-10-20 19:00", tz="UTC")}])
+    live = pd.DataFrame([{"home_raw": "Liverpool U19", "away_raw": "Villarreal U19",
+                          "kickoff": pd.Timestamp("2026-10-20 14:00", tz="UTC")},
+                         {"home_raw": "Liverpul", "away_raw": "Vilyarreal",
+                          "kickoff": pd.Timestamp("2026-10-20 19:00", tz="UTC")}])
+    out = link_live(live, day)
+    assert out["our_idx"].iloc[0] is None and out["our_idx"].iloc[1] == 0

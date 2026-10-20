@@ -470,10 +470,18 @@ def link_live(live: pd.DataFrame, day: pd.DataFrame) -> pd.DataFrame:
     if live.empty or day is None or day.empty:
         return live
     for i, r in live.iterrows():
+        # "Liverpool U19" must never take the place of Liverpool (Youth League the same evening)
+        if any(EXCLUDE.search(str(x)) or EXCLUDE_TEAM.search(str(x))
+               for x in (r["home_raw"], r["away_raw"], r.get("competition", ""))):
+            continue
         h = _norm(NATIONS_AZ.get(r["home_raw"], r["home_raw"]))
         a = _norm(NATIONS_AZ.get(r["away_raw"], r["away_raw"]))
         best, score = None, 0.0
+        k = r.get("kickoff")
         for j, d in day.iterrows():
+            dk = d.get("kickoff")
+            if k is not None and pd.notna(k) and dk is not None and pd.notna(dk)                     and abs((pd.Timestamp(k) - pd.Timestamp(dk)).total_seconds()) > 3 * 3600:
+                continue  # same names, different match (another day / the youth game)
             nh = {_norm(str(x)) for x in (d.get("home"), d.get("home_src")) if pd.notna(x)}
             na = {_norm(str(x)) for x in (d.get("away"), d.get("away_src")) if pd.notna(x)}
             s = min(max(similarity(n, h) for n in nh), max(similarity(n, a) for n in na))

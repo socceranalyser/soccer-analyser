@@ -62,10 +62,9 @@ STYLES = {
     "medium": {"title": "⚖️ Средний — две игры с хорошим коэффициентом", "size": 2,
                "min_odds": 1.50, "max_odds": 2.20, "min_p": 0.0, "agree_min": 0.50,
                "score": lambda p, o, pm: pm - p},
-    "big": {"title": "🚀 Крупный — три игры, большой коэффициент", "size": 3, "min_odds": 1.50,
-            "max_odds": 2.20, "min_p": 0.0, "agree_min": 0.50,
-            "score": lambda p, o, pm: pm - p},
 }
+# "🚀 Крупный" (3 games 1.50-2.20, "model above market") removed 2026-10-24: worst style on
+# 2023-25 history (came true 17%, -14%, losing run 28 days) and 0 of 5 in the live journal.
 # How such coupons did on 2023-25 league matches with real odds (scripts/backtest_coupons.py):
 # share of days the coupon came true, average total odds, longest losing streak (days), money
 # result per stake. Promised chances matched reality within 1-2 points for every style.

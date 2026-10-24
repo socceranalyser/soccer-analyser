@@ -36,8 +36,20 @@ if __name__ == "__main__":
             from soccer.notify import send as _send
             sus = link_check(ev)
             print("suspicious links:", sus or "none")
-            if sus:
-                _send("🔗 <b>Возможная путаница команд</b>" + "".join(f"\n• {s}" for s in sus[:10]))
+            # each match once (it used to repeat every day), in calm words: such matches are
+            # already kept out of the coupons; the owner only needs to know when it is new
+            import json
+            from soccer.config import DATA_DIR
+            seen_f = DATA_DIR / "state" / "link_alerts.json"
+            seen = set(json.loads(seen_f.read_text(encoding="utf-8"))) if seen_f.exists() else set()
+            key = lambda s: s.split("«")[-1].split("»")[0]  # the match as misli names it
+            new = [s for s in sus if key(s) not in seen]
+            if new:
+                _send("ℹ️ <b>Модель и букмекер сильно расходятся</b> — такие матчи не берутся в "
+                      "купоны; я проверю, не перепутаны ли команды:"
+                      + "".join(f"\n• {s.split('(misli) = ')[-1]}" for s in new[:10]))
+                seen_f.write_text(json.dumps(sorted(seen | {key(s) for s in new})[-300:]),
+                                  encoding="utf-8")
             from soccer import news
             if news.available():  # Claude reads today's news; the maths weighs it
                 print("news analysed:", len(news.analyse(ev)), "W, G, n =", news.weights())

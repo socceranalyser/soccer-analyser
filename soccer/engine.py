@@ -52,6 +52,14 @@ MODEL_KEYS = {"Dixon-Coles": "dixon_coles", "Elo": "elo", "Elo (межлигов
               "Букмекеры": "market"}
 
 
+def drop_near_duplicates(m: pd.DataFrame, days: int = 2) -> pd.DataFrame:
+    """The same league game from two sources a day apart (US evening = next day in UTC:
+    Columbus Crew 18.10 / 19.10) counts once - the first (football-data) row is kept."""
+    m = m.sort_values("date", kind="stable").reset_index(drop=True)
+    prev = m.groupby(["league", "home", "away"])["date"].diff().dt.days
+    return m[~(prev <= days)].reset_index(drop=True)
+
+
 @dataclass
 class EloGoals:
     """Poisson goals from an Elo difference: log λ = a0 + a1·d, log μ = b0 - b1·d."""
@@ -121,6 +129,7 @@ class Engine:
             log("livescore results backfilled", len(back))
         except Exception:
             back = []
+        self.matches = drop_near_duplicates(self.matches)
         self.n_fresh = len(fresh) + len(back)
         cur_cups = current_cup_matches(self.schedule)
         if len(cur_cups):

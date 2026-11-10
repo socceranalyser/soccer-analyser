@@ -4738,7 +4738,6 @@ Artsul FC RJ,Goytacaz FC RJ,2026-11-07 18:00:00+00:00,ENDED,91.0,True,False,0.0,
 La Serena,Palestino,2026-11-07 18:00:00+00:00,ENDED,90.0,True,False,1.0,0.0
 Campo Grande AC RJ,Audax Rio EC RJ,2026-11-07 18:00:00+00:00,ENDED,45.0,True,False,0.0,0.0
 FK Babrungas Plunge,Fa Siauliai B,2026-11-07 12:00:00+00:00,ENDED,78.0,True,False,3.0,1.0
-Estudiantes,Independiente Rivadavia,2026-11-12 23:00:00+00:00,ENDED,0.0,True,False,0.0,0.0
 KF Ferizaj,FC Suhareka,2026-11-09 12:00:00+00:00,ENDED,91.0,True,False,1.0,0.0
 AL Hashd AL Shade,AL Atesalat,2026-11-09 11:30:00+00:00,ENDED,91.0,True,False,0.0,0.0
 AL Hussein,AL Nasiriya,2026-11-09 11:30:00+00:00,ENDED,92.0,True,False,0.0,3.0
@@ -4831,3 +4830,46 @@ Leones Negros UDEG,Alacranes de Durango,2026-11-08 18:00:00+00:00,ENDED,90.0,Tru
 Talaea Əl Qaiş,Asyut Petroleum,2026-11-08 18:00:00+00:00,ENDED,90.0,True,False,0.0,1.0
 Central SC PE,Belo Jardim,2026-11-08 18:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
 AS Far Rabat,Difaa Həsəni Əl Cadidi,2026-11-08 18:00:00+00:00,ENDED,90.0,True,False,3.0,1.0
+Estudiantes,Independiente Rivadavia,2026-11-12 23:00:00+00:00,ENDED,0.0,True,False,0.0,0.0
+AL Moard AL Maiya,AL Kofa SC,2026-11-10 11:30:00+00:00,ENDED,93.0,True,False,1.0,1.0
+AL Sufiya SC,AL Shirqat,2026-11-10 11:30:00+00:00,ENDED,92.0,True,False,2.0,2.0
+Negro United,KMKM,2026-11-10 11:00:00+00:00,ENDED,91.0,True,False,2.0,3.0
+Deren,Fc Ulaanbaatar,2026-11-10 08:00:00+00:00,ENDED,90.0,True,False,4.0,1.0
+Tuv Buganuud,Hunters Fc,2026-11-10 05:00:00+00:00,ENDED,90.0,True,False,3.0,2.0
+Chapulineros de Oaxaca,Cordobes FC,2026-11-10 02:05:00+00:00,ENDED,92.0,True,False,1.0,1.0
+Arnett Qardens,Waterhouse FC,2026-11-10 01:00:00+00:00,ENDED,92.0,True,False,1.0,0.0
+AD Rosario,Pitbulls Santa Barbara FC,2026-11-10 01:00:00+00:00,ENDED,92.0,True,False,0.0,0.0
+Aurora,FC Universitario de Vinto,2026-11-10 00:30:00+00:00,ENDED,90.0,True,False,1.0,1.0
+SV River Plate Aruba,SV Deportivo Nacional,2026-11-10 00:30:00+00:00,ENDED,97.0,True,False,4.0,3.0
+CD FK Junior,Cucuta Deportivo FC,2026-11-10 00:00:00+00:00,ENDED,90.0,True,False,2.0,0.0
+SC Corinthians SP (Q) U20,SE Palmeiras SP (Q) U20,2026-11-10 00:00:00+00:00,ENDED,100.0,True,False,2.0,3.0
+Luqueno Sportivo,CS 2 de Mayo,2026-11-09 22:30:00+00:00,ENDED,92.0,True,False,3.0,0.0
+Santa Cruz FC RJ,Serra Macaense FC RJ,2026-11-09 21:30:00+00:00,ENDED,91.0,True,False,1.0,2.0
+CD Texniki Universiteti,FC Manta,2026-11-09 20:30:00+00:00,ENDED,91.0,True,False,1.0,2.0
+Independiente Yumbo,Union Maqdalena Santa Mar,2026-11-09 20:30:00+00:00,ENDED,91.0,True,False,0.0,0.0
+Torreense,UD Leiria,2026-11-09 20:15:00+00:00,ENDED,90.0,True,False,2.0,3.0
+Sportivo San Lorenzo,Rubio Nu,2026-11-09 20:00:00+00:00,ENDED,90.0,True,False,2.0,2.0
+RC Deportivo La Coru. (Q),Valencia Cf (Q),2026-11-09 20:00:00+00:00,ENDED,92.0,True,False,0.0,2.0
+Bangor FC Reserves,Dungannon Swifts Reserves,2026-11-09 20:00:00+00:00,ENDED,90.0,True,False,4.0,1.0
+Cliftonville Reserves,Linfield Swifts Reserves,2026-11-09 20:00:00+00:00,ENDED,92.0,True,False,1.0,3.0
+Redditç Yunayted,Piterborou Sports,2026-11-09 19:45:00+00:00,ENDED,91.0,True,False,0.0,1.0
+Çelmsford Siti,FK Ebbsflit Yunayted,2026-11-09 19:45:00+00:00,ENDED,91.0,True,False,2.0,2.0
+Az Piçerno,Bari,2026-11-09 19:45:00+00:00,ENDED,90.0,True,False,1.0,1.0
+CD Tolima U19,CD Once Caldas U19,2026-11-09 19:45:00+00:00,ENDED,90.0,True,False,1.0,1.0
+Las-Palmas,Eldense,2026-11-09 19:30:00+00:00,ENDED,91.0,True,False,2.0,0.0
+Asd Pineto Calcio,Vis Pesaro,2026-11-09 19:30:00+00:00,ENDED,91.0,True,False,1.0,0.0
+Kalço Foccia,Barletta Calcio,2026-11-09 19:30:00+00:00,ENDED,92.0,True,False,0.0,1.0
+Asd Team Altamura,Cavese 1919,2026-11-09 19:30:00+00:00,ENDED,92.0,True,False,2.0,2.0
+CE Sabadell FC,Real Sosyedad B,2026-11-09 19:30:00+00:00,ENDED,90.0,True,False,0.0,0.0
+Plymouth Parkway,Berkhamsted FC,2026-11-09 19:30:00+00:00,ENDED,120.0,True,False,1.0,1.0
+CA Lito,Danubio,2026-11-09 19:30:00+00:00,ENDED,102.0,True,False,1.0,1.0
+Midlsbro U21,Derby County U21,2026-11-09 19:00:00+00:00,ENDED,93.0,True,False,1.0,1.0
+Kolon FK Rezerv,Defensor Sporting Rezerv,2026-11-09 19:00:00+00:00,ENDED,90.0,True,False,0.0,1.0
+Torque Rezerv,Boston River Rezerv,2026-11-09 19:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
+Atletiko Madrid (Q),Las Planas (Q),2026-11-09 18:00:00+00:00,ENDED,92.0,True,False,3.0,0.0
+FC Botoşan,Otelul,2026-11-09 18:00:00+00:00,ENDED,90.0,True,False,1.0,1.0
+SC Muşuk Runa,SC Delfin,2026-11-09 18:00:00+00:00,ENDED,91.0,True,False,2.0,1.0
+İF Hvidovre,Orxus Fremad,2026-11-09 18:00:00+00:00,ENDED,91.0,True,False,3.0,0.0
+Palmeyras SP U20,Santos SP U20,2026-11-09 18:00:00+00:00,ENDED,91.0,True,False,1.0,2.0
+Ironi Beit Dagan,AS Holon Mor,2026-11-09 18:00:00+00:00,ENDED,90.0,True,False,3.0,0.0
+Kristiansund BK,Valerenga IF Oslo,2026-11-09 18:00:00+00:00,ENDED,90.0,True,False,1.0,0.0

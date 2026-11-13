@@ -4942,7 +4942,6 @@ America PE,Serrano PE,2026-11-10 18:00:00+00:00,ENDED,90.0,True,False,3.0,0.0
 Anaitasuna,Alaves,2026-11-10 18:00:00+00:00,ENDED,90.0,True,False,1.0,6.0
 FC Midtjylland (Q),Odense Q,2026-11-10 18:00:00+00:00,ENDED,90.0,True,False,2.0,0.0
 Vyetnam,Sinqapur,2026-11-12 12:00:00+00:00,ENDED,,True,False,1.0,0.0
-Estudiantes,Independiente Rivadavia,2026-11-12 23:00:00+00:00,ENDED,0.0,True,False,0.0,0.0
 Hannover 96,TSV Havelse,2026-11-12 11:00:00+00:00,ENDED,,True,False,6.0,1.0
 Black Mamba,Zimamoto,2026-11-12 11:00:00+00:00,ENDED,90.0,True,False,1.0,6.0
 Khon Kaen Mor Dindaeng Fc,Korat City FC,2026-11-12 10:00:00+00:00,ENDED,91.0,True,False,2.0,0.0
@@ -4990,3 +4989,70 @@ At Rafaela 2,Belqrano 2,2026-11-11 18:00:00+00:00,ENDED,90.0,True,False,1.0,0.0
 Ferro Karril Oeste 2,Defensa və Xustisiya 2,2026-11-11 18:00:00+00:00,ENDED,91.0,True,False,0.0,2.0
 İndependiente 2,Lanus 2,2026-11-11 18:00:00+00:00,ENDED,90.0,True,False,1.0,1.0
 İnstituto 2,San-Lorenso 2,2026-11-11 18:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
+Orlando Pirates B FC,Mabopane Jm,2026-11-13 10:00:00+00:00,ENDED,90.0,True,False,5.0,4.0
+Dinoko City FC,Soweto Super United FC,2026-11-13 10:00:00+00:00,ENDED,91.0,True,False,0.0,1.0
+FK Vityaz Moscow Youth,FC Chernomorets Novorossi,2026-11-13 09:00:00+00:00,ENDED,91.0,True,False,1.0,2.0
+Armed Forces FC,Wan Tendong Stable,2026-11-13 08:45:00+00:00,ENDED,90.0,True,False,0.0,1.0
+Oakleigh Cannons,Marconi Stallions,2026-11-13 08:30:00+00:00,ENDED,103.0,True,False,2.0,2.0
+Preston Lions FC,Kvinslend Layns,2026-11-13 08:30:00+00:00,ENDED,91.0,True,False,3.0,1.0
+Mfa Moscow U20,PFK Sochi U20,2026-11-13 08:00:00+00:00,ENDED,91.0,True,False,1.0,2.0
+Veroskronos Tsuno,Cobaltore Onagawa,2026-11-13 04:30:00+00:00,ENDED,91.0,True,False,2.0,1.0
+Aries FC Tokyo,Fukuyama City FC,2026-11-13 04:30:00+00:00,ENDED,94.0,True,False,4.0,1.0
+Tokyo United FC,Gakunan F Mosperio,2026-11-13 04:30:00+00:00,ENDED,91.0,True,False,0.0,0.0
+Atletiko Morelia,Leones Negros UDEG,2026-11-13 02:00:00+00:00,ENDED,,True,False,1.0,0.0
+FC Basara Hyogo,Fukui United,2026-11-13 01:45:00+00:00,ENDED,90.0,True,False,0.0,1.0
+Asc Hokkaido,Nankatsu SC,2026-11-13 01:45:00+00:00,ENDED,92.0,True,False,2.0,3.0
+Sonio Takamatsu,Blancdieu Hirosaki,2026-11-13 01:45:00+00:00,ENDED,91.0,True,False,0.0,2.0
+Kürasao,Panama,2026-11-13 00:30:00+00:00,ENDED,90.0,True,False,0.0,0.0
+Antiqua və Barbuda,Trinidad və Tobaqo,2026-11-12 23:00:00+00:00,ENDED,90.0,True,False,2.0,3.0
+Real Potosi,CA Nasional Potosi,2026-11-12 23:00:00+00:00,ENDED,90.0,True,False,5.0,5.0
+Cerro Largo FC,Proqreso,2026-11-12 23:00:00+00:00,ENDED,90.0,True,False,2.0,2.0
+Estudiantes,Independiente Rivadavia,2026-11-12 23:00:00+00:00,ENDED,122.0,True,False,2.0,2.0
+Sao Bernardo FC,Athletic Club Sjdr MG,2026-11-12 23:00:00+00:00,ENDED,90.0,True,False,2.0,2.0
+Deportivo Pasto,CD FK Junior,2026-11-12 23:00:00+00:00,ENDED,90.0,True,False,0.0,1.0
+EC Bahia BA (Q),EC Vitoria BA (Q),2026-11-12 22:15:00+00:00,ENDED,91.0,True,False,3.0,3.0
+Aruba,Martinika,2026-11-12 22:00:00+00:00,ENDED,90.0,True,False,0.0,0.0
+Boka Xuniors 2,Nyuells Old Boyz 2,2026-11-12 22:00:00+00:00,ENDED,90.0,True,False,1.0,3.0
+Ponte-Preta,Operario Ferroviario EC P,2026-11-12 22:00:00+00:00,ENDED,90.0,True,False,0.0,2.0
+Aurora FC,Deportivo Mixco,2026-11-12 22:00:00+00:00,ENDED,91.0,True,False,0.0,1.0
+Akademiya Puerto Kabello,Monaqas,2026-11-12 22:00:00+00:00,ENDED,90.0,True,False,0.0,1.0
+CD Aquila,Munisipal Limeno,2026-11-12 21:30:00+00:00,ENDED,93.0,True,False,1.0,1.0
+Atletico Balboa,CD Inca,2026-11-12 21:30:00+00:00,ENDED,90.0,True,False,4.0,1.0
+AD Izalco,AD Forfut,2026-11-12 20:30:00+00:00,ENDED,91.0,True,False,1.0,0.0
+Benfika (Q),FK Austria Wien (Q),2026-11-12 20:00:00+00:00,ENDED,90.0,True,False,3.0,1.0
+İtaliya,Fransa,2026-11-12 19:45:00+00:00,ENDED,90.0,True,False,3.0,1.0
+İngiltərə,Xorvatiya,2026-11-12 19:45:00+00:00,ENDED,90.0,True,False,2.0,1.0
+Çexiya,İspaniya,2026-11-12 19:45:00+00:00,ENDED,90.0,True,False,0.0,2.0
+San Marino,Belarus,2026-11-12 19:45:00+00:00,ENDED,90.0,True,False,0.0,2.0
+Albaniya,Finlandiya,2026-11-12 19:45:00+00:00,ENDED,90.0,True,False,2.0,0.0
+Monteneqro,Latviya,2026-11-12 19:45:00+00:00,ENDED,90.0,True,False,2.0,1.0
+İngiltərə U20,Çexiya U20,2026-11-12 19:30:00+00:00,ENDED,93.0,True,False,6.0,1.0
+Plaza Colonia,Rentistas,2026-11-12 19:30:00+00:00,ENDED,90.0,True,False,0.0,1.0
+CS Cerrito,Colon FC,2026-11-12 19:30:00+00:00,ENDED,91.0,True,False,0.0,1.0
+CA Atenas De San Karlos,Club Oriental de Football,2026-11-12 19:30:00+00:00,ENDED,91.0,True,False,1.0,0.0
+Benin,Mərkəzi Afrika Respublika,2026-11-12 19:00:00+00:00,ENDED,90.0,True,False,4.0,1.0
+Barbados,Qvadelupa,2026-11-12 19:00:00+00:00,ENDED,90.0,True,False,0.0,3.0
+Fil Dişi Sahili,Qambiya,2026-11-12 19:00:00+00:00,ENDED,91.0,True,False,2.0,1.0
+Kayman Adaları,Qayana,2026-11-12 19:00:00+00:00,ENDED,90.0,True,False,0.0,6.0
+CE Europa (Q),RC Deportivo La Coru. (Q),2026-11-12 19:00:00+00:00,ENDED,92.0,True,False,0.0,1.0
+CA Talleres de Cordoba(Q),San Luis FC (Q),2026-11-12 19:00:00+00:00,ENDED,90.0,True,False,2.0,0.0
+Ximnasiya və Esqrima (Q),Belgrano de Cordoba (Q),2026-11-12 19:00:00+00:00,ENDED,91.0,True,False,2.0,1.0
+Seneqal,Sudan,2026-11-12 19:00:00+00:00,ENDED,91.0,True,False,4.0,1.0
+Kamerun,Namibiya,2026-11-12 19:00:00+00:00,ENDED,92.0,True,False,2.0,0.0
+Flugoiania FK (Q),Anapolina Saf GO (Q),2026-11-12 19:00:00+00:00,ENDED,90.0,True,False,0.0,6.0
+Kimberley de Mar Del Plat,Club Olimpo,2026-11-12 18:30:00+00:00,ENDED,92.0,True,False,1.0,1.0
+Seara,FK Atletiko Searense,2026-11-12 18:00:00+00:00,ENDED,91.0,True,False,2.0,0.0
+Cd Tarankon,Levante,2026-11-12 18:00:00+00:00,ENDED,121.0,True,False,1.0,1.0
+CDA Navalcarnero,Real Betis,2026-11-12 18:00:00+00:00,ENDED,118.0,True,False,2.0,2.0
+Rosaria Central 2,River Pleyt 2,2026-11-12 18:00:00+00:00,ENDED,91.0,True,False,1.0,1.0
+San-Lorenso (Q),Union de Santa Fe (Q),2026-11-12 18:00:00+00:00,ENDED,91.0,True,False,1.0,4.0
+Barrakas Sentral 2,Argentinos Xuniors 2,2026-11-12 18:00:00+00:00,ENDED,92.0,True,False,0.0,1.0
+Red Bull BragantinoSP U20,Korintians SP U20,2026-11-12 18:00:00+00:00,ENDED,103.0,True,False,0.0,1.0
+Hurakan 2,Estudiantes Rio Cuarto 2,2026-11-12 18:00:00+00:00,ENDED,91.0,True,False,1.0,1.0
+Qodoy-Krus 2,Ximnasiya və Esqrima 2,2026-11-12 18:00:00+00:00,ENDED,91.0,True,False,3.0,1.0
+CA Banfield (Q),CA River Plate (Arg) (Q),2026-11-12 18:00:00+00:00,ENDED,92.0,True,False,2.0,0.0
+CA Osasuna (Q),Cdef Logrono (Q),2026-11-12 18:00:00+00:00,ENDED,91.0,True,False,2.0,3.0
+Elçe CF U19,Patacona CF U19,2026-11-12 18:00:00+00:00,ENDED,90.0,True,False,2.0,1.0
+Chambery SF,Qrenobl,2026-11-12 18:00:00+00:00,ENDED,90.0,True,False,0.0,2.0
+CD Aguila U20,Municipal Limeno U20,2026-11-12 18:00:00+00:00,ENDED,91.0,True,False,4.0,0.0
+Tayland U23,Qətər U23,2026-11-12 08:00:00+00:00,ENDED,89.0,True,False,1.0,2.0
